@@ -1,0 +1,1024 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Ripple TS</title>
+		<meta name="description" content="Ripple TS - the elegant TypeScript UI framework" />
+
+		<!-- AI/LLM Documentation Reference -->
+		<meta name="ai-documentation" content="/llms.txt" />
+		<link rel="ai-documentation" href="/llms.txt" type="text/plain" />
+
+		<meta property="og:type" content="website" />
+		<meta property="og:url" content="https://ripple-ts.com/" />
+		<meta property="og:title" content="Ripple TS" />
+		<meta property="og:description" content="A new way to build reactive web applications." />
+		<meta property="og:image" content="/ripple-social.png" />
+
+		<meta property="twitter:card" content="summary_large_image" />
+		<meta property="twitter:url" content="https://ripple-ts.com/" />
+		<meta property="twitter:title" content="Ripple TS" />
+		<meta property="twitter:description" content="A new way to build reactive web applications." />
+		<meta property="twitter:image" content="/ripple-social.png" />
+
+		<link rel="icon" type="image/x-icon" sizes="48x48" href="/favicon.ico" />
+		<link rel="icon" type="image/svg+xml" sizes="any" href="/favicon.svg" />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Recursive:wght@300..1000&display=swap"
+			rel="stylesheet"
+		/>
+
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+				box-sizing: border-box;
+			}
+
+			html {
+				overflow-x: hidden;
+			}
+
+			body {
+				font-family:
+					'Recursive',
+					-apple-system,
+					BlinkMacSystemFont,
+					'Segoe UI',
+					Roboto,
+					sans-serif;
+				background: #0a0a0f;
+				color: white;
+				min-height: 100vh;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				overflow-x: hidden;
+				overflow-y: auto;
+				position: relative;
+			}
+
+			main {
+				min-width: 0;
+				max-width: 100%;
+			}
+
+			body::before {
+				content: '';
+				position: absolute;
+				top: 0;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				background:
+					radial-gradient(1px 1px at 20px 30px, rgba(255, 255, 255, 0.15), transparent),
+					radial-gradient(1px 1px at 40px 70px, rgba(120, 219, 226, 0.4), transparent),
+					radial-gradient(1px 1px at 90px 40px, rgba(255, 119, 198, 0.3), transparent),
+					radial-gradient(1px 1px at 130px 80px, rgba(255, 255, 255, 0.1), transparent),
+					radial-gradient(2px 2px at 160px 30px, rgba(120, 219, 226, 0.2), transparent);
+				background-repeat: repeat;
+				background-size:
+					200px 100px,
+					200px 100px,
+					200px 100px,
+					200px 100px,
+					200px 100px;
+				animation: starTwinkle 8s linear infinite;
+			}
+
+			body::after {
+				content: '';
+				position: absolute;
+				top: 0;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				background:
+					radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+					radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.15) 0%, transparent 50%),
+					radial-gradient(circle at 40% 40%, rgba(120, 219, 226, 0.1) 0%, transparent 50%);
+			}
+
+			@keyframes starTwinkle {
+				0%,
+				100% {
+					opacity: 1;
+				}
+				50% {
+					opacity: 0.7;
+				}
+			}
+
+			@keyframes atmosphericShift {
+				0%,
+				100% {
+					transform: translateX(0) translateY(0) scale(1);
+					opacity: 0.8;
+				}
+				25% {
+					transform: translateX(20px) translateY(-15px) scale(1.05);
+					opacity: 0.9;
+				}
+				50% {
+					transform: translateX(-10px) translateY(-25px) scale(0.95);
+					opacity: 1;
+				}
+				75% {
+					transform: translateX(-15px) translateY(10px) scale(1.02);
+					opacity: 0.85;
+				}
+			}
+
+			.container {
+				text-align: center;
+				max-width: 720px;
+				padding: 2rem;
+				position: relative;
+				z-index: 10;
+			}
+
+			.logo {
+				width: 100%;
+				max-width: 400px;
+				aspect-ratio: 800 / 217;
+				margin: 20px auto;
+				filter: drop-shadow(0 0 30px rgba(120, 219, 226, 0.6))
+					drop-shadow(0 0 60px rgba(255, 119, 198, 0.6))
+					drop-shadow(0 0 90px rgba(120, 119, 198, 0.4));
+				animation: glowFadeOut 3s ease-in-out forwards;
+			}
+
+			@keyframes glowFadeOut {
+				0% {
+					filter: drop-shadow(0 0 30px rgba(120, 219, 226, 0.6))
+						drop-shadow(0 0 60px rgba(255, 119, 198, 0.6))
+						drop-shadow(0 0 90px rgba(120, 119, 198, 0.4));
+				}
+				100% {
+					filter: drop-shadow(0 0 30px rgba(120, 219, 226, 0))
+						drop-shadow(0 0 60px rgba(255, 119, 198, 0))
+						drop-shadow(0 0 90px rgba(120, 119, 198, 0));
+				}
+			}
+
+			@keyframes editorSlideIn {
+				0% {
+					opacity: 0;
+					transform: translateY(30px);
+				}
+				100% {
+					opacity: 1;
+					transform: translateY(0);
+				}
+			}
+
+			.editor-code {
+				margin: 0;
+				padding: 1.5rem;
+				background: none;
+				color: inherit;
+				font: inherit;
+				white-space: pre;
+				overflow-x: auto;
+				overflow-y: auto;
+				height: 100%;
+				box-sizing: border-box;
+			}
+
+			.editor-code::-webkit-scrollbar {
+				width: 8px;
+				height: 8px;
+			}
+
+			.editor-code::-webkit-scrollbar-track {
+				background: rgba(20, 20, 25, 0.3);
+				border-radius: 4px;
+			}
+
+			.editor-code::-webkit-scrollbar-thumb {
+				background: rgba(120, 219, 226, 0.4);
+				border-radius: 4px;
+				transition: background 0.3s ease;
+			}
+
+			.editor-code::-webkit-scrollbar-thumb:hover {
+				background: rgba(120, 219, 226, 0.6);
+			}
+
+			.editor-code::-webkit-scrollbar-corner {
+				background: rgba(20, 20, 25, 0.3);
+			}
+
+			.editor-content::-webkit-scrollbar {
+				width: 8px;
+				height: 8px;
+			}
+
+			.editor-content::-webkit-scrollbar-track {
+				background: rgba(20, 20, 25, 0.3);
+				border-radius: 4px;
+			}
+
+			.editor-content::-webkit-scrollbar-thumb {
+				background: rgba(120, 219, 226, 0.4);
+				border-radius: 4px;
+				transition: background 0.3s ease;
+			}
+
+			.editor-content::-webkit-scrollbar-thumb:hover {
+				background: rgba(120, 219, 226, 0.6);
+			}
+
+			.editor-content::-webkit-scrollbar-corner {
+				background: rgba(20, 20, 25, 0.3);
+			}
+
+			.editor-code {
+				scrollbar-width: thin;
+				scrollbar-color: rgba(120, 219, 226, 0.4) rgba(20, 20, 25, 0.3);
+			}
+
+			.editor-content {
+				scrollbar-width: thin;
+				scrollbar-color: rgba(120, 219, 226, 0.4) rgba(20, 20, 25, 0.3);
+			}
+
+			.typing-cursor {
+				background-color: #78dbe2;
+				animation: blink 1s infinite;
+			}
+
+			@keyframes blink {
+				0%,
+				50% {
+					opacity: 1;
+				}
+				51%,
+				100% {
+					opacity: 0;
+				}
+			}
+
+			.subtitle {
+				font-size: 1.25rem;
+				font-weight: 400;
+				margin-bottom: 3rem;
+				opacity: 0.8;
+				line-height: 1.6;
+				font-variation-settings: 'CASL' 0.5;
+				color: rgba(255, 255, 255, 0.8);
+				text-shadow: 0 0 20px rgba(120, 219, 226, 0.2);
+			}
+
+			.content-section {
+				background: rgba(40, 44, 52, 0.92);
+				border-radius: 12px;
+				padding: 2rem;
+				margin: 2rem auto;
+
+				max-width: 700px;
+				border: 1px solid rgba(255, 255, 255, 0.1);
+			}
+
+			.description {
+				font-size: 1.1rem;
+				font-weight: 400;
+				margin-top: 0;
+				opacity: 0.9;
+				line-height: 1.6;
+				color: rgba(255, 255, 255, 0.9);
+				font-variation-settings: 'CASL' 0.3;
+				text-align: left;
+			}
+
+			.features {
+				list-style-type: disc;
+				padding-left: 2rem;
+				margin: 1.5rem 0 0 0;
+				text-align: left;
+			}
+
+			.features li {
+				padding: 0.6rem 0;
+				font-size: 1rem;
+				line-height: 1.5;
+				color: rgba(255, 255, 255, 0.85);
+				position: relative;
+			}
+
+			.features li::marker {
+				color: #78dbe2;
+				font-size: 1.2em;
+			}
+
+			.features strong {
+				color: rgba(255, 255, 255, 0.95);
+				font-weight: 600;
+			}
+
+			.features code {
+				background: rgba(120, 219, 226, 0.15);
+				color: #78dbe2;
+				padding: 0.2rem 0.4rem;
+				border-radius: 4px;
+				font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+				font-size: 0.9em;
+			}
+
+			.early-development {
+				text-align: center;
+				margin: 2rem auto;
+				max-width: 700px;
+				padding: 1.5rem;
+				background: rgba(255, 193, 7, 0.18);
+				border: 1px solid rgba(255, 193, 7, 0.3);
+				border-radius: 8px;
+			}
+
+			.early-development p {
+				margin: 0;
+				font-size: 1rem;
+				color: rgba(255, 255, 255, 0.8);
+				line-height: 1.5;
+			}
+
+			.coming-soon {
+				font-size: 1.1rem;
+				font-weight: 500;
+				background: rgba(255, 255, 255, 0.24);
+				padding: 1rem 2rem;
+				border-radius: 50px;
+				border: 1px solid rgba(255, 255, 255, 0.2);
+				display: inline-block;
+				margin-bottom: 2rem;
+			}
+
+			.github-link {
+				color: rgba(255, 255, 255, 0.7);
+				text-decoration: none;
+				font-weight: 500;
+				transition: all 0.3s ease;
+				display: inline-flex;
+				align-items: center;
+				gap: 0.5rem;
+				padding: 0.75rem 1.5rem;
+				border: 1px solid rgba(120, 219, 226, 0.3);
+				border-radius: 50px;
+				background: rgba(0, 0, 0, 0.32);
+				margin-bottom: 1rem;
+				box-sizing: border-box;
+				line-height: 1.2;
+				font-size: 1rem;
+				height: 48px;
+			}
+
+			.github-link:hover {
+				color: white;
+				transform: translateY(-2px);
+				border-color: rgba(120, 219, 226, 0.6);
+				box-shadow: 0 10px 30px rgba(120, 219, 226, 0.2);
+				background: rgba(120, 219, 226, 0.1);
+			}
+
+			.github-link svg {
+				width: 20px;
+				height: 20px;
+				fill: currentColor;
+			}
+
+			.social-links {
+				display: flex;
+				gap: 1rem;
+				justify-content: center;
+				margin-bottom: 1rem;
+				align-items: baseline;
+			}
+
+			.social-button {
+				color: rgba(255, 255, 255, 0.7);
+				text-decoration: none;
+				font-weight: 500;
+				transition: all 0.3s ease;
+				display: inline-flex;
+				align-items: center;
+				gap: 0.5rem;
+				padding: 0.75rem 1.5rem;
+				border: 1px solid rgba(120, 219, 226, 0.3);
+				border-radius: 50px;
+				background: rgba(0, 0, 0, 0.32);
+				box-sizing: border-box;
+				line-height: 1.2;
+				font-size: 1rem;
+				height: 48px;
+			}
+
+			.discord-link {
+				color: rgba(255, 255, 255, 0.7);
+				text-decoration: none;
+				font-weight: 500;
+				transition: all 0.3s ease;
+				display: inline-flex;
+				align-items: center;
+				gap: 0.5rem;
+				padding: 0.75rem 1.5rem;
+				border: 1px solid rgba(120, 219, 226, 0.3);
+				border-radius: 50px;
+				background: rgba(0, 0, 0, 0.32);
+				box-sizing: border-box;
+				line-height: 1.2;
+				font-size: 1rem;
+				height: 48px;
+			}
+
+			.discord-link:hover {
+				color: white;
+				transform: translateY(-2px);
+				border-color: rgba(120, 219, 226, 0.6);
+				box-shadow: 0 10px 30px rgba(120, 219, 226, 0.2);
+				background: rgba(120, 219, 226, 0.1);
+			}
+
+			.discord-link svg {
+				width: 20px;
+				height: 20px;
+				fill: currentColor;
+			}
+
+			.bottom-links {
+				display: flex;
+				flex-direction: row;
+				gap: 1rem;
+				align-items: stretch;
+				justify-content: center;
+			}
+
+			.bottom-links .github-link,
+			.bottom-links .discord-link {
+				display: flex;
+				align-items: center;
+				box-sizing: border-box;
+				height: 48px;
+			}
+
+			/* Mock Editor */
+			.editor-mockup {
+				max-width: 700px;
+				margin: 1rem auto;
+				background: rgba(30, 30, 35, 0.98);
+				border-radius: 12px;
+				border: 1px solid rgba(255, 255, 255, 0.1);
+				overflow: hidden;
+				box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+				text-align: left;
+				/* Animation: start hidden and below */
+				opacity: 0;
+				transform: translateY(30px);
+				animation: editorSlideIn 1s ease-out 0.5s forwards;
+			}
+
+			.editor-header {
+				background: rgba(20, 20, 25, 0.9);
+				padding: 0.75rem 1rem 0;
+				border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+				display: flex;
+				align-items: flex-start;
+				gap: 1rem;
+			}
+
+			.editor-dots {
+				display: flex;
+				gap: 0.5rem;
+				align-self: center;
+				margin-top: -7px;
+			}
+
+			.editor-dot {
+				width: 12px;
+				height: 12px;
+				border-radius: 50%;
+			}
+
+			.editor-dot.red {
+				background: #ff5f57;
+			}
+			.editor-dot.yellow {
+				background: #ffbd2e;
+			}
+			.editor-dot.green {
+				background: #28ca42;
+			}
+
+			.editor-tab {
+				background: rgba(25, 25, 30, 0.95);
+				padding: 0.5rem 1rem;
+				border-radius: 6px 6px 0 0;
+				color: rgba(255, 255, 255, 0.9);
+				font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+				font-size: 0.75rem;
+				border: 1px solid rgba(255, 255, 255, 0.1);
+				border-bottom: none;
+				margin-bottom: -1px;
+				align-self: flex-end;
+			}
+
+			.editor-content {
+				background: rgba(25, 25, 30, 0.95);
+				padding: 0;
+				font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+				font-size: 0.8rem;
+				line-height: 1.5;
+				color: #e1e4e8;
+				overflow-x: auto;
+				text-align: left;
+				height: min(620px, 64vh);
+			}
+
+			.editor-code {
+				margin: 0;
+				padding: 1.5rem;
+				background: none;
+				color: inherit;
+				font: inherit;
+				white-space: pre;
+				overflow-x: auto;
+			}
+
+			.editor-line {
+				display: block;
+			}
+
+			.line-number {
+				color: rgba(255, 255, 255, 0.3);
+				display: inline-block;
+				width: 1rem;
+				text-align: right;
+				margin-right: 0.75rem;
+				user-select: none;
+			}
+
+			.keyword {
+				color: #569cd6;
+			}
+			.export-keyword {
+				color: #c586c0;
+			}
+			.string {
+				color: #ce9178;
+			}
+			.component {
+				color: #4ec9b0;
+			}
+			.function {
+				color: #dcdcaa;
+			}
+			.property {
+				color: #9cdcfe;
+			}
+			.css-selector {
+				color: #d7ba7d;
+			}
+			.control-keyword {
+				color: #c586c0;
+			}
+			.block-brace {
+				color: #c586c0;
+			}
+			.tag {
+				color: #569cd6;
+			}
+			.attribute {
+				color: #92c5f8;
+			}
+			.value {
+				color: #b5cea8;
+			}
+			.comment {
+				color: #6a9955;
+				font-style: italic;
+			}
+			.brace {
+				color: #ffd700;
+			}
+			.css-brace {
+				color: #d4d4d4;
+			}
+			.template-brace {
+				color: #ffd700;
+			}
+			.ripple-syntax {
+				color: #4fc1ff;
+			}
+			.bracket {
+				color: #808080;
+			}
+			.reactive-var {
+				color: #9cdcfe;
+				font-weight: bold;
+			}
+
+			.sr-only {
+				position: absolute;
+				width: 1px;
+				height: 1px;
+				padding: 0;
+				margin: -1px;
+				overflow: hidden;
+				clip: rect(0, 0, 0, 0);
+				white-space: nowrap;
+				border-width: 0;
+			}
+
+			.vercel-footer {
+				position: relative;
+				z-index: 10;
+				padding: 1.5rem;
+				text-align: center;
+				opacity: 0.7;
+			}
+
+			.vercel-footer p {
+				font-size: 0.875rem;
+				color: rgba(255, 255, 255, 0.7);
+				margin: 0;
+			}
+
+			.vercel-footer a {
+				color: rgba(255, 255, 255, 0.9);
+				text-decoration: underline;
+				transition: opacity 0.3s ease;
+			}
+
+			.vercel-footer a:hover {
+				opacity: 0.8;
+			}
+
+			@media (max-width: 768px) {
+				h1 {
+					font-size: 2.5rem;
+				}
+
+				.subtitle {
+					font-size: 1.1rem;
+				}
+
+				.container {
+					padding: 1rem;
+					max-width: 100%;
+					overflow-x: hidden;
+				}
+
+				.editor-mockup {
+					margin: 1rem auto;
+					max-width: calc(100% - 2rem);
+					width: 100%;
+				}
+
+				.editor-content {
+					padding: 0.5rem;
+					font-size: 0.65rem;
+					height: min(360px, 58vh);
+					overflow-x: auto;
+					overflow-y: auto;
+				}
+
+				.editor-code {
+					padding: 0.75rem;
+					white-space: pre;
+					font-size: 0.65rem;
+					line-height: 1.4;
+				}
+
+				.line-number {
+					width: 1.2rem;
+					margin-right: 0.5rem;
+					font-size: 0.6rem;
+					flex-shrink: 0;
+				}
+
+				.editor-tab {
+					font-size: 0.7rem;
+					padding: 0.3rem 0.6rem;
+				}
+
+				.social-links {
+					flex-direction: row;
+					flex-wrap: wrap;
+					gap: 0.75rem;
+					align-items: stretch;
+					justify-content: center;
+					margin-bottom: 2rem;
+				}
+
+				.github-link,
+				.discord-link {
+					flex: 1;
+					max-width: 180px;
+					min-width: 140px;
+					justify-content: center;
+					font-size: 0.85rem;
+					padding: 0.6rem 1rem;
+					height: 44px;
+					display: flex;
+					align-items: center;
+					box-sizing: border-box;
+				}
+
+				.content-section {
+					padding: 1.5rem;
+					margin: 1.5rem 1rem;
+					max-width: none;
+					width: auto;
+				}
+
+				.early-development {
+					margin: 1.5rem 1rem;
+					max-width: none;
+					width: auto;
+				}
+
+				.description {
+					font-size: 1rem;
+				}
+
+				.features {
+					padding-left: 1.5rem;
+				}
+
+				.features li {
+					font-size: 0.9rem;
+					padding: 0.4rem 0;
+				}
+
+				.bottom-links {
+					flex-direction: row;
+					flex-wrap: wrap;
+					gap: 0.75rem;
+					justify-content: center;
+					margin: 1.5rem 1rem;
+				}
+
+				.bottom-links .github-link,
+				.bottom-links .discord-link {
+					flex: 1;
+					max-width: 180px;
+					min-width: 140px;
+					justify-content: center;
+					font-size: 0.85rem;
+					padding: 0.6rem 1rem;
+					height: 44px;
+					display: flex;
+					align-items: center;
+					box-sizing: border-box;
+					margin-bottom: 0;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<main>
+			<div class="container">
+				<h1 class="sr-only">Ripple</h1>
+				<img
+					src="/ripple-logo-horizontal.png"
+					alt="Ripple Logo"
+					class="logo"
+					fetchpriority="high"
+				/>
+				<p class="subtitle">the elegant TypeScript UI framework</p>
+
+				<div class="social-links">
+					<a
+						href="https://github.com/Ripple-TS/ripple"
+						class="github-link"
+						target="_blank"
+						rel="noopener noreferrer"
+					>
+						<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.30.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+							/>
+						</svg>
+						GitHub
+					</a>
+
+					<a
+						href="https://discord.gg/JBF2ySrh2W"
+						class="discord-link"
+						target="_blank"
+						rel="noopener noreferrer"
+					>
+						<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M20.222 0c1.406 0 2.54 1.137 2.607 2.475V24l-2.677-2.273-1.47-1.338-1.604-1.398.67 2.205H3.71c-1.402 0-2.54-1.065-2.54-2.476V2.48C1.17 1.142 2.31.003 3.715.003h16.5L20.222 0zm-6.118 5.683h-.03l-.202.2c2.073.6 3.076 1.537 3.076 1.537-1.336-.668-2.54-1.002-3.744-1.137-.87-.135-1.74-.064-2.475 0h-.2c-.47 0-1.47.2-2.81.735-.467.203-.735.336-.735.336s1.002-1.002 3.21-1.537l-.135-.135s-1.672-.064-3.477 1.27c0 0-1.805 3.144-1.805 7.02 0 0 1 1.74 3.743 1.806 0 0 .4-.533.805-1.002-1.54-.4-2.172-1.27-2.172-1.27s.135.064.336.2h.06c.03 0 .044.015.06.03v.006c.016.016.03.03.06.03.33.136.66.27.93.4.466.202 1.065.403 1.8.536.93.135 1.996.2 3.21 0 .6-.135 1.2-.267 1.8-.535.39-.2.87-.4 1.397-.737 0 0-.6.936-2.205 1.27.33.466.795 1 .795 1 2.744-.06 3.81-1.8 3.87-1.726 0-3.87-1.815-7.02-1.815-7.02-1.635-1.214-3.165-1.26-3.435-1.26l.056-.02zm.168 4.413c.703 0 1.27.6 1.27 1.335 0 .74-.57 1.34-1.27 1.34-.7 0-1.27-.6-1.27-1.34.002-.74.573-1.338 1.27-1.335zm-4.543 0c.7 0 1.266.6 1.266 1.335 0 .74-.57 1.34-1.27 1.34-.7 0-1.27-.6-1.27-1.34 0-.74.57-1.335 1.27-1.335z"
+							/>
+						</svg>
+						Discord
+					</a>
+
+					<a href="/docs/introduction" class="github-link">
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							width="24"
+							height="24"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							class="lucide lucide-book-text-icon lucide-book-text"
+						>
+							<path
+								d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20"
+							/>
+							<path d="M8 11h8" />
+							<path d="M8 7h6" />
+						</svg>
+						Docs
+					</a>
+
+					<a href="/playground" class="discord-link">
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							width="24"
+							height="24"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							class="lucide lucide-play-icon lucide-play"
+						>
+							<path
+								d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"
+							/>
+						</svg>
+						Playground
+					</a>
+				</div>
+
+				<div class="editor-mockup">
+					<div class="editor-header">
+						<div class="editor-dots">
+							<div class="editor-dot red"></div>
+							<div class="editor-dot yellow"></div>
+							<div class="editor-dot green"></div>
+						</div>
+						<div class="editor-tab">Examples.tsrx</div>
+					</div>
+					<div class="editor-content">
+						<pre class="editor-code" id="typewriter-code"></pre>
+					</div>
+				</div>
+
+				<div class="content-section">
+					<h2 class="description">
+						Ripple is a TypeScript UI framework that combines the best parts of React, Solid, and
+						Svelte into one package.
+					</h2>
+
+					<ul class="features">
+						<li>
+							<strong>Reactive State Management</strong> - Built-in reactivity with
+							<code>track()</code> and tracked <code>.value</code> reads and writes
+						</li>
+						<li>
+							<strong>Component-Based Architecture</strong> - Clean, reusable components with props
+							and children
+						</li>
+						<li>
+							<strong>Statement Containers</strong> - Use <code>@{...}</code> for local setup, then
+							finish with one JSX element, fragment, or control-flow expression
+						</li>
+						<li>
+							<strong>Performance</strong> - Fine-grain rendering, with industry-leading
+							performance, bundle-size and memory usage
+						</li>
+						<li>
+							<strong>TypeScript Support</strong> - Full TypeScript integration with type checking
+						</li>
+						<li>
+							<strong>VSCode Integration</strong> - Rich editor support with diagnostics and
+							IntelliSense
+						</li>
+						<li>
+							<strong>Control Flow</strong> - Inline <code>@if</code>, <code>@for</code>,
+							<code>@switch</code>, and <code>@try</code> in templates
+						</li>
+						<li>
+							<strong>Scoped Styling</strong> - Component-local CSS with
+							<code>&lt;style&gt;</code> elements
+						</li>
+						<li>
+							<strong>Prettier Support</strong> - Full Prettier formatting support for
+							<code>.tsrx</code> modules
+						</li>
+						<li>
+							<strong>ESLint Support</strong> - Full ESLint integration for
+							<code>.tsrx</code> modules
+						</li>
+					</ul>
+				</div>
+
+				<div class="bottom-links">
+					<a
+						href="https://github.com/Ripple-TS/ripple"
+						class="github-link"
+						target="_blank"
+						rel="noopener noreferrer"
+					>
+						<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+							/>
+						</svg>
+						View on GitHub
+					</a>
+
+					<a
+						href="https://discord.gg/JBF2ySrh2W"
+						class="discord-link"
+						target="_blank"
+						rel="noopener noreferrer"
+					>
+						<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M20.222 0c1.406 0 2.54 1.137 2.607 2.475V24l-2.677-2.273-1.47-1.338-1.604-1.398.67 2.205H3.71c-1.402 0-2.54-1.065-2.54-2.476V2.48C1.17 1.142 2.31.003 3.715.003h16.5L20.222 0zm-6.118 5.683h-.03l-.202.2c2.073.6 3.076 1.537 3.076 1.537-1.336-.668-2.54-1.002-3.744-1.137-.87-.135-1.74-.064-2.475 0h-.2c-.47 0-1.47.2-2.81.735-.467.203-.735.336-.735.336s1.002-1.002 3.21-1.537l-.135-.135s-1.672-.064-3.477 1.27c0 0-1.805 3.144-1.805 7.02 0 0 1 1.74 3.743 1.806 0 0 .4-.533.805-1.002-1.54-.4-2.172-1.27-2.172-1.27s.135.064.336.2h.06c.03 0 .044.015.06.03v.006c.016.016.03.03.06.03.33.136.66.27.93.4.466.202 1.065.403 1.8.536.93.135 1.996.2 3.21 0 .6-.135 1.2-.267 1.8-.535.39-.2.87-.4 1.397-.737 0 0-.6.936-2.205 1.27.33.466.795 1 .795 1 2.744-.06 3.81-1.8 3.87-1.726 0-3.87-1.815-7.02-1.815-7.02-1.635-1.214-3.165-1.26-3.435-1.26l.056-.02zm.168 4.413c.703 0 1.27.6 1.27 1.335 0 .74-.57 1.34-1.27 1.34-.7 0-1.27-.6-1.27-1.34.002-.74.573-1.338 1.27-1.335zm-4.543 0c.7 0 1.266.6 1.266 1.335 0 .74-.57 1.34-1.27 1.34-.7 0-1.27-.6-1.27-1.34 0-.74.57-1.335 1.27-1.335z"
+							/>
+						</svg>
+						Join Discord
+					</a>
+				</div>
+			</div>
+
+			<div class="vercel-footer">
+				<p>
+					Backed by
+					<a href="https://vercel.com" target="_blank" rel="noopener noreferrer"> Vercel</a>
+				</p>
+			</div>
+
+			<script>
+				// Typewriter effect for the code editor
+				const codeContent = `<span class="line-number"> 1</span> <span class="export-keyword">import</span> <span class="brace">{</span> <span class="property">Button</span> <span class="brace">}</span> <span class="export-keyword">from</span> <span class="string">'./Button.tsrx'</span>;
+<span class="line-number"> 2</span> <span class="export-keyword">import</span> <span class="brace">{</span> <span class="property">track</span> <span class="brace">}</span> <span class="export-keyword">from</span> <span class="string">'ripple'</span>;
+<span class="line-number"> 3</span>
+<span class="line-number"> 4</span> <span class="export-keyword">export</span> <span class="keyword">function</span> <span class="function">TodoList</span><span class="brace">(</span><span class="brace">{</span> <span class="property">todos</span>, <span class="property">addTodo</span> <span class="brace">}</span>: <span class="component">Props</span><span class="brace">)</span> <span class="block-brace">@{</span>
+<span class="line-number"> 5</span>   <span class="bracket">&lt;</span><span class="tag">div</span> <span class="attribute">class</span>=<span class="string">"container"</span><span class="bracket">&gt;</span>
+<span class="line-number"> 6</span>     <span class="bracket">&lt;</span><span class="tag">h2</span><span class="bracket">&gt;</span><span class="string">Todo List</span><span class="bracket">&lt;/</span><span class="tag">h2</span><span class="bracket">&gt;</span>
+<span class="line-number"> 7</span>     <span class="bracket">&lt;</span><span class="tag">ul</span><span class="bracket">&gt;</span>
+<span class="line-number"> 8</span>       <span class="control-keyword">@for</span> <span class="brace">(</span><span class="keyword">const</span> <span class="property">todo</span> <span class="keyword">of</span> <span class="ripple-syntax">todos</span>; <span class="keyword">key</span> <span class="property">todo.id</span><span class="brace">)</span> <span class="block-brace">{</span>
+<span class="line-number"> 9</span>         <span class="bracket">&lt;</span><span class="tag">li</span><span class="bracket">&gt;</span><span class="template-brace">{</span><span class="property">todo.text</span><span class="template-brace">}</span><span class="bracket">&lt;/</span><span class="tag">li</span><span class="bracket">&gt;</span>
+<span class="line-number">10</span>       <span class="block-brace">}</span> <span class="control-keyword">@empty</span> <span class="block-brace">{</span>
+<span class="line-number">11</span>         <span class="bracket">&lt;</span><span class="tag">li</span><span class="bracket">&gt;</span><span class="string">No todos yet</span><span class="bracket">&lt;/</span><span class="tag">li</span><span class="bracket">&gt;</span>
+<span class="line-number">12</span>       <span class="block-brace">}</span>
+<span class="line-number">13</span>     <span class="bracket">&lt;/</span><span class="tag">ul</span><span class="bracket">&gt;</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>     <span class="bracket">&lt;</span><span class="component">Button</span> <span class="attribute">onClick</span>=<span class="template-brace">{</span><span class="property">addTodo</span><span class="template-brace">}</span> <span class="attribute">label</span>=<span class="string">"Add Todo"</span> <span class="bracket">/&gt;</span>
+<span class="line-number">16</span>   <span class="bracket">&lt;/</span><span class="tag">div</span><span class="bracket">&gt;</span>
+<span class="line-number">17</span> <span class="block-brace">}</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span> <span class="export-keyword">export</span> <span class="keyword">function</span> <span class="function">Counter</span><span class="brace">()</span> <span class="block-brace">@{</span>
+<span class="line-number">20</span>   <span class="keyword">const</span> <span class="property">count</span> <span class="operator">=</span> <span class="function">track</span><span class="brace">(</span><span class="value">0</span><span class="brace">)</span>;
+<span class="line-number">21</span>   <span class="keyword">const</span> <span class="property">double</span> <span class="operator">=</span> <span class="function">track</span><span class="brace">(</span><span class="brace">()</span> <span class="operator">=&gt;</span> <span class="property">count.value</span> <span class="operator">*</span> <span class="value">2</span><span class="brace">)</span>;
+<span class="line-number">22</span>
+<span class="line-number">23</span>   <span class="bracket">&lt;</span><span class="tag">div</span> <span class="attribute">class</span>=<span class="string">"counter"</span><span class="bracket">&gt;</span>
+<span class="line-number">24</span>     <span class="bracket">&lt;</span><span class="tag">h2</span><span class="bracket">&gt;</span><span class="string">Counter</span><span class="bracket">&lt;/</span><span class="tag">h2</span><span class="bracket">&gt;</span>
+<span class="line-number">25</span>     <span class="bracket">&lt;</span><span class="tag">p</span><span class="bracket">&gt;</span><span class="string">Count: </span><span class="template-brace">{</span><span class="property">count.value</span><span class="template-brace">}</span><span class="bracket">&lt;/</span><span class="tag">p</span><span class="bracket">&gt;</span>
+<span class="line-number">26</span>     <span class="bracket">&lt;</span><span class="tag">p</span><span class="bracket">&gt;</span><span class="string">Double: </span><span class="template-brace">{</span><span class="property">double.value</span><span class="template-brace">}</span><span class="bracket">&lt;/</span><span class="tag">p</span><span class="bracket">&gt;</span>
+<span class="line-number">27</span>     <span class="bracket">&lt;</span><span class="component">Button</span> <span class="attribute">onClick</span>=<span class="template-brace">{</span><span class="brace">()</span> <span class="operator">=&gt;</span> <span class="property">count.value</span><span class="operator">++</span><span class="template-brace">}</span> <span class="attribute">label</span>=<span class="string">"Increment"</span> <span class="bracket">/&gt;</span>
+<span class="line-number">28</span>   <span class="bracket">&lt;/</span><span class="tag">div</span><span class="bracket">&gt;</span>
+<span class="line-number">29</span> <span class="block-brace">}</span>`;
+
+				function typeWriter() {
+					const element = document.getElementById('typewriter-code');
+					if (!element) return;
+
+					let charIndex = 0;
+					const STEP = 40;
+					const INTERVAL = STEP / 2;
+					const CURSOR = '<span class="typing-cursor">|</span>';
+
+					function addChar() {
+						charIndex += STEP;
+
+						if (charIndex < codeContent.length) {
+							element.innerHTML = codeContent.substring(0, charIndex) + CURSOR;
+							setTimeout(addChar, INTERVAL);
+						} else {
+							element.innerHTML = codeContent;
+						}
+					}
+
+					setTimeout(addChar, 1000);
+				}
+
+				window.addEventListener('load', typeWriter);
+			</script>
+		</main>
+	</body>
+</html>

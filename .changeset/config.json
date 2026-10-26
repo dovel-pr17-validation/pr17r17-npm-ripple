@@ -1,0 +1,29 @@
+{
+  "$schema": "https://unpkg.com/@changesets/config@4.0.0/schema.json",
+  "changelog": ["@changesets/changelog-github", { "repo": "Ripple-TS/ripple" }],
+  "commit": false,
+  "fixed": [
+    [
+      "ripple",
+      "@ripple-ts/cli",
+      "create-ripple",
+      "@ripple-ts/adapter",
+      "@ripple-ts/adapter-node",
+      "@ripple-ts/adapter-bun",
+      "@ripple-ts/adapter-vercel",
+      "@ripple-ts/rollup-plugin",
+      "@ripple-ts/vite-plugin"
+    ]
+  ],
+  "linked": [],
+  "access": "public",
+  "baseBranch": "main",
+  "updateInternalDependencies": "patch",
+  "privatePackages": {
+    "version": false,
+    "tag": false
+  },
+  "ignore": [
+    "@ripple-ts/playground"
+  ]
+}

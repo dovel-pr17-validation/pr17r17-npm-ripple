@@ -1,0 +1,1067 @@
+# create-ripple
+
+## 0.4.7
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.4.7
+
+## 0.4.6
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.4.6
+
+## 0.4.5
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.4.5
+
+## 0.4.4
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.4.4
+
+## 0.4.3
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.4.3
+
+## 0.4.2
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.4.2
+
+## 0.4.1
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.4.1
+
+## 0.4.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.4.0
+
+## 0.3.128
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.128
+
+## 0.3.127
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.127
+
+## 0.3.126
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.126
+
+## 0.3.125
+
+### Patch Changes
+
+- Updated dependencies
+  [[`71747c0`](https://github.com/Ripple-TS/ripple/commit/71747c088d549cd3ec85fb78744acf0273b8f6a8)]:
+  - @ripple-ts/cli@0.3.125
+
+## 0.3.124
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.124
+
+## 0.3.123
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.123
+
+## 0.3.122
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.122
+
+## 0.3.121
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.121
+
+## 0.3.120
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.120
+
+## 0.3.119
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.119
+
+## 0.3.118
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.118
+
+## 0.3.117
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.117
+
+## 0.3.116
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.116
+
+## 0.3.115
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.115
+
+## 0.3.114
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.114
+
+## 0.3.113
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.113
+
+## 0.3.112
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.112
+
+## 0.3.111
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.111
+
+## 0.3.110
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.110
+
+## 0.3.109
+
+### Patch Changes
+
+- Updated dependencies
+  [[`99e759d`](https://github.com/Ripple-TS/ripple/commit/99e759d146d9b2488bc6e0e8ae3253f32bb74fba)]:
+  - @ripple-ts/cli@0.3.109
+
+## 0.3.108
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.108
+
+## 0.3.107
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.107
+
+## 0.3.106
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.106
+
+## 0.3.105
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.105
+
+## 0.3.104
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.104
+
+## 0.3.103
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.103
+
+## 0.3.102
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.102
+
+## 0.3.101
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.101
+
+## 0.3.100
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.100
+
+## 0.3.99
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.99
+
+## 0.3.98
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.98
+
+## 0.3.97
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.97
+
+## 0.3.96
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.96
+
+## 0.3.95
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.95
+
+## 0.3.94
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.94
+
+## 0.3.93
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.93
+
+## 0.3.92
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.92
+
+## 0.3.91
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.91
+
+## 0.3.90
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.90
+
+## 0.3.89
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.89
+
+## 0.3.88
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.88
+
+## 0.3.87
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.87
+
+## 0.3.86
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.86
+
+## 0.3.85
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.85
+
+## 0.3.84
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.84
+
+## 0.3.83
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.83
+
+## 0.3.82
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.82
+
+## 0.3.81
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.81
+
+## 0.3.80
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.80
+
+## 0.3.79
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.79
+
+## 0.3.78
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.78
+
+## 0.3.77
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.77
+
+## 0.3.76
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.76
+
+## 0.3.75
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.75
+
+## 0.3.74
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.74
+
+## 0.3.73
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.73
+
+## 0.3.72
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.72
+
+## 0.3.71
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.71
+
+## 0.3.70
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.70
+
+## 0.3.69
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.69
+
+## 0.3.68
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.68
+
+## 0.3.67
+
+### Patch Changes
+
+- [`f568e60`](https://github.com/Ripple-TS/ripple/commit/f568e605e745587af0006f5bc821d88267a86a76)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Add skipLibCheck to the basic
+  template
+
+- Updated dependencies
+  [[`f568e60`](https://github.com/Ripple-TS/ripple/commit/f568e605e745587af0006f5bc821d88267a86a76)]:
+  - @ripple-ts/cli@0.3.67
+
+## 0.3.66
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.66
+
+## 0.3.65
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.65
+
+## 0.3.64
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.64
+
+## 0.3.63
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.63
+
+## 0.3.62
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.62
+
+## 0.3.61
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.61
+
+## 0.3.60
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.60
+
+## 0.3.59
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.59
+
+## 0.3.58
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.58
+
+## 0.3.57
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.57
+
+## 0.3.56
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.56
+
+## 0.3.55
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.55
+
+## 0.3.54
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.54
+
+## 0.3.53
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.53
+
+## 0.3.52
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.52
+
+## 0.3.51
+
+### Patch Changes
+
+- [`f1b1f94`](https://github.com/Ripple-TS/ripple/commit/f1b1f9475553cbe3632a5cc9794a8f54615c29f2)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Patch packages currently
+  versioned at 0.3.50 to fix the bump that caused major 1.0.0 release with a minor
+  changeset.
+
+- Updated dependencies
+  [[`f1b1f94`](https://github.com/Ripple-TS/ripple/commit/f1b1f9475553cbe3632a5cc9794a8f54615c29f2)]:
+  - @ripple-ts/cli@0.3.51
+
+## 0.3.50
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.50
+
+## 0.3.49
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.49
+
+## 0.3.48
+
+### Patch Changes
+
+- Updated dependencies
+  [[`9d437ee`](https://github.com/Ripple-TS/ripple/commit/9d437ee5f3fe108deb5b1334f935990290296246)]:
+  - @ripple-ts/cli@0.3.48
+
+## 0.3.47
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.47
+
+## 0.3.46
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.46
+
+## 0.3.45
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.45
+
+## 0.3.44
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.44
+
+## 0.3.43
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.43
+
+## 0.3.42
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.42
+
+## 0.3.41
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.41
+
+## 0.3.40
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.40
+
+## 0.3.39
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.39
+
+## 0.3.38
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.38
+
+## 0.3.37
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.37
+
+## 0.3.36
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.36
+
+## 0.3.35
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.35
+
+## 0.3.34
+
+### Patch Changes
+
+- [`8e2aa8e`](https://github.com/Ripple-TS/ripple/commit/8e2aa8e75678c9ebc9b72055f4da474c82a8e834)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Add prepare script to the
+  typescript-plugin to make sure dist is published and in general provided. Change
+  the ones that point their main to dist to prepare from prepack to cover more use
+  cases.
+- Updated dependencies
+  [[`8e2aa8e`](https://github.com/Ripple-TS/ripple/commit/8e2aa8e75678c9ebc9b72055f4da474c82a8e834)]:
+  - @ripple-ts/cli@0.3.34
+
+## 0.3.33
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.33
+
+## 0.3.32
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.32
+
+## 0.3.31
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.31
+
+## 0.3.30
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.30
+
+## 0.3.29
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.29
+
+## 0.3.28
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.28
+
+## 0.3.27
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.27
+
+## 0.3.26
+
+### Patch Changes
+
+- [`68d80f8`](https://github.com/Ripple-TS/ripple/commit/68d80f8c7a6398692e00497b90cb3d0ba981aea3)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Correct package versions.
+
+- Updated dependencies
+  [[`5b01246`](https://github.com/Ripple-TS/ripple/commit/5b01246b8e1a3a3c7c9da294f3ebda8c73af3ee7),
+  [`68d80f8`](https://github.com/Ripple-TS/ripple/commit/68d80f8c7a6398692e00497b90cb3d0ba981aea3)]:
+  - @ripple-ts/cli@0.3.26
+
+## 1.0.1
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@1.0.1
+
+## 1.0.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@1.0.0
+
+## 0.3.25
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.25
+
+## 0.3.24
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.24
+
+## 0.3.23
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.23
+
+## 0.3.22
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.22
+
+## 0.3.21
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.21
+
+## 0.3.20
+
+### Patch Changes
+
+- [#879](https://github.com/Ripple-TS/ripple/pull/879)
+  [`7ff7cfa`](https://github.com/Ripple-TS/ripple/commit/7ff7cfad33b2c31f742d410d7e2450066b735d92)
+  Thanks [@RazinShafayet2007](https://github.com/RazinShafayet2007)! - chore: drop
+  Node 20 support
+
+- Updated dependencies
+  [[`7ff7cfa`](https://github.com/Ripple-TS/ripple/commit/7ff7cfad33b2c31f742d410d7e2450066b735d92)]:
+  - @ripple-ts/cli@0.3.20
+
+## 0.3.19
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.19
+
+## 0.3.18
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.18
+
+## 0.3.17
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.17
+
+## 0.3.16
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.16
+
+## 0.3.15
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.15
+
+## 0.3.14
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.14
+
+## 0.3.13
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.13
+
+## 0.3.12
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.12
+
+## 0.3.11
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.11
+
+## 0.3.10
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.10
+
+## 0.3.9
+
+### Patch Changes
+
+- Updated dependencies
+  [[`3c1263a`](https://github.com/Ripple-TS/ripple/commit/3c1263a0fc9c0cc4466ae4e1ea94b5a49b03728f)]:
+  - @ripple-ts/cli@0.3.9
+
+## 0.3.8
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.8
+
+## 0.3.7
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.7
+
+## 0.3.6
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.6
+
+## 0.3.5
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.5
+
+## 0.3.4
+
+### Patch Changes
+
+- [#807](https://github.com/Ripple-TS/ripple/pull/807)
+  [`56cdf54`](https://github.com/Ripple-TS/ripple/commit/56cdf54afb1b96e49faa273c18e0489ad70897b2)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Upgrade to Vite 8
+
+- Updated dependencies
+  [[`56cdf54`](https://github.com/Ripple-TS/ripple/commit/56cdf54afb1b96e49faa273c18e0489ad70897b2)]:
+  - @ripple-ts/cli@0.3.4
+
+## 0.3.3
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.3
+
+## 0.3.2
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.2
+
+## 0.3.1
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.1
+
+## 0.3.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.3.0
+
+## 0.2.216
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.2.216
+
+## 0.2.215
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.2.215
+
+## 0.2.214
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.2.214
+
+## 0.2.213
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.2.213
+
+## 0.2.212
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.2.212
+
+## 0.2.211
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.2.211
+
+## 0.2.210
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.2.210
+
+## 0.2.209
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/cli@0.2.209

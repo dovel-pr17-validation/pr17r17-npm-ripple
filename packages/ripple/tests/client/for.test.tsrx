@@ -1,0 +1,710 @@
+import { RippleArray, flushSync, track } from 'ripple';
+import { compile } from '@tsrx/ripple';
+
+describe('for statements', () => {
+	it('renders a simple static array', () => {
+		function App() @{
+			const items = ['Item 1', 'Item 2', 'Item 3'];
+			@for (const item of items) {
+				<div class={item}>{item}</div>
+			}
+		}
+
+		render(App);
+
+		expect(container).toMatchSnapshot();
+	});
+
+	it('allows plain JavaScript control flow in setup when rendered output follows', () => {
+		expect(
+			() => compile(
+				`function App() @{
+					const items = [1, 2, 3];
+					const content = [];
+					for (const item of items) {
+						content.push(<div class="selected">{item}</div>);
+					}
+					<>{content}</>
+				}`,
+				'App.tsrx',
+				{ mode: 'client' },
+			),
+		).not.toThrow();
+	});
+
+	it('renders filtered items before passing them to @for', () => {
+		function App() @{
+			const items = ['Item 1', '', 'Item 3'].filter(Boolean);
+			@for (const item of items) {
+				<div class="item">{item}</div>
+			}
+		}
+
+		render(App);
+
+		expect(Array.from(container.querySelectorAll('.item')).map((el) => el.textContent)).toEqual([
+			'Item 1',
+			'Item 3',
+		]);
+	});
+
+	it('renders an empty fallback', () => {
+		function App() @{
+			const items: string[] = [];
+			@for (const item of items) {
+				<div class="item">{item}</div>
+			} @empty {
+				<div class="empty">{'No items'}</div>
+			}
+		}
+
+		render(App);
+
+		expect(container.querySelector('.empty').textContent).toBe('No items');
+		expect(container.querySelector('.item')).toBeNull();
+	});
+
+	it('throws for continue statements inside for...of loops', () => {
+		expect(
+			() => compile(
+				`function App() @{
+				const items = ['Item 1', '', 'Item 3'];
+				@for (const item of items) {
+					if (!item) continue;
+					<div class="item">{item}</div>
+				}
+			}`,
+				'App.tsrx',
+				{ mode: 'client' },
+			),
+		).toThrow('Continue statements are not allowed inside TSRX template for...of loops');
+	});
+
+	it('renders a simple dynamic array', () => {
+		function App() @{
+			const items = new RippleArray('Item 1', 'Item 2', 'Item 3');
+			<>
+				@for (const item of items) {
+					<div class={item}>{item}</div>
+				}
+				<button onClick={() => items.push(`Item ${items.length + 1}`)}>{'Add Item'}</button>
+			</>
+		}
+
+		render(App);
+		expect(container).toMatchSnapshot();
+
+		const button = container.querySelector('button');
+
+		button.click();
+		flushSync();
+
+		expect(container).toMatchSnapshot();
+	});
+
+	it('correctly handles intermediate statements in for block', () => {
+		function App() @{
+			const items = new RippleArray(1, 2, 3);
+			<>
+				<div>
+					@for (const item of items) {
+						const some_text = item;
+						<div>
+							<div>{item}</div>
+							<div>{some_text}</div>
+						</div>
+					}
+				</div>
+				<button onClick={() => items.push(items.length + 1)}>{'Add Item'}</button>
+			</>
+		}
+
+		render(App);
+
+		expect(container).toMatchSnapshot();
+
+		const button = container.querySelector('button');
+
+		button.click();
+		flushSync();
+
+		expect(container).toMatchSnapshot();
+	});
+
+	it('correctly handles the index in a for...of loop', () => {
+		function App() @{
+			const items = new RippleArray('a', 'b', 'c');
+			<>
+				<div>
+					@for (let item of items; index i) {
+						<div>{i + ' : ' + item}</div>
+					}
+				</div>
+				<button
+					onClick={() => items.push(String.fromCharCode(97 + items.length))}
+				>{'Add Item'}</button>
+				<button onClick={() => items.reverse()}>{'Reverse'}</button>
+			</>
+		}
+
+		render(App);
+
+		expect(container).toMatchSnapshot();
+
+		const [button, button2] = container.querySelectorAll('button');
+
+		button.click();
+		flushSync();
+
+		expect(container).toMatchSnapshot();
+
+		button2.click();
+		flushSync();
+
+		expect(container).toMatchSnapshot();
+	});
+
+	it('correctly handles keyed for...of loops', () => {
+		function App() @{
+			const items = track([
+				{ id: 1, text: 'Item 1' },
+				{ id: 2, text: 'Item 2' },
+				{ id: 3, text: 'Item 3' },
+			]);
+			<>
+				@for (let item of items.value; index i; key item.id) {
+					<div>{i + ':' + item.text}</div>
+				}
+				<button
+					onClick={() => {
+						items.value = items.value.toReversed();
+					}}
+				>{'Reverse'}</button>
+			</>
+		}
+
+		render(App);
+
+		expect(container).toMatchSnapshot();
+
+		const button = container.querySelector('button');
+
+		button.click();
+		flushSync();
+
+		expect(container).toMatchSnapshot();
+	});
+
+	it('keyed by identity re-reads a plain array mutated in place', () => {
+		const list = [{ id: 1 }, { id: 2 }, { id: 3 }];
+		let bump = () => {};
+
+		function App() @{
+			const version = track(0);
+			bump = () => {
+				version.value = version.value + 1;
+			};
+			<ul>
+				@for (const item of (version.value, list); key item) {
+					<li>{item.id}</li>
+				}
+			</ul>
+		}
+
+		render(App);
+		const texts = () => Array.from(container.querySelectorAll('li'), (el) => el.textContent);
+		expect(texts()).toEqual(['1', '2', '3']);
+
+		list.push({ id: 4 });
+		bump();
+		flushSync();
+		expect(texts()).toEqual(['1', '2', '3', '4']);
+
+		list.splice(0, 1);
+		bump();
+		flushSync();
+		expect(texts()).toEqual(['2', '3', '4']);
+
+		list.reverse();
+		bump();
+		flushSync();
+		expect(texts()).toEqual(['4', '3', '2']);
+
+		list.splice(1, 1, { id: 5 });
+		bump();
+		flushSync();
+		expect(texts()).toEqual(['4', '5', '2']);
+	});
+
+	it('keyed for over derived updates sibling text nodes', () => {
+		function App() @{
+			const count = track(0);
+			const items = track(
+				() => Array.from({ length: count.value }).map((_, id) => ({ id, label: `Item ${id}` })),
+			);
+			<>
+				<button
+					onClick={() => {
+						count.value++;
+					}}
+				>{'Add'}</button>
+				@for (const item of items.value; key item.id) {
+					<div class="item">{item.label}</div>
+				}
+				<p class="count">{count.value}</p>
+			</>
+		}
+
+		render(App);
+
+		const button = container.querySelector('button');
+
+		expect(container.querySelector('.count').textContent).toBe('0');
+		expect(container.querySelectorAll('.item').length).toBe(0);
+
+		button.click();
+		flushSync();
+
+		expect(container.querySelector('.count').textContent).toBe('1');
+		expect(container.querySelectorAll('.item').length).toBe(1);
+
+		button.click();
+		flushSync();
+
+		expect(container.querySelector('.count').textContent).toBe('2');
+		expect(container.querySelectorAll('.item').length).toBe(2);
+	});
+
+	it('keyed for inserts multiple new items in the middle in correct order', () => {
+		function App() @{
+			const items = track([
+				{ id: 'a', text: 'A' },
+				{ id: 'c', text: 'C' },
+				{ id: 'd', text: 'D' },
+			]);
+			<>
+				@for (const item of items.value; key item.id) {
+					<div class="item">{item.text}</div>
+				}
+				<button
+					onClick={() => {
+						items.value = [
+							{ id: 'a', text: 'A' },
+							{ id: 'b1', text: 'B1' },
+							{ id: 'b2', text: 'B2' },
+							{ id: 'c', text: 'C' },
+							{ id: 'd', text: 'D' },
+						];
+					}}
+				>{'Insert'}</button>
+			</>
+		}
+
+		render(App);
+
+		const getTexts = () => Array.from(container.querySelectorAll('.item')).map(
+			(el) => el.textContent,
+		);
+
+		expect(getTexts()).toEqual(['A', 'C', 'D']);
+
+		container.querySelector('button').click();
+		flushSync();
+
+		expect(getTexts()).toEqual(['A', 'B1', 'B2', 'C', 'D']);
+	});
+
+	it('ref-based for inserts multiple new items in the middle in correct order', () => {
+		const a = { text: 'A' };
+		const c = { text: 'C' };
+		const d = { text: 'D' };
+
+		function App() @{
+			const items = track([a, c, d]);
+			<>
+				@for (const item of items.value) {
+					<div class="item">{item.text}</div>
+				}
+				<button
+					onClick={() => {
+						items.value = [a, { text: 'B1' }, { text: 'B2' }, c, d];
+					}}
+				>{'Insert'}</button>
+			</>
+		}
+
+		render(App);
+
+		const getTexts = () => Array.from(container.querySelectorAll('.item')).map(
+			(el) => el.textContent,
+		);
+
+		expect(getTexts()).toEqual(['A', 'C', 'D']);
+
+		container.querySelector('button').click();
+		flushSync();
+
+		expect(getTexts()).toEqual(['A', 'B1', 'B2', 'C', 'D']);
+	});
+
+	it('keyed for with 32+ items: full reversal updates values via Map path', () => {
+		function App() @{
+			const items = track(Array.from({ length: 40 }, (_, i) => ({ id: i, text: `Item ${i}` })));
+			<>
+				<div>
+					@for (let item of items.value; index idx; key item.id) {
+						<span class="item">{idx + ':' + item.text}</span>
+					}
+				</div>
+				<button
+					onClick={() => {
+						items.value = items.value.toReversed();
+					}}
+				>{'Reverse'}</button>
+			</>
+		}
+
+		render(App);
+
+		const getTexts = () => Array.from(container.querySelectorAll('.item')).map(
+			(el) => el.textContent,
+		);
+
+		expect(getTexts()).toEqual(Array.from({ length: 40 }, (_, i) => `${i}:Item ${i}`));
+
+		container.querySelector('button').click();
+		flushSync();
+
+		expect(getTexts()).toEqual(Array.from({ length: 40 }, (_, i) => `${i}:Item ${39 - i}`));
+	});
+
+	it('handles updating with new objects with same key', () => {
+		function App() @{
+			const items = track([
+				{ id: 1, text: 'Item 1' },
+				{ id: 2, text: 'Item 2' },
+				{ id: 3, text: 'Item 3' },
+			]);
+			<>
+				@for (let item of items.value; index i; key item.id) {
+					<div>{i + ':' + item.text}</div>
+				}
+				<button
+					onClick={() => {
+						items.value[0].id = 3;
+						items.value[1].id = 2;
+						items.value[2].id = 1;
+
+						items.value = [
+							{ ...items.value[0], text: 'Item 1!' },
+							{ ...items.value[1], text: 'Item 2!' },
+							{ ...items.value[2], text: 'Item 3!' },
+						];
+					}}
+				>{'Reverse'}</button>
+			</>
+		}
+
+		render(App);
+		expect(container).toMatchSnapshot();
+
+		const button = container.querySelector('button');
+		button.click();
+		flushSync();
+
+		expect(container).toMatchSnapshot();
+	});
+
+	it('ref-based for with 32+ items: remove from start with shared refs via Map path', () => {
+		const objects = Array.from({ length: 50 }, (_, i) => ({ id: i, text: `Obj ${i}` }));
+
+		function App() @{
+			const items = track(objects.slice());
+			<>
+				<div>
+					@for (const item of items.value) {
+						<span class="item">{item.text}</span>
+					}
+				</div>
+				<button
+					onClick={() => {
+						items.value = objects.slice(15).reverse();
+					}}
+				>{'Trim and reverse'}</button>
+			</>
+		}
+
+		render(App);
+
+		const getTexts = () => Array.from(container.querySelectorAll('.item')).map(
+			(el) => el.textContent,
+		);
+
+		expect(getTexts()).toEqual(objects.map((o) => o.text));
+
+		container.querySelector('button').click();
+		flushSync();
+
+		expect(getTexts()).toEqual(objects.slice(15).reverse().map((o) => o.text));
+	});
+
+	it('renders the index and the key from a function that returns its template', () => {
+		function Plain({ items }) {
+			return <ul>
+				@for (const item of items) {
+					<li class="plain">{item.text}</li>
+				}
+			</ul>;
+		}
+
+		function Indexed({ items }) {
+			return <ul>
+				@for (const item of items; index i) {
+					<li class="indexed">{i + ': ' + item.text}</li>
+				}
+			</ul>;
+		}
+
+		function Keyed({ items }) {
+			return <ul>
+				@for (const item of items; key item.id) {
+					<li class="keyed">{item.text}</li>
+				}
+			</ul>;
+		}
+
+		function IndexedAndKeyed({ items }) {
+			return <ul>
+				@for (const item of items; index i; key item.id) {
+					<li class="indexed-keyed">{i + ': ' + item.text}</li>
+				}
+			</ul>;
+		}
+
+		const Arrow = ({ items }) => <ul>
+			@for (const item of items; index i) {
+				<li class="arrow">{i + ': ' + item.text}</li>
+			}
+		</ul>;
+
+		function App() @{
+			const items = [
+				{ id: 1, text: 'a' },
+				{ id: 2, text: 'b' },
+			];
+			<>
+				<Plain {items} />
+				<Indexed {items} />
+				<Keyed {items} />
+				<IndexedAndKeyed {items} />
+				<Arrow {items} />
+			</>
+		}
+
+		render(App);
+
+		const texts = (selector) => Array.from(container.querySelectorAll(selector)).map(
+			(el) => el.textContent,
+		);
+
+		expect(texts('.plain')).toEqual(['a', 'b']);
+		expect(texts('.indexed')).toEqual(['0: a', '1: b']);
+		expect(texts('.keyed')).toEqual(['a', 'b']);
+		expect(texts('.indexed-keyed')).toEqual(['0: a', '1: b']);
+		expect(texts('.arrow')).toEqual(['0: a', '1: b']);
+	});
+
+	it('renders the index and the key from a template held in a variable', () => {
+		function Indexed({ items }) {
+			const list = <ul>
+				@for (const item of items; index i) {
+					<li class="indexed">{i + ': ' + item.text}</li>
+				}
+			</ul>;
+			return list;
+		}
+
+		function Keyed({ items }) {
+			return [
+				<ul>
+					@for (const item of items; key item.id) {
+						<li class="keyed">{item.text}</li>
+					}
+				</ul>,
+			];
+		}
+
+		function App() @{
+			const items = [
+				{ id: 1, text: 'a' },
+				{ id: 2, text: 'b' },
+			];
+			<>
+				<Indexed {items} />
+				<Keyed {items} />
+			</>
+		}
+
+		render(App);
+
+		const texts = (selector) => Array.from(container.querySelectorAll(selector)).map(
+			(el) => el.textContent,
+		);
+
+		expect(texts('.indexed')).toEqual(['0: a', '1: b']);
+		expect(texts('.keyed')).toEqual(['a', 'b']);
+	});
+
+	it('renders a bare `@for` held in a variable through an expression', () => {
+		function Returned({ items }) {
+			const yo = @for (const item of items; index i; key item.id) {
+				<li class="returned">{i + ': ' + item.text}</li>
+			};
+			return <ul>{yo}</ul>;
+		}
+
+		function Held({ items }) {
+			const yo = @for (const item of items; index i) {
+				<li class="held">{i + ': ' + item.text}</li>
+			};
+			const list = <ul>{yo}</ul>;
+			return list;
+		}
+
+		function App() @{
+			const items = [
+				{ id: 1, text: 'a' },
+				{ id: 2, text: 'b' },
+			];
+			<>
+				<Returned {items} />
+				<Held {items} />
+			</>
+		}
+
+		render(App);
+
+		const texts = (selector) => Array.from(container.querySelectorAll(selector)).map(
+			(el) => el.textContent,
+		);
+
+		expect(texts('.returned')).toEqual(['0: a', '1: b']);
+		expect(texts('.held')).toEqual(['0: a', '1: b']);
+	});
+
+	it('reads rest and default pattern names off the per-key item as it changes', () => {
+		type Row = { id: number; name: string; tags?: string[] };
+		let replace: (rows: Row[]) => void = () => {};
+
+		function App() @{
+			const rows = track<Row[]>([
+				{ id: 1, name: 'one', tags: ['a', 'b'] },
+			]);
+			replace = (next) => {
+				rows.value = next;
+			};
+			<ul>
+				@for (const { id, ...rest } of rows.value; key id) {
+					<li>{rest.name}</li>
+				}
+				@for (const [head, second = 'none', ...others] of rows.value.map(
+					(row) => row.tags ?? [],
+				); key head) {
+					<li>{head + ':' + second + ':' + others.length}</li>
+				}
+			</ul>
+		}
+
+		render(App);
+		const items = () => [...container.querySelectorAll('li')].map((li) => li.textContent);
+		expect(items()).toEqual(['one', 'a:b:0']);
+
+		// A new object under the same key updates the existing block in place.
+		replace([
+			{ id: 1, name: 'uno', tags: ['a'] },
+		]);
+		flushSync();
+		expect(items()).toEqual(['uno', 'a:none:0']);
+	});
+
+	it('destructures a keyed item once per change, so defaults run once', () => {
+		type Row = { id: number; label?: string };
+		let replace: (rows: Row[]) => void = () => {};
+		let defaults = 0;
+		const next = () => `default ${++defaults}`;
+
+		function App() @{
+			const rows = track<Row[]>([{ id: 1 }]);
+			replace = (next) => {
+				rows.value = next;
+			};
+			<ul>
+				@for (const { id, label = next() } of rows.value; key id) {
+					<li>{label + '/' + label + '/' + id}</li>
+				}
+			</ul>
+		}
+
+		render(App);
+		const items = () => [...container.querySelectorAll('li')].map((li) => li.textContent);
+		// Two reads of `label`, one evaluation of its default.
+		expect(items()).toEqual(['default 1/default 1/1']);
+		expect(defaults).toBe(1);
+
+		replace([{ id: 1 }]);
+		flushSync();
+		expect(items()).toEqual(['default 2/default 2/1']);
+		expect(defaults).toBe(2);
+
+		replace([
+			{ id: 1, label: 'given' },
+		]);
+		flushSync();
+		expect(items()).toEqual(['given/given/1']);
+		expect(defaults).toBe(2);
+	});
+
+	it('reads rest pattern names inside a hoisted branch of a keyed loop', () => {
+		type Row = { id: number; name: string };
+		let replace: (rows: Row[]) => void = () => {};
+		let toggle: () => void = () => {};
+
+		function App() @{
+			const rows = track<Row[]>([
+				{ id: 1, name: 'one' },
+			]);
+			const show = track(true);
+			replace = (next) => {
+				rows.value = next;
+			};
+			toggle = () => {
+				show.value = !show.value;
+			};
+			<ul>
+				@for (const { id, ...rest } of rows.value; key id) {
+					@if (show.value) {
+						<li>{rest.name}</li>
+					}
+				}
+			</ul>
+		}
+
+		render(App);
+		const items = () => [...container.querySelectorAll('li')].map((li) => li.textContent);
+		expect(items()).toEqual(['one']);
+
+		replace([
+			{ id: 1, name: 'uno' },
+		]);
+		flushSync();
+		expect(items()).toEqual(['uno']);
+
+		toggle();
+		flushSync();
+		expect(items()).toEqual([]);
+
+		toggle();
+		flushSync();
+		expect(items()).toEqual(['uno']);
+	});
+});

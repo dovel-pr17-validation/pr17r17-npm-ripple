@@ -1,0 +1,381 @@
+import type { Derived, Tracked, Props } from 'ripple';
+import { effect, flushSync, track, trackReadOnly } from 'ripple';
+
+describe('composite > props', () => {
+	it('hands a child a read-only view through trackReadOnly()', () => {
+		function Child({ count }: { count: Derived<number> }) @{
+			<span class="child">{count.value}</span>
+		}
+
+		function App() @{
+			const count = track(0);
+			<>
+				<Child count={trackReadOnly(count)} />
+				<button onClick={() => count.value++}>{'inc'}</button>
+			</>
+		}
+
+		render(App);
+		flushSync();
+		expect(container.querySelector('.child').textContent).toBe('0');
+
+		container.querySelector('button').click();
+		flushSync();
+		expect(container.querySelector('.child').textContent).toBe('1');
+	});
+
+	it('returns a read-only derived from trackReadOnly() as is and wraps a writable one', () => {
+		function App() @{
+			const count = track(1);
+			const double = track(() => count.value * 2);
+			const draft = track(() => count.value, undefined, true);
+			const double_view = trackReadOnly(double);
+			const draft_view = trackReadOnly(draft);
+			expect(double_view).toBe(double);
+			expect(draft_view).not.toBe(draft);
+			<>
+				<span class="draft">{draft.value}</span>
+				<span class="view">{draft_view.value}</span>
+				<button onClick={() => (draft.value = 42)}>{'write'}</button>
+			</>
+		}
+
+		render(App);
+		flushSync();
+		expect(container.querySelector('.view').textContent).toBe('1');
+
+		// A write to the writable derived is visible through its view.
+		container.querySelector('button').click();
+		flushSync();
+		expect(container.querySelector('.draft').textContent).toBe('42');
+		expect(container.querySelector('.view').textContent).toBe('42');
+	});
+
+	it('releases a trackReadOnly() view with the block that created it', () => {
+		let set_rows: (rows: number[]) => void = () => {};
+		let bump: () => void = () => {};
+		let source: Tracked<number> | undefined;
+
+		function Child({ count }: { count: Derived<number> }) @{
+			<span class="child">{count.value}</span>
+		}
+
+		function App() @{
+			const count = track(0);
+			const rows = track<number[]>([]);
+			source = count;
+			set_rows = (next) => {
+				rows.value = next;
+			};
+			bump = () => {
+				count.value++;
+			};
+			<ul>
+				@for (const row of rows.value; key row) {
+					<li>
+						<Child count={trackReadOnly(count)} />
+					</li>
+				}
+			</ul>
+		}
+
+		// Each view is a derived subscribed to the source; the subscriber list is
+		// the runtime's own (`sb` / `sn`).
+		const subscribers = () => {
+			let n = 0;
+			for (let d = (source as any).sb; d !== null; d = d.sn) n++;
+			return n;
+		};
+
+		render(App);
+		flushSync();
+		expect(subscribers()).toBe(0);
+
+		set_rows([1, 2, 3]);
+		flushSync();
+		expect(container.querySelectorAll('.child').length).toBe(3);
+		expect(subscribers()).toBe(3);
+
+		// Removing the items destroys the blocks that created the views, so the
+		// next write to the source prunes them instead of keeping them alive.
+		set_rows([]);
+		flushSync();
+		bump();
+		flushSync();
+		expect(container.querySelectorAll('.child').length).toBe(0);
+		expect(subscribers()).toBe(0);
+	});
+
+	it('keeps a trackReadOnly() view from writing through to its source', () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		try {
+			function App() @{
+				const count = track(1);
+				const view = trackReadOnly(count);
+				const write = () => {
+					view.value = 99;
+				};
+				<>
+					<span class="source">{count.value}</span>
+					<span class="view">{view.value}</span>
+					<button onClick={write}>{'write'}</button>
+				</>
+			}
+
+			render(App);
+			flushSync();
+			container.querySelector('button').click();
+			flushSync();
+
+			// The write warned in development and never reached the source.
+			expect(warn).toHaveBeenCalledWith(expect.stringContaining('read-only derived'));
+			expect(container.querySelector('.source').textContent).toBe('1');
+		} finally {
+			warn.mockRestore();
+		}
+	});
+
+	it('correctly handles default prop values', () => {
+		function Child({ foo = 456 }) @{
+			<div>{foo}</div>
+		}
+
+		function App() @{
+			const foo = track(123);
+			<>
+				<Child />
+				<Child foo={foo.value} />
+			</>
+		}
+
+		render(App);
+
+		expect(container.querySelectorAll('div')[0].textContent).toBe('456');
+		expect(container.querySelectorAll('div')[1].textContent).toBe('123');
+	});
+
+	it('correctly handles default prop values #2', () => {
+		function Child({ foo = 456 }) @{
+			<div>{foo}</div>
+		}
+
+		function App() @{
+			let foo = 123;
+			<>
+				<Child />
+				<Child {foo} />
+			</>
+		}
+
+		render(App);
+
+		expect(container.querySelectorAll('div')[0].textContent).toBe('456');
+		expect(container.querySelectorAll('div')[1].textContent).toBe('123');
+	});
+
+	it('correctly handles no props', () => {
+		function Child(props: { foo?: Tracked<number> }) @{
+			<div>
+				{props.foo?.value}
+			</div>
+		}
+
+		function App() @{
+			let foo = track(123);
+			<>
+				<Child />
+				<Child {foo} />
+			</>
+		}
+
+		render(App);
+
+		expect(container.querySelectorAll('div')[0].textContent).toBe('');
+		expect(container.querySelectorAll('div')[1].textContent).toBe('123');
+	});
+
+	it('correctly handles no props #2', () => {
+		function Child({ foo }: { foo?: number }) @{
+			<div>{foo}</div>
+		}
+
+		function App() @{
+			const foo = track(123);
+			<>
+				<Child />
+				<Child foo={foo.value} />
+			</>
+		}
+
+		render(App);
+
+		expect(container.querySelectorAll('div')[0].textContent).toBe('');
+		expect(container.querySelectorAll('div')[1].textContent).toBe('123');
+	});
+
+	it('mutating a tracked value prop should work as intended', () => {
+		const logs: number[] = [];
+
+		function Counter({ count }: { count: Tracked<number> }) @{
+			effect(() => {
+				logs.push(count.value);
+			});
+			<button onClick={() => (count.value = count.value + 1)}>{'+'}</button>
+		}
+
+		function App() @{
+			const count = track(0);
+			<div>
+				<Counter {count} />
+			</div>
+		}
+
+		render(App);
+		flushSync();
+
+		expect(logs).toEqual([0]);
+
+		const button = container.querySelector('button');
+		button.click();
+		flushSync();
+
+		expect(logs).toEqual([0, 1]);
+	});
+
+	it('correctly retains prop accessors and reactivity when using rest props', () => {
+		function Button({ children, ...rest }: Props) @{
+			<>
+				<button {...rest}>{children}</button>
+				<style>
+					.on {
+						color: blue;
+					}
+					.off {
+						color: red;
+					}
+				</style>
+			</>
+		}
+
+		function Toggle({ pressed, ...rest }: { pressed: Tracked<boolean> }) @{
+			const onClick = () => (pressed.value = !pressed.value);
+			<>
+				<Button
+					{...rest}
+					class={track(() => (pressed.value ? 'on' : 'off'))}
+					{onClick}
+				>{'button 1'}</Button>
+				<Button class={track(() => (pressed.value ? 'on' : 'off'))} {onClick}>{'button 2'}</Button>
+			</>
+		}
+
+		function App() @{
+			const pressed = track(true);
+			<Toggle {pressed} />
+		}
+
+		render(App);
+		const button1 = container.querySelectorAll('button')[0];
+
+		const button2 = container.querySelectorAll('button')[1];
+
+		expect(button1.className).toContain('on');
+		expect(button2.className).toContain('on');
+
+		button1.click();
+		flushSync();
+
+		expect(button1.className).toContain('off');
+		expect(button2.className).toContain('off');
+	});
+
+	it('correctly renders destructured props', () => {
+		interface ProductInfo {
+			id: string;
+			name: string;
+			organizationName: string;
+			description: string;
+			imageUrl: string;
+			price: number;
+		}
+
+		function Product({ id, name, organizationName, description, imageUrl, price }: ProductInfo) @{
+			<article class="no-padding">
+				<img class="responsive small" src={imageUrl} alt={name} />
+				<span>{id}</span>
+				<h5>{name}</h5>
+				<h3>{organizationName}</h3>
+				<p>{description}</p>
+				<price class="price">{price}</price>
+			</article>
+		}
+
+		function App() @{
+			<Product
+				id="1"
+				name="Product 1"
+				organizationName="Org 1"
+				description="Description 1"
+				imageUrl="https://picsum.photos/300/200"
+				price={15}
+			/>
+		}
+
+		render(App);
+
+		expect(container.querySelector('img').getAttribute('src')).toBe(
+			'https://picsum.photos/300/200',
+		);
+		expect(container.querySelector('span').textContent).toBe('1');
+		expect(container.querySelector('h5').textContent).toBe('Product 1');
+		expect(container.querySelector('h3').textContent).toBe('Org 1');
+		expect(container.querySelector('p').textContent).toBe('Description 1');
+		expect(container.querySelector('price').textContent).toBe('15');
+	});
+
+	it('renders a template element passed inline as a prop', () => {
+		function Child(props: { header: unknown }) @{
+			<div>{props.header}</div>
+		}
+
+		function App() @{
+			<Child header={<h1>{'hello'}</h1>} />
+		}
+
+		render(App);
+		expect(container.querySelector('div h1').textContent).toBe('hello');
+	});
+
+	it('updates control flow inside an element passed inline as a prop', () => {
+		function Child(props: { header: unknown }) @{
+			<div>{props.header}</div>
+		}
+
+		function App() @{
+			const ok = track(true);
+			<>
+				<button
+					onClick={() => {
+						ok.value = !ok.value;
+					}}
+				>{'toggle'}</button>
+				<Child
+					header={<h1>
+						@if (ok.value) {
+							<span>{'yes'}</span>
+						} @else {
+							<span>{'no'}</span>
+						}
+					</h1>}
+				/>
+			</>
+		}
+
+		render(App);
+		expect(container.querySelector('div h1 span').textContent).toBe('yes');
+
+		container.querySelector('button').click();
+		flushSync();
+		expect(container.querySelector('div h1 span').textContent).toBe('no');
+	});
+});

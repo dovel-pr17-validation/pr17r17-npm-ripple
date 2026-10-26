@@ -1,0 +1,20 @@
+{
+  "name": "solid-news-bench",
+  "private": true,
+  "type": "module",
+  "version": "0.0.0",
+  "description": "news-site SSR+hydration bench fixture for Solid 2.0 (authored in .tsrx, compiled via @tsrx/solid).",
+  "scripts": {
+    "dev": "vite --host --port 5192 --strictPort"
+  },
+  "dependencies": {
+    "@solidjs/web": "catalog:benchmarks",
+    "solid-js": "catalog:benchmarks"
+  },
+  "devDependencies": {
+    "@tsrx/solid": "catalog:benchmarks",
+    "@tsrx/vite-plugin-solid": "catalog:benchmarks",
+    "vite": "catalog:benchmarks",
+    "vite-plugin-solid": "catalog:benchmarks"
+  }
+}

@@ -1,0 +1,150 @@
+// @ts-nocheck
+import * as _$_ from 'ripple/internal/client';
+
+var root_1 = _$_.template_el('div', ['class', 'portal-content'], 'Portal content');
+var root = _$_.template_el('div', ['class', 'container'], [['h1', null, 'Main Content']]);
+
+function SimplePortal_render(__anchor, __block) {
+	var div = root();
+
+	{
+		var h1 = _$_.hydrating ? _$_.hydrate_child() : div.firstChild;
+		var node = _$_.hydrating ? _$_.hydrate_sibling() : _$_.append_into(div);
+
+		_$_.portal(node, () => typeof document !== 'undefined' ? document.body : null, (__anchor, __block) => {
+			var div_1 = root_1();
+
+			_$_.append(__anchor, div_1);
+		});
+
+		_$_.hydrating && _$_.pop(div);
+	}
+
+	_$_.append(__anchor, div);
+}
+
+SimplePortal[_$_.$r] = SimplePortal_render;
+
+var root_3 = _$_.template_el('div', ['class', 'portal-content'], 'Portal is visible');
+
+function consequent(__anchor) {
+	_$_.portal(__anchor, () => typeof document !== 'undefined' ? document.body : null, (__anchor, __block) => {
+		var div_3 = root_3();
+
+		_$_.append(__anchor, div_3);
+	});
+}
+
+function if_1(show) {
+	if (show.value) return consequent;
+}
+
+var root_2 = _$_.template_el('div', ['class', 'container'], [['button', ['class', 'toggle'], 'Toggle']]);
+
+function render(__prev) {
+	var __a = if_1(__prev._a);
+
+	if (__prev.a !== __a) {
+		_$_.if_update(__prev._b, __prev.a = __a);
+	}
+}
+
+function ConditionalPortal_render(__anchor, __block) {
+	const show = _$_.track(true, __block, 'm1ectw');
+	var div_2 = root_2();
+
+	{
+		var button = _$_.hydrating ? _$_.hydrate_child() : div_2.firstChild;
+
+		button.__click = () => show.value = !show.value;
+
+		var node_1 = _$_.hydrating ? _$_.hydrate_sibling() : _$_.append_into(div_2, true);
+		var ifs = _$_.if_static(node_1, if_1, 0, show);
+
+		_$_.hydrating && _$_.pop(div_2);
+	}
+
+	_$_.render(render, { a: _$_.UNINITIALIZED, _a: show, _b: ifs });
+	_$_.append(__anchor, div_2);
+}
+
+ConditionalPortal[_$_.$r] = ConditionalPortal_render;
+
+var root_5 = _$_.template_el('div', ['class', 'portal-content'], 'Modal content');
+
+var root_4 = _$_.template_el('div', null, [
+	['div', ['class', 'main-content'], 'Main page content'],
+	['div', ['class', 'footer'], 'Footer']
+]);
+
+function PortalWithMainContent_render(__anchor, __block) {
+	var div_4 = root_4();
+
+	{
+		var div_5 = _$_.hydrating ? _$_.hydrate_child() : div_4.firstChild;
+		var node_2 = _$_.hydrating ? _$_.hydrate_sibling() : div_5.nextSibling;
+
+		_$_.portal(node_2, () => typeof document !== 'undefined' ? document.body : null, (__anchor, __block) => {
+			var div_6 = root_5();
+
+			_$_.append(__anchor, div_6);
+		});
+
+		_$_.hydrating && _$_.pop(div_4);
+	}
+
+	_$_.append(__anchor, div_4);
+}
+
+PortalWithMainContent[_$_.$r] = PortalWithMainContent_render;
+
+var root_7 = _$_.template_el('div', ['class', 'portal-content'], 'Portal content');
+
+var root_6 = _$_.template_el('div', ['class', 'outer'], [
+	[
+		'div',
+		['class', 'inner'],
+		[['span', null, 'Nested content']]
+	]
+]);
+
+function NestedContentWithPortal_render(__anchor, __block) {
+	var div_7 = root_6();
+
+	{
+		var div_8 = _$_.hydrating ? _$_.hydrate_child() : div_7.firstChild;
+		var node_3 = _$_.hydrating ? _$_.hydrate_sibling() : _$_.append_into(div_7);
+
+		_$_.portal(node_3, () => typeof document !== 'undefined' ? document.body : null, (__anchor, __block) => {
+			var div_9 = root_7();
+
+			_$_.append(__anchor, div_9);
+		});
+
+		_$_.hydrating && _$_.pop(div_7);
+	}
+
+	_$_.append(__anchor, div_7);
+}
+
+NestedContentWithPortal[_$_.$r] = NestedContentWithPortal_render;
+
+import { Portal, track } from 'ripple';
+
+export function SimplePortal() {
+	return _$_.tsrx_element(SimplePortal_render);
+}
+
+export function ConditionalPortal() {
+	return _$_.tsrx_element(ConditionalPortal_render);
+}
+
+export function PortalWithMainContent() {
+	return _$_.tsrx_element(PortalWithMainContent_render);
+}
+
+export function NestedContentWithPortal() {
+	return _$_.tsrx_element(NestedContentWithPortal_render);
+}
+
+_$_.delegate(['click']);

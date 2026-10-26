@@ -1,0 +1,615 @@
+/** @import { AddEventObject, AddEventOptions, ExtendedEventOptions } from '#public'*/
+/**
+ * @typedef {EventTarget & Record<string, any>} DelegatedEventTarget
+ */
+import {
+	event_name_from_capture,
+	is_capture_event,
+	is_non_delegated,
+	is_passive_event,
+} from '@tsrx/core/runtime/events';
+import {
+	active_block,
+	active_reaction,
+	set_active_block,
+	set_active_reaction,
+	set_tracking,
+	tracking,
+} from './runtime.js';
+import { define_property, is_array } from '@tsrx/core/runtime/language-helpers';
+import { render } from './blocks.js';
+
+/** @type {Set<string>} */
+var all_registered_events = new Set();
+
+/**
+ * A root delegation target: its acquire count, the event names it listens
+ * for, and the element.
+ * @typedef {{ n: number, e: Set<string>, t: Element }} RootTargetRef
+ */
+
+/**
+ * Active root delegation targets, ref-counted per target. Multiple callers of
+ * `handle_root_events` can share one target element — sibling Portals both
+ * targeting `document.body`, a Portal targeting the app's mount target, or
+ * nested mounts. The shared delegated listeners for a target may only be torn
+ * down once every caller for that target has released it, otherwise
+ * unmounting one Portal silently kills event delegation for its siblings.
+ * @type {Map<Element, RootTargetRef>}
+ */
+var root_target_refs = new Map();
+
+/** @type {RootTargetRef | null} */
+var last_root_ref = null;
+
+/**
+ * Delegated handling only works for elements strictly below a root delegation
+ * target: the root listener's propagation walk never visits the target itself
+ * or anything above it, so a delegated handler stored there would never fire.
+ * @param {EventTarget} element
+ */
+function is_root_target_or_above(element) {
+	for (var target of root_target_refs.keys()) {
+		if (element === target || /** @type {Element} */ (element).contains?.(target)) {
+			return true;
+		}
+	}
+	return false;
+}
+
+/**
+ * @param {AddEventOptions} options
+ * @returns {AddEventListenerOptions}
+ */
+function get_event_options(options) {
+	/** @type AddEventListenerOptions */
+	var event_options = {};
+
+	if (options.capture) {
+		event_options.capture = true;
+	}
+	if (options.once) {
+		event_options.once = true;
+	}
+	if (options.passive) {
+		event_options.passive = true;
+	}
+	if (options.signal) {
+		event_options.signal = options.signal;
+	}
+	return event_options;
+}
+
+/**
+ * @param {EventTarget} element
+ * @param {string} type
+ * @param {EventListener} handler
+ * @param {ExtendedEventOptions} [options]
+ */
+export function on(element, type, handler, options = {}) {
+	var opts = { ...options };
+	if (
+		element === window ||
+		element === document ||
+		element === document.body ||
+		element instanceof MediaQueryList ||
+		is_root_target_or_above(element)
+	) {
+		opts.delegated = false;
+	}
+
+	var remove_listener = create_event(type, element, handler, opts);
+
+	return () => {
+		remove_listener();
+	};
+}
+
+/**
+ * @this {EventTarget}
+ * @param {Event} event
+ * @returns {void}
+ */
+export function handle_event_propagation(event) {
+	var handler_element = this;
+	var owner_document = /** @type {Node} */ (handler_element).ownerDocument;
+	var event_name = event.type;
+	/** @type {null | Element} */
+	var current_target;
+
+	// __root marks the root that already handled this event: this listener
+	// then belongs to a parent of a nested mounted app, and the walk resumes
+	// from that root so nothing below it handles the event twice. Only then
+	// is the composed path needed; a plain event starts at its target (the
+	// composed target when it was retargeted out of a shadow tree).
+	var handled_at = event.__root;
+
+	if (handled_at) {
+		var path = event.composedPath?.() || [];
+		var path_idx = 0;
+		var at_idx = path.indexOf(handled_at);
+		if (at_idx !== -1 && (handler_element === document || handler_element === window)) {
+			// This is the fallback document listener or a window listener, but the event was already handled
+			// -> ignore, but set handle_at to document/window so that we're resetting the event
+			// chain in case someone manually dispatches the same event object again.
+			event.__root = handler_element;
+			return;
+		}
+
+		// We're deliberately not skipping if the index is higher, because
+		// someone could create an event programmatically and emit it multiple times,
+		// in which case we want to handle the whole propagation chain properly each time.
+		// (this will only be a false negative if the event is dispatched multiple times and
+		// the fallback document listener isn't reached in between, but that's super rare)
+		var handler_idx = path.indexOf(handler_element);
+		if (handler_idx === -1) {
+			// handle_idx can theoretically be -1 (happened in some JSDOM testing scenarios with an event listener on the window object)
+			// so guard against that, too, and assume that everything was handled at this point.
+			return;
+		}
+
+		if (at_idx <= handler_idx) {
+			path_idx = at_idx;
+		}
+		current_target = /** @type {Element} */ (path[path_idx] || event.target);
+	} else {
+		current_target = /** @type {Element} */ (event.target);
+		if (current_target !== null && /** @type {any} */ (current_target).shadowRoot) {
+			current_target = /** @type {Element} */ (event.composedPath?.()[0] || current_target);
+		}
+	}
+
+	// there can only be one delegated event per element, and we either already handled the current target,
+	// or this is the very first target in the chain which has a non-delegated listener, in which case it's safe
+	// to handle a possible delegated event on it later (through the root delegation listener for example).
+	if (current_target === handler_element) return;
+
+	// Proxy currentTarget to correct target
+	define_property(event, 'currentTarget', {
+		configurable: true,
+		get() {
+			return current_target || owner_document;
+		},
+	});
+
+	var previous_block = active_block;
+	var previous_reaction = active_reaction;
+	var previous_tracking = tracking;
+
+	set_active_block(null);
+	set_active_reaction(null);
+	set_tracking(false);
+
+	try {
+		/**
+		 * @type {unknown}
+		 */
+		var throw_error;
+		/**
+		 * @type {unknown[] | null}
+		 */
+		var other_errors = null;
+		var prop = '__' + event_name;
+
+		while (current_target !== null) {
+			/** @type {null | Element} */
+			var parent_element =
+				current_target.assignedSlot ||
+				current_target.parentNode ||
+				/** @type {any} */ (current_target).host ||
+				null;
+
+			try {
+				var delegated = /** @type {Record<string, any>} */ (current_target)[prop];
+
+				if (delegated !== undefined && !(/** @type {any} */ (current_target).disabled)) {
+					if (is_array(delegated)) {
+						for (var i = 0; i < delegated.length; i++) {
+							delegated[i].call(current_target, event);
+						}
+					} else {
+						delegated.call(current_target, event);
+					}
+				}
+			} catch (error) {
+				if (throw_error) {
+					(other_errors ??= []).push(error);
+				} else {
+					throw_error = error;
+				}
+			}
+			if (event.cancelBubble || parent_element === handler_element || parent_element === null) {
+				break;
+			}
+			current_target = parent_element;
+		}
+
+		if (throw_error) {
+			if (other_errors !== null) {
+				for (let error of other_errors) {
+					// Throw the rest of the errors, one-by-one on a microtask
+					queueMicrotask(() => {
+						throw error;
+					});
+				}
+			}
+			throw throw_error;
+		}
+	} finally {
+		event.__root = handler_element;
+		// @ts-ignore remove proxy on currentTarget
+		delete event.currentTarget;
+		set_active_block(previous_block);
+		set_active_reaction(previous_reaction);
+		set_tracking(previous_tracking);
+	}
+}
+
+/**
+ * @param {string} event_name
+ * @param {EventTarget} dom
+ * @param {EventListener} handler
+ * @param {AddEventOptions} options
+ * @returns {() => void}
+ */
+function create_event(event_name, dom, handler, options) {
+	var is_delegated = true;
+
+	if (is_capture_event(event_name)) {
+		event_name = event_name_from_capture(event_name);
+
+		if (!('capture' in options) || options.capture !== false) {
+			options.capture = true;
+		}
+	}
+
+	event_name =
+		options.customName && options.customName?.length
+			? options.customName
+			: event_name.toLowerCase();
+
+	if (
+		options.delegated === false ||
+		options.capture ||
+		options.passive ||
+		options.once ||
+		options.signal ||
+		is_non_delegated(event_name)
+	) {
+		is_delegated = false;
+	}
+
+	if (is_delegated) {
+		var prop = '__' + event_name;
+		var target = /** @type {DelegatedEventTarget} */ (dom);
+		add_delegated_handler(target, prop, handler);
+		delegate([event_name]);
+		return () => {
+			remove_delegated_handler(target, prop, handler);
+		};
+	}
+
+	/**
+	 * @this {Element}
+	 * @param {Event} event
+	 * @returns {any}
+	 */
+	function target_handler(event) {
+		var previous_block = active_block;
+		var previous_reaction = active_reaction;
+		var previous_tracking = tracking;
+
+		try {
+			set_active_block(null);
+			set_active_reaction(null);
+			set_tracking(false);
+
+			if (!options.capture) {
+				// Only call in the bubble phase, else delegated events would be called before the capturing events
+				handle_event_propagation.call(dom, event);
+			}
+			if (!event.cancelBubble) {
+				return handler?.call(/** @type {Element} */ (this), event);
+			}
+		} finally {
+			set_active_block(previous_block);
+			set_active_reaction(previous_reaction);
+			set_tracking(previous_tracking);
+		}
+	}
+
+	var event_options = get_event_options(options);
+
+	dom.addEventListener(event_name, target_handler, event_options);
+	return () => {
+		dom.removeEventListener(event_name, target_handler, event_options);
+	};
+}
+
+/**
+ * Delegated event name resolution per compiler-emitted name (`"Click"`,
+ * `"PointerMove"`, ...): the lowercase DOM name, or null when the event cannot
+ * be delegated (capture variants, non-bubbling events).
+ * @type {Map<string, string | null>}
+ */
+var delegated_event_names = new Map();
+
+/**
+ * @param {string} event_name
+ * @returns {string | null}
+ */
+function get_delegated_event_name(event_name) {
+	var name = delegated_event_names.get(event_name);
+
+	if (name === undefined) {
+		if (is_capture_event(event_name)) {
+			name = null;
+		} else {
+			name = event_name.toLowerCase();
+			if (is_non_delegated(name)) {
+				name = null;
+			}
+		}
+		delegated_event_names.set(event_name, name);
+	}
+
+	return name;
+}
+
+/**
+ * @param {DelegatedEventTarget} target
+ * @param {string} prop
+ * @param {EventListener} handler
+ * @returns {void}
+ */
+function add_delegated_handler(target, prop, handler) {
+	var current = target[prop];
+
+	if (current === undefined) {
+		target[prop] = handler;
+	} else if (is_array(current)) {
+		if (!current.includes(handler)) {
+			current.push(handler);
+		}
+	} else {
+		if (current !== handler) {
+			target[prop] = [current, handler];
+		}
+	}
+}
+
+/**
+ * @param {DelegatedEventTarget} target
+ * @param {string} prop
+ * @param {EventListener} handler
+ * @returns {void}
+ */
+function remove_delegated_handler(target, prop, handler) {
+	var handlers = target[prop];
+	if (is_array(handlers)) {
+		var filtered = handlers.filter((h) => h !== handler);
+		target[prop] =
+			filtered.length === 0 ? undefined : filtered.length === 1 ? filtered[0] : filtered;
+	} else {
+		target[prop] = undefined;
+	}
+}
+
+/**
+ * Compiler-emitted one-shot listener for a static `onEvent={handler}`: the
+ * element's lifetime owns the handler, so nothing is returned for cleanup.
+ * @param {string} event_name
+ * @param {Element} dom
+ * @param {EventListener | AddEventObject} handler
+ * @returns {void}
+ */
+export function event(event_name, dom, handler) {
+	if (typeof handler === 'function') {
+		// Plain handler: the common compiled `onClick={fn}` shape. Resolve the
+		// delegated name from the cache and skip the options plumbing.
+		var name = get_delegated_event_name(event_name);
+
+		if (name !== null) {
+			add_delegated_handler(/** @type {DelegatedEventTarget} */ (dom), '__' + name, handler);
+			delegate([name]);
+			return;
+		}
+	}
+
+	event_listener(event_name, dom, handler);
+}
+
+/**
+ * Compiler-emitted listener for a static `onEvent={fn}` whose name can never
+ * be delegated (`onBlur`, `onScroll`, a `Capture` variant): a native listener
+ * on the element, with the handler run outside any reactive context as a
+ * delegated handler is. Nothing is returned, as for `event()`. The name is the
+ * DOM event name the compiler resolved, so no name table is consulted here.
+ * @param {string} name
+ * @param {EventTarget} dom
+ * @param {EventListener} handler
+ * @param {boolean} [capture]
+ * @returns {void}
+ */
+export function listen(name, dom, handler, capture) {
+	dom.addEventListener(
+		name,
+		/**
+		 * @this {EventTarget}
+		 * @param {Event} event
+		 */
+		function (event) {
+			var previous_block = active_block;
+			var previous_reaction = active_reaction;
+			var previous_tracking = tracking;
+			set_active_block(null);
+			set_active_reaction(null);
+			set_tracking(false);
+			try {
+				return handler.call(this, event);
+			} finally {
+				set_active_block(previous_block);
+				set_active_reaction(previous_reaction);
+				set_tracking(previous_tracking);
+			}
+		},
+		capture,
+	);
+}
+
+/**
+ * Attaches a listener and returns its remover; `event()` is the one-shot
+ * compiled form of this.
+ * @param {string} event_name
+ * @param {Element} dom
+ * @param {EventListener | AddEventObject} handler
+ * @returns {() => void}
+ */
+export function event_listener(event_name, dom, handler) {
+	/** @type AddEventOptions */
+	var options = {};
+	/** @type {EventListener} */
+	var event_handler;
+
+	if (typeof handler === 'object' && 'handleEvent' in handler) {
+		({ handleEvent: event_handler, ...options } = handler);
+	} else {
+		event_handler = /** @type {EventListener} */ (handler);
+	}
+
+	return create_event(event_name, dom, event_handler, options);
+}
+
+/**
+ * Reactive version of event that automatically cleans up and re-attaches
+ * when the handler changes
+ * @param {string} event_name
+ * @param {Element} dom
+ * @param {() => EventListener | AddEventObject} get_handler
+ */
+export function render_event(event_name, dom, get_handler) {
+	/** @type {EventListener | AddEventObject | undefined} */
+	var prev;
+	/** @type {(() => void) | undefined} */
+	var remove_listener;
+
+	render(() => {
+		var handler = get_handler();
+
+		if (handler !== prev) {
+			if (remove_listener) {
+				remove_listener();
+				remove_listener = undefined;
+			}
+
+			prev = handler;
+
+			if (handler) {
+				remove_listener = event_listener(event_name, dom, handler);
+			}
+		}
+	});
+}
+
+/**
+ * @param {Array<string>} events
+ * @returns {void}
+ */
+export function delegate(events) {
+	var added = false;
+
+	for (var i = 0; i < events.length; i++) {
+		var event_name = events[i];
+
+		if (!all_registered_events.has(event_name)) {
+			all_registered_events.add(event_name);
+			added = true;
+		}
+	}
+
+	// Every root target already listens for every previously registered event,
+	// so only a new event name needs to fan out to the targets.
+	if (added) {
+		for (var ref of root_target_refs.values()) {
+			register_root_events(ref, events);
+		}
+	}
+}
+
+var event_prototype_prepared = false;
+
+/**
+ * @param {RootTargetRef} ref
+ * @param {Iterable<string>} events
+ */
+function register_root_events(ref, events) {
+	var registered_events = ref.e;
+	var target = ref.t;
+
+	for (var event_name of events) {
+		if (registered_events.has(event_name)) continue;
+		if (!event_prototype_prepared) {
+			event_prototype_prepared = true;
+			// `__root` is read on every delegated event: declared on the
+			// prototype, the read stops at Event instead of walking to Object.
+			// Done with the first listener, so a mount before any delegated
+			// event is registered never touches `Event.prototype`.
+			Event.prototype.__root = undefined;
+		}
+		registered_events.add(event_name);
+
+		target.addEventListener(event_name, handle_event_propagation, {
+			passive: is_passive_event(event_name),
+		});
+	}
+}
+
+/**
+ * Acquires the delegated root listeners for `target` and returns the shared
+ * ref; every acquire must be paired with one `release_root_events` call.
+ * @param {Element} target
+ * @returns {RootTargetRef}
+ */
+export function handle_root_events(target) {
+	// Sibling portals mostly share one target, so check the last ref first.
+	/** @type {RootTargetRef | undefined} */
+	var ref =
+		last_root_ref !== null && last_root_ref.t === target
+			? last_root_ref
+			: root_target_refs.get(target);
+
+	if (ref === undefined) {
+		ref = { n: 0, e: new Set(), t: target };
+		root_target_refs.set(target, ref);
+		// Before any delegated event is registered (a first mount) there is
+		// nothing to attach.
+		if (all_registered_events.size > 0) {
+			register_root_events(ref, all_registered_events);
+		}
+	}
+
+	ref.n += 1;
+	last_root_ref = ref;
+	return ref;
+}
+
+/**
+ * @param {RootTargetRef} ref
+ * @returns {void}
+ */
+export function release_root_events(ref) {
+	// The map entry for `ref.t` is always this `ref`: it is only deleted
+	// when the count hits 0, which requires every acquirer to have released.
+	ref.n -= 1;
+	if (ref.n > 0) return;
+
+	// Last caller for this target: actually tear down the shared listeners.
+	var target = ref.t;
+	root_target_refs.delete(target);
+	if (last_root_ref === ref) {
+		last_root_ref = null;
+	}
+	for (var event_name of ref.e) {
+		target.removeEventListener(event_name, /** @type {EventListener} */ (handle_event_propagation));
+	}
+}

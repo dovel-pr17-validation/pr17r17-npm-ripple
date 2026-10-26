@@ -1,0 +1,469 @@
+import { Portal, flushSync, track, type Tracked } from 'ripple';
+
+describe('Portal', () => {
+	afterEach(() => {
+		// Clean up any leftover portal content from document.body
+		const portals = document.body.querySelectorAll('.test-portal');
+		portals.forEach((el) => el.remove());
+	});
+
+	it('renders portal content to target element', () => {
+		const target = document.createElement('div');
+		document.body.appendChild(target);
+
+		function TestPortal() @{
+			<Portal {target}>
+				<div class="test-portal">{'Portal works!'}</div>
+			</Portal>
+		}
+
+		render(TestPortal);
+
+		// Portal content should be in the target, not in container
+		expect(container.querySelector('.test-portal')).toBeNull();
+		expect(target.querySelector('.test-portal')).toBeTruthy();
+		expect(target.querySelector('.test-portal').textContent).toBe('Portal works!');
+
+		document.body.removeChild(target);
+	});
+
+	it('renders portal content to document.body', () => {
+		function TestPortal() @{
+			<Portal target={document.body}>
+				<div class="test-portal">{'In document.body!'}</div>
+			</Portal>
+		}
+
+		render(TestPortal);
+
+		// Should not be in container
+		expect(container.querySelector('.test-portal')).toBeNull();
+
+		// Should be in document.body
+		expect(document.body.querySelector('.test-portal')).toBeTruthy();
+		expect(document.body.querySelector('.test-portal').textContent).toBe('In document.body!');
+	});
+
+	it('cleans up portal content when destroyed via conditional rendering', () => {
+		function TestPortal() @{
+			const open = track(true);
+			<>
+				@if (open.value) {
+					<Portal target={document.body}>
+						<div class="test-portal">{'Conditional content'}</div>
+					</Portal>
+				}
+				<button onClick={() => (open.value = false)}>{'Close'}</button>
+			</>
+		}
+
+		render(TestPortal);
+
+		// Initially portal content should be present
+		expect(document.body.querySelector('.test-portal')).toBeTruthy();
+
+		// Click close button to destroy portal
+		container.querySelector('button').click();
+		flushSync();
+
+		// Portal content should be cleaned up
+		expect(document.body.querySelector('.test-portal')).toBeNull();
+	});
+
+	it('opens and closes portal via conditional rendering', () => {
+		function TestPortal() @{
+			const open = track(false);
+			<>
+				@if (open.value) {
+					<Portal target={document.body}>
+						<div class="test-portal">
+							{'Content'}
+							<button onClick={() => (open.value = false)}>{'Close'}</button>
+						</div>
+					</Portal>
+				}
+				@if (!open.value) {
+					<button onClick={() => (open.value = true)}>{'Open'}</button>
+				}
+			</>
+		}
+
+		render(TestPortal);
+
+		// Open the portal
+		container.querySelector('button').click();
+		flushSync();
+		expect(document.body.querySelector('.test-portal')).toBeTruthy();
+
+		// Close the portal - this should work without errors
+		expect(() => {
+			document.body.querySelector('button').click();
+			flushSync();
+		}).not.toThrow();
+
+		// Portal content should be cleaned up
+		expect(document.body.querySelector('.test-portal')).toBeNull();
+	});
+
+	it('handles multiple portals simultaneously', () => {
+		const target1 = document.createElement('div');
+		const target2 = document.createElement('div');
+		target1.id = 'multi-target1';
+		target2.id = 'multi-target2';
+		document.body.appendChild(target1);
+		document.body.appendChild(target2);
+
+		function TestMultiPortal() @{
+			<>
+				<Portal target={target1}>
+					<div class="test-portal">{'Portal 1 content'}</div>
+				</Portal>
+				<Portal target={target2}>
+					<div class="test-portal">{'Portal 2 content'}</div>
+				</Portal>
+			</>
+		}
+
+		render(TestMultiPortal);
+
+		// Both portals should render in their respective targets
+		expect(target1.querySelector('.test-portal')).toBeTruthy();
+		expect(target1.querySelector('.test-portal').textContent).toBe('Portal 1 content');
+
+		expect(target2.querySelector('.test-portal')).toBeTruthy();
+		expect(target2.querySelector('.test-portal').textContent).toBe('Portal 2 content');
+
+		document.body.removeChild(target1);
+		document.body.removeChild(target2);
+	});
+
+	it(
+		'two portals sharing the same target: closing one does not break click delegation for the other',
+		() => {
+			// Regression test: handle_root_events used to have no ref-counting per
+			// target. When two Portals both targeted document.body (e.g. a Modal
+			// and a SideSheet), closing/unmounting the first Portal would tear
+			// down the shared delegated event listeners for *all* portals on that
+			// target, silently breaking clicks inside any portal still open.
+			function TestSharedTargetPortals() @{
+				const modalOpen = track(true);
+				const sheetOpen = track(true);
+				const sheetClicks = track(0);
+				<>
+					@if (modalOpen.value) {
+						<Portal target={document.body}>
+							<div class="test-portal test-modal">
+								<button
+									class="close-modal"
+									onClick={() => (modalOpen.value = false)}
+								>{'Close modal'}</button>
+							</div>
+						</Portal>
+					}
+					@if (sheetOpen.value) {
+						<Portal target={document.body}>
+							<div class="test-portal test-sheet">
+								<span class="sheet-clicks">{String(sheetClicks.value)}</span>
+								<button
+									class="sheet-btn"
+									onClick={() => {
+										sheetClicks.value++;
+									}}
+								>{'Sheet button'}</button>
+							</div>
+						</Portal>
+					}
+				</>
+			}
+
+			render(TestSharedTargetPortals);
+
+			expect(document.body.querySelector('.close-modal')).toBeTruthy();
+			expect(document.body.querySelector('.sheet-btn')).toBeTruthy();
+
+			// Close the modal portal - its cleanup must not tear down the shared
+			// document.body event delegation that the still-open sheet portal relies on.
+			document.body.querySelector('.close-modal').click();
+			flushSync();
+
+			expect(document.body.querySelector('.close-modal')).toBeNull();
+			const sheetBtn = document.body.querySelector('.sheet-btn');
+			expect(sheetBtn).toBeTruthy();
+			expect(document.body.querySelector('.sheet-clicks').textContent).toBe('0');
+
+			sheetBtn.click();
+			flushSync();
+
+			// This is the actual regression check: before the fix, the shared
+			// document.body listener was removed when the modal portal's cleanup
+			// ran, so this click would never reach the handler and the count
+			// would stay at 0.
+			expect(document.body.querySelector('.sheet-clicks').textContent).toBe('1');
+		},
+	);
+
+	it('retargets portal when target changes and keeps click delegation working', () => {
+		const target1 = document.createElement('div');
+		const target2 = document.createElement('div');
+		document.body.appendChild(target1);
+		document.body.appendChild(target2);
+
+		function TestRetargetPortal() @{
+			const useSecond = track(false);
+			const clicks = track(0);
+			<>
+				<button class="swap" onClick={() => (useSecond.value = true)}>{'Swap'}</button>
+				<Portal target={useSecond.value ? target2 : target1}>
+					<div class="test-portal">
+						<span class="clicks">{String(clicks.value)}</span>
+						<button class="portal-btn" onClick={() => clicks.value++}>{'Click'}</button>
+					</div>
+				</Portal>
+			</>
+		}
+
+		render(TestRetargetPortal);
+
+		expect(target1.querySelector('.portal-btn')).toBeTruthy();
+		target1.querySelector('.portal-btn').click();
+		flushSync();
+		expect(target1.querySelector('.clicks').textContent).toBe('1');
+
+		container.querySelector('.swap').click();
+		flushSync();
+
+		// Content moved to the new target, and delegation must follow it there.
+		expect(target1.querySelector('.portal-btn')).toBeNull();
+		expect(target2.querySelector('.portal-btn')).toBeTruthy();
+
+		target2.querySelector('.portal-btn').click();
+		flushSync();
+		expect(target2.querySelector('.clicks').textContent).toBe('2');
+
+		document.body.removeChild(target1);
+		document.body.removeChild(target2);
+	});
+
+	it('handles portal with reactive content', () => {
+		function TestReactivePortal() @{
+			const count = track(0);
+			<Portal target={document.body}>
+				<div class="test-portal">
+					{'Count: '}
+					{String(count.value)}
+					<button onClick={() => count.value++}>{'Increment'}</button>
+				</div>
+			</Portal>
+		}
+
+		render(TestReactivePortal);
+
+		const portalElement = document.body.querySelector('.test-portal');
+		expect(portalElement).toBeTruthy();
+		expect(portalElement.textContent).toContain('Count: 0');
+
+		// Click increment button
+		portalElement.querySelector('button').click();
+		flushSync();
+
+		expect(portalElement.textContent).toContain('Count: 1');
+	});
+
+	it('re-renders a root @if child at its own position among sibling portals', () => {
+		// Portal content appends through an append-into sentinel with no anchor
+		// node of its own. A child component whose root is control flow must
+		// still re-render where it was, not after content appended since.
+		const target = document.createElement('div');
+		document.body.appendChild(target);
+
+		function Toggle(props: { on: Tracked<boolean> }) @{
+			@if (props.on.value) {
+				<span class="test-portal">{'A'}</span>
+			} @else {
+				<span class="test-portal">{'a'}</span>
+			}
+		}
+
+		function TestPortalOrder() @{
+			const on = track(true);
+			<>
+				<button onClick={() => (on.value = !on.value)}>{'Toggle'}</button>
+				<Portal {target}>
+					<Toggle {on} />
+				</Portal>
+				<Portal {target}>
+					<span class="test-portal">{'B'}</span>
+				</Portal>
+			</>
+		}
+
+		render(TestPortalOrder);
+
+		expect(target.textContent).toBe('AB');
+
+		container.querySelector('button').click();
+		flushSync();
+		expect(target.textContent).toBe('aB');
+
+		container.querySelector('button').click();
+		flushSync();
+		expect(target.textContent).toBe('AB');
+
+		document.body.removeChild(target);
+	});
+
+	it('moves items to the end of a keyed @for rendered as a component root inside a portal', () => {
+		const target = document.createElement('div');
+		document.body.appendChild(target);
+
+		function List(props: { items: Tracked<number[]> }) @{
+			@for (const item of props.items.value; key item) {
+				<span class="test-portal">{item}</span>
+			}
+		}
+
+		function TestPortalList() @{
+			const items = track([1, 2, 3]);
+			<>
+				<button
+					onClick={() => (items.value = [items.value[1], items.value[2], items.value[0]])}
+				>{'Rotate'}</button>
+				<Portal {target}>
+					<List {items} />
+				</Portal>
+			</>
+		}
+
+		render(TestPortalList);
+
+		expect(target.textContent).toBe('123');
+
+		// Moving the first item to the end inserts before the list's anchor.
+		container.querySelector('button').click();
+		flushSync();
+		expect(target.textContent).toBe('231');
+
+		document.body.removeChild(target);
+	});
+
+	it('moves items to the end of a keyed @for rendered directly as portal children', () => {
+		const target = document.createElement('div');
+		document.body.appendChild(target);
+
+		function TestPortalFor() @{
+			const items = track([1, 2, 3]);
+			<>
+				<button
+					onClick={() => (items.value = [items.value[1], items.value[2], items.value[0]])}
+				>{'Rotate'}</button>
+				<Portal {target}>
+					@for (const item of items.value; key item) {
+						<span class="test-portal">{item}</span>
+					}
+				</Portal>
+			</>
+		}
+
+		render(TestPortalFor);
+
+		expect(target.textContent).toBe('123');
+
+		container.querySelector('button').click();
+		flushSync();
+		expect(target.textContent).toBe('231');
+
+		document.body.removeChild(target);
+	});
+
+	it('removes portal content when a fragment containing the portal is destroyed', () => {
+		// The `@if` branch owns a DOM range of its own (the fragment), so it
+		// tells its subtree not to remove DOM; the portal content lives in the
+		// target, outside that range, and must still go.
+		function TestPortalInFragment() @{
+			const open = track(true);
+			<>
+				<button onClick={() => (open.value = false)}>{'Close'}</button>
+				@if (open.value) {
+					<>
+						<Portal target={document.body}>
+							<div class="test-portal">{'Content'}</div>
+						</Portal>
+						<span class="sibling">{'Sibling'}</span>
+					</>
+				}
+			</>
+		}
+
+		render(TestPortalInFragment);
+
+		expect(document.body.querySelector('.test-portal')).toBeTruthy();
+
+		container.querySelector('button').click();
+		flushSync();
+
+		expect(container.querySelector('.sibling')).toBeNull();
+		expect(document.body.querySelector('.test-portal')).toBeNull();
+	});
+
+	it(
+		'leaves nothing in the target after closing or retargeting a portal with control-flow roots',
+		() => {
+			// A root-controlled block inside portal content gets a text anchor of its
+			// own; the target outlives the portal, so that anchor must go with the
+			// content on close and on retarget.
+			const target1 = document.createElement('div');
+			const target2 = document.createElement('div');
+			document.body.appendChild(target1);
+			document.body.appendChild(target2);
+
+			function Toggle(props) @{
+				@if (props.on) {
+					<span class="test-portal">{'A'}</span>
+				} @else {
+					<span class="test-portal">{'a'}</span>
+				}
+			}
+
+			function List(props) @{
+				@for (const item of props.items; key item) {
+					<span class="test-portal">{item}</span>
+				}
+			}
+
+			function TestPortalCleanup() @{
+				const open = track(true);
+				const useSecond = track(false);
+				<>
+					<button class="close" onClick={() => (open.value = false)}>{'Close'}</button>
+					<button class="swap" onClick={() => (useSecond.value = true)}>{'Swap'}</button>
+					@if (open.value) {
+						<>
+							<Portal target={useSecond.value ? target2 : target1}>
+								<Toggle on={true} />
+							</Portal>
+							<Portal target={useSecond.value ? target2 : target1}>
+								<List items={[1, 2]} />
+							</Portal>
+						</>
+					}
+				</>
+			}
+
+			render(TestPortalCleanup);
+
+			expect(target1.textContent).toBe('A12');
+
+			container.querySelector('.swap').click();
+			flushSync();
+			expect(target1.childNodes.length).toBe(0);
+			expect(target2.textContent).toBe('A12');
+
+			container.querySelector('.close').click();
+			flushSync();
+			expect(target2.childNodes.length).toBe(0);
+
+			document.body.removeChild(target1);
+			document.body.removeChild(target2);
+		},
+	);
+});

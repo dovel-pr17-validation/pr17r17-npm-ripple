@@ -1,0 +1,70 @@
+# Dependency directories
+node_modules/
+
+# IDE related
+.idea
+
+# Test coverage
+coverage
+*.lcov
+
+# Local settings
+*.local.json
+
+.claude/settings.json
+
+playground/src
+playground/ripple/src
+
+website/.vitepress/dist/
+website/.vitepress/cache/
+website/.vitepress/.temp/
+
+# Optional eslint cache
+.eslintcache
+
+# dotenv environment variables file
+.env
+.env.test
+
+# build output
+.vercel
+
+# OS-specific
+.DS_Store
+
+# VS Code settings
+.vscode/
+!.vscode/settings.json
+!.vscode/launch.json
+!.vscode/tasks.json
+# But include playground/.vscode/settings.json
+!playground/.vscode/
+playground/.vscode/*
+!playground/.vscode/settings.json
+
+# Chrome Debugger
+.chrome-debug-profile/
+
+tmp
+dist
+debug
+.build-hash
+.build-hash-built
+**/*.d.tsrx.ts
+
+# Temporary folders
+tmp/
+temp/
+
+# differential test rig precompile cache
+**/.react-cache/
+
+
+# Keep saved benchmark logs even when a global Git ignore excludes *.log.
+!benchmarks/results/**/*.log
+
+# Local benchmark references and profiles
+benchmarks/baselines/local/
+benchmarks/**/*.cpuprofile
+benchmarks/**/*.heapsnapshot

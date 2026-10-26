@@ -1,0 +1,775 @@
+import type { OnEventListenerRemover } from 'ripple';
+import { effect, flushSync, mount, on, Portal, track } from 'ripple';
+
+describe('on() event handler', () => {
+	it('only invokes supplied optional zero-argument callbacks', () => {
+		let calls = 0;
+
+		function Action({ done }: { done?: (() => void) | null }) @{
+			<div>
+				<button
+					onClick={() => {
+						done?.();
+					}}
+				>block</button>
+				<button onClick={() => done?.()}>expression</button>
+				<button
+					onScroll={() => {
+						done?.();
+					}}
+				>scroll</button>
+			</div>
+		}
+
+		function App() @{
+			<>
+				<Action />
+				<Action done={undefined} />
+				<Action done={null} />
+				<Action
+					done={() => {
+						calls++;
+					}}
+				/>
+			</>
+		}
+
+		render(App);
+
+		const errors: unknown[] = [];
+		const onError = (event: ErrorEvent) => {
+			errors.push(event.error);
+			event.preventDefault();
+		};
+		window.addEventListener('error', onError);
+		try {
+			for (const action of container.querySelectorAll('div')) {
+				const [block, expression, scroll] = action.querySelectorAll('button');
+				block.click();
+				expression.click();
+				scroll.dispatchEvent(new Event('scroll'));
+				flushSync();
+			}
+		} finally {
+			window.removeEventListener('error', onError);
+		}
+
+		expect(errors).toEqual([]);
+		expect(calls).toBe(3);
+	});
+
+	it('should attach multiple handlers via onClick attribute (delegated)', () => {
+		function Basic() @{
+			const count1 = track(0);
+			const count2 = track(0);
+			<>
+				<button
+					onClick={() => {
+						count1.value++;
+						count2.value++;
+					}}
+				>{'Click me'}</button>
+				<div class="count1">{count1.value}</div>
+				<div class="count2">{count2.value}</div>
+			</>
+		}
+
+		render(Basic);
+
+		const button = container.querySelector('button');
+		const count1Div = container.querySelector('.count1');
+		const count2Div = container.querySelector('.count2');
+
+		expect(count1Div.textContent).toBe('0');
+		expect(count2Div.textContent).toBe('0');
+
+		button.click();
+		flushSync();
+		expect(count1Div.textContent).toBe('1');
+		expect(count2Div.textContent).toBe('1');
+	});
+
+	it('attaches directly on a root delegation target even when a portal roots elsewhere', () => {
+		// Regression test: `on()` must not delegate handlers attached to any
+		// active root delegation target. With a single `root_target` global,
+		// a Portal targeting a sibling layer overwrote it, so `on(container)`
+		// took the delegated path and its handler never fired.
+		const layer = document.createElement('div');
+		document.body.appendChild(layer);
+
+		function App() @{
+			<>
+				<button class="inner">{'Inner'}</button>
+				<Portal target={layer}>
+					<div class="layer-content">{'Layer content'}</div>
+				</Portal>
+			</>
+		}
+
+		render(App);
+
+		let calls = 0;
+		const off = on(container, 'click', () => {
+			calls++;
+		});
+
+		container.querySelector('.inner').click();
+		flushSync();
+		expect(calls).toBe(1);
+
+		off();
+		layer.remove();
+	});
+
+	it('should attach and remove a single event handler', () => {
+		function Basic() @{
+			const count = track(0);
+			const setupListener = (node: HTMLButtonElement) => {
+				const remove = on(node, 'click', () => {
+					count.value++;
+				});
+				return remove;
+			};
+			<>
+				<button ref={setupListener}>{'Click me'}</button>
+				<div class="count">{count.value}</div>
+			</>
+		}
+
+		render(Basic);
+		flushSync();
+
+		const button = container.querySelector('button');
+		const countDiv = container.querySelector('.count');
+
+		expect(countDiv.textContent).toBe('0');
+
+		button.click();
+		flushSync();
+		expect(countDiv.textContent).toBe('1');
+
+		button.click();
+		flushSync();
+		expect(countDiv.textContent).toBe('2');
+	});
+
+	it('should handle multiple different event types on same element', () => {
+		function Basic() @{
+			const clickCount = track(0);
+			const mousedownCount = track(0);
+			const setupListeners = (node: HTMLButtonElement) => {
+				const remove1 = on(node, 'click', () => {
+					clickCount.value++;
+				});
+				const remove2 = on(node, 'mousedown', () => {
+					mousedownCount.value++;
+				});
+				return () => {
+					remove1();
+					remove2();
+				};
+			};
+			<>
+				<button ref={setupListeners}>{'Test'}</button>
+				<div class="click-count">{clickCount.value}</div>
+				<div class="mousedown-count">{mousedownCount.value}</div>
+			</>
+		}
+
+		render(Basic);
+		flushSync();
+
+		const button = container.querySelector('button');
+		const clickDiv = container.querySelector('.click-count');
+		const mousedownDiv = container.querySelector('.mousedown-count');
+
+		expect(clickDiv.textContent).toBe('0');
+		expect(mousedownDiv.textContent).toBe('0');
+
+		button.click();
+		flushSync();
+		expect(clickDiv.textContent).toBe('1');
+		expect(mousedownDiv.textContent).toBe('0'); // click() doesn't trigger mousedown
+
+		button.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+		flushSync();
+		expect(clickDiv.textContent).toBe('1');
+		expect(mousedownDiv.textContent).toBe('1');
+
+		// Click again to verify both handlers still work
+		button.click();
+		flushSync();
+		expect(clickDiv.textContent).toBe('2');
+		expect(mousedownDiv.textContent).toBe('1'); // Still only incremented by mousedown events
+	});
+
+	it('should handle multiple handlers for same event type on same element', () => {
+		function Basic() @{
+			const callOrder = track<number[]>([]);
+			const setupListeners = (node: HTMLButtonElement) => {
+				const remove1 = on(node, 'click', () => {
+					callOrder.value = [...callOrder.value, 1];
+				});
+				const remove2 = on(node, 'click', () => {
+					callOrder.value = [...callOrder.value, 2];
+				});
+				const remove3 = on(node, 'click', () => {
+					callOrder.value = [...callOrder.value, 3];
+				});
+				return () => {
+					remove1();
+					remove2();
+					remove3();
+				};
+			};
+			<>
+				<button ref={setupListeners}>{'Click me'}</button>
+				<div class="order">{callOrder.value.join(',')}</div>
+			</>
+		}
+
+		render(Basic);
+		flushSync();
+
+		const button = container.querySelector('button');
+		const orderDiv = container.querySelector('.order');
+
+		expect(orderDiv.textContent).toBe('');
+
+		button.click();
+		flushSync();
+		expect(orderDiv.textContent).toBe('1,2,3');
+
+		// Click again to verify order is consistent
+		button.click();
+		flushSync();
+		expect(orderDiv.textContent).toBe('1,2,3,1,2,3');
+	});
+
+	it('should remove specific handler without affecting others', () => {
+		function Basic() @{
+			const handler1Called = track(0);
+			const handler2Called = track(0);
+			const handler3Called = track(0);
+			let removeHandler2: OnEventListenerRemover | undefined;
+			const setupListeners = (node: HTMLButtonElement) => {
+				const remove1 = on(node, 'click', () => {
+					handler1Called.value++;
+				});
+				removeHandler2 = on(node, 'click', () => {
+					handler2Called.value++;
+				});
+				const remove3 = on(node, 'click', () => {
+					handler3Called.value++;
+				});
+				return () => {
+					remove1();
+					removeHandler2?.();
+					remove3();
+				};
+			};
+			<div>
+				<button class="test-btn" ref={setupListeners}>{'Click me'}</button>
+				<button
+					class="remove-btn"
+					onClick={() => {
+						removeHandler2?.();
+						removeHandler2 = undefined;
+					}}
+				>{'Remove handler 2'}</button>
+				<div class="h1">{handler1Called.value}</div>
+				<div class="h2">{handler2Called.value}</div>
+				<div class="h3">{handler3Called.value}</div>
+			</div>
+		}
+
+		render(Basic);
+		flushSync();
+
+		const testBtn = container.querySelector('.test-btn');
+		const removeBtn = container.querySelector('.remove-btn');
+		const h1Div = container.querySelector('.h1');
+		const h2Div = container.querySelector('.h2');
+		const h3Div = container.querySelector('.h3');
+
+		// All handlers should be called initially
+		testBtn.click();
+		flushSync();
+		expect(h1Div.textContent).toBe('1');
+		expect(h2Div.textContent).toBe('1');
+		expect(h3Div.textContent).toBe('1');
+
+		// Remove handler 2
+		removeBtn.click();
+		flushSync();
+
+		// Only handlers 1 and 3 should be called
+		testBtn.click();
+		flushSync();
+		expect(h1Div.textContent).toBe('2');
+		expect(h2Div.textContent).toBe('1'); // Should not increment
+		expect(h3Div.textContent).toBe('2');
+
+		// Verify again
+		testBtn.click();
+		flushSync();
+		expect(h1Div.textContent).toBe('3');
+		expect(h2Div.textContent).toBe('1'); // Still should not increment
+		expect(h3Div.textContent).toBe('3');
+	});
+
+	it(
+		'should handle change event with multiple handlers (like bindChecked and bindIndeterminate)',
+		() => {
+			function Basic() @{
+				const checked = track(false);
+				const indeterminate = track(true);
+				const setupListeners = (node: HTMLInputElement) => {
+					node.indeterminate = indeterminate.value;
+					node.checked = checked.value;
+
+					const remove1 = on(node, 'change', () => {
+						checked.value = node.checked;
+					});
+					const remove2 = on(node, 'change', () => {
+						indeterminate.value = node.indeterminate;
+					});
+					return () => {
+						remove1();
+						remove2();
+					};
+				};
+				<div>
+					<input type="checkbox" ref={setupListeners} />
+					<div class="checked">
+						{checked.value ? 'true' : 'false'}
+					</div>
+					<div class="indeterminate">
+						{indeterminate.value ? 'true' : 'false'}
+					</div>
+				</div>
+			}
+
+			render(Basic);
+			flushSync();
+
+			const input = container.querySelector('input');
+			const checkedDiv = container.querySelector('.checked');
+			const indeterminateDiv = container.querySelector('.indeterminate');
+
+			expect(checkedDiv.textContent).toBe('false');
+			expect(indeterminateDiv.textContent).toBe('true');
+			expect(input.indeterminate).toBe(true);
+
+			// Click the checkbox
+			input.click();
+			flushSync();
+
+			// Both tracked values should update
+			expect(checkedDiv.textContent).toBe('true');
+			expect(indeterminateDiv.textContent).toBe('false');
+		},
+	);
+
+	it('should support non-delegated events', () => {
+		function Basic() @{
+			const focusCount = track(0);
+			const setupListener = (node: HTMLInputElement) => {
+				const remove = on(node, 'focus', () => {
+					focusCount.value++;
+				});
+				return remove;
+			};
+			<>
+				<input ref={setupListener} />
+				<div class="focus-count">{focusCount.value}</div>
+			</>
+		}
+
+		render(Basic);
+		flushSync();
+
+		const input = container.querySelector('input');
+		const focusDiv = container.querySelector('.focus-count');
+
+		expect(focusDiv.textContent).toBe('0');
+
+		input.dispatchEvent(new Event('focus'));
+		flushSync();
+		expect(focusDiv.textContent).toBe('1');
+
+		input.dispatchEvent(new Event('focus'));
+		flushSync();
+		expect(focusDiv.textContent).toBe('2');
+	});
+
+	it('should handle removal of all handlers for same event type', () => {
+		function Basic() @{
+			const count = track(0);
+			let remove1: OnEventListenerRemover | undefined;
+			let remove2: OnEventListenerRemover | undefined;
+			let remove3: OnEventListenerRemover | undefined;
+			const setupListeners = (node: HTMLButtonElement) => {
+				remove1 = on(node, 'click', () => {
+					count.value++;
+				});
+				remove2 = on(node, 'click', () => {
+					count.value += 10;
+				});
+				remove3 = on(node, 'click', () => {
+					count.value += 100;
+				});
+				return () => {
+					remove1?.();
+					remove2?.();
+					remove3?.();
+				};
+			};
+			<div>
+				<button class="test-btn" ref={setupListeners}>{'Click me'}</button>
+				<button
+					class="remove-all"
+					onClick={() => {
+						remove1?.();
+						remove2?.();
+						remove3?.();
+						remove1 = remove2 = remove3 = undefined;
+					}}
+				>{'Remove all'}</button>
+				<div class="count">{count.value}</div>
+			</div>
+		}
+
+		render(Basic);
+		flushSync();
+
+		const testBtn = container.querySelector('.test-btn');
+		const removeAllBtn = container.querySelector('.remove-all');
+		const countDiv = container.querySelector('.count');
+
+		expect(countDiv.textContent).toBe('0');
+
+		// All three handlers should fire (1 + 10 + 100 = 111)
+		testBtn.click();
+		flushSync();
+		expect(countDiv.textContent).toBe('111');
+
+		// Remove all handlers
+		removeAllBtn.click();
+		flushSync();
+
+		// No handlers should fire
+		testBtn.click();
+		flushSync();
+		expect(countDiv.textContent).toBe('111'); // Should remain unchanged
+	});
+
+	it('should not add duplicate handlers when same handler is attached multiple times', () => {
+		function Basic() @{
+			const count = track(0);
+			const sharedHandler = () => {
+				count.value++;
+			};
+			const setupListeners = (node: HTMLButtonElement) => {
+				// Attach the same handler multiple times
+				const remove1 = on(node, 'click', sharedHandler);
+				const remove2 = on(node, 'click', sharedHandler);
+				const remove3 = on(node, 'click', sharedHandler);
+
+				return () => {
+					remove1?.();
+					remove2?.();
+					remove3?.();
+				};
+			};
+			<>
+				<button ref={setupListeners}>{'Click me'}</button>
+				<div class="count">{count.value}</div>
+			</>
+		}
+
+		render(Basic);
+		flushSync();
+
+		const button = container.querySelector('button');
+		const countDiv = container.querySelector('.count');
+
+		expect(countDiv.textContent).toBe('0');
+
+		// Handler should only be called once per click, not three times
+		button.click();
+		flushSync();
+		expect(countDiv.textContent).toBe('1');
+
+		button.click();
+		flushSync();
+		expect(countDiv.textContent).toBe('2');
+	});
+
+	it('should allow duplicate handlers when delegated is false (no deduplication)', () => {
+		function Basic() @{
+			const count = track(0);
+			const sharedHandler = () => {
+				count.value++;
+			};
+			const setupListeners = (node: HTMLButtonElement) => {
+				// Attach the same handler multiple times with delegated: false
+				const remove1 = on(node, 'click', sharedHandler, { delegated: false });
+				const remove2 = on(node, 'click', sharedHandler, { delegated: false });
+				const remove3 = on(node, 'click', sharedHandler, { delegated: false });
+
+				return () => {
+					remove1?.();
+					remove2?.();
+					remove3?.();
+				};
+			};
+			<>
+				<button ref={setupListeners}>{'Click me'}</button>
+				<div class="count">{count.value}</div>
+			</>
+		}
+
+		render(Basic);
+		flushSync();
+
+		const button = container.querySelector('button');
+		const countDiv = container.querySelector('.count');
+
+		expect(countDiv.textContent).toBe('0');
+
+		// Non-delegated events use addEventListener directly, which DOES allow duplicates
+		// So handler should be called 3 times per click
+		button.click();
+		flushSync();
+		expect(countDiv.textContent).toBe('3');
+
+		button.click();
+		flushSync();
+		expect(countDiv.textContent).toBe('6');
+	});
+
+	it('should fire capture event on parent before bubbling event on child', () => {
+		function Basic() @{
+			const callOrder = track<string[]>([]);
+			const parentCaptureHandler = () => {
+				callOrder.value = [...callOrder.value, 'parent-capture'];
+			};
+			const childBubbleHandler = () => {
+				callOrder.value = [...callOrder.value, 'child-bubble'];
+			};
+			const setupParent = (node: HTMLDivElement) => {
+				return on(node, 'clickCapture', parentCaptureHandler);
+			};
+			const setupChild = (node: HTMLButtonElement) => {
+				return on(node, 'click', childBubbleHandler);
+			};
+			<>
+				<div ref={setupParent} class="parent">
+					<button ref={setupChild} class="child">{'Click me'}</button>
+				</div>
+				<div class="order">{callOrder.value.join(',')}</div>
+			</>
+		}
+
+		render(Basic);
+		flushSync();
+
+		const button = container.querySelector('.child');
+		const orderDiv = container.querySelector('.order');
+
+		expect(orderDiv.textContent).toBe('');
+
+		// Capture phase happens first (parent), then bubbling phase (child)
+		button.click();
+		flushSync();
+		expect(orderDiv.textContent).toBe('parent-capture,child-bubble');
+
+		// Click again to verify order is consistent
+		button.click();
+		flushSync();
+		expect(orderDiv.textContent).toBe('parent-capture,child-bubble,parent-capture,child-bubble');
+	});
+
+	it('should fire handler only once when once option is true', () => {
+		function Basic() @{
+			const count = track(0);
+			const permanentCount = track(0);
+			const setupListeners = (node: HTMLButtonElement) => {
+				const onceHandler = on(node, 'click', () => {
+					count.value++;
+				}, { once: true });
+
+				const permanentHandler = on(node, 'click', () => {
+					permanentCount.value++;
+				});
+
+				return () => {
+					onceHandler?.();
+					permanentHandler?.();
+				};
+			};
+			<>
+				<button ref={setupListeners}>{'Click me'}</button>
+				<div class="once-count">{count.value}</div>
+				<div class="permanent-count">{permanentCount.value}</div>
+			</>
+		}
+
+		render(Basic);
+		flushSync();
+
+		const button = container.querySelector('button');
+		const onceDiv = container.querySelector('.once-count');
+		const permanentDiv = container.querySelector('.permanent-count');
+
+		expect(onceDiv.textContent).toBe('0');
+		expect(permanentDiv.textContent).toBe('0');
+
+		// First click: both handlers should fire
+		button.click();
+		flushSync();
+		expect(onceDiv.textContent).toBe('1');
+		expect(permanentDiv.textContent).toBe('1');
+
+		// Second click: only permanent handler should fire
+		button.click();
+		flushSync();
+		expect(onceDiv.textContent).toBe('1'); // Still 1
+		expect(permanentDiv.textContent).toBe('2');
+
+		// Third click: only permanent handler should fire
+		button.click();
+		flushSync();
+		expect(onceDiv.textContent).toBe('1'); // Still 1
+		expect(permanentDiv.textContent).toBe('3');
+	});
+
+	it('should handle click events on window', () => {
+		function Basic() @{
+			const windowClickCount = track(0);
+			effect(() => {
+				const removeWindowListener = on(window, 'click', () => {
+					windowClickCount.value++;
+				});
+				return removeWindowListener;
+			});
+			<div>
+				<button class="test-btn">{'Click me'}</button>
+				<div class="window-count">{windowClickCount.value}</div>
+			</div>
+		}
+
+		render(Basic);
+		flushSync();
+
+		const button = container.querySelector('.test-btn');
+		const windowCountDiv = container.querySelector('.window-count');
+
+		expect(windowCountDiv.textContent).toBe('0');
+
+		// Click on button should bubble to window
+		button.click();
+		flushSync();
+		expect(windowCountDiv.textContent).toBe('1');
+
+		// Click directly on window
+		window.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+		flushSync();
+		expect(windowCountDiv.textContent).toBe('2');
+	});
+
+	it('should handle click events on document', () => {
+		function Basic() @{
+			const documentClickCount = track(0);
+			effect(() => {
+				const removeDocumentListener = on(document, 'click', () => {
+					documentClickCount.value++;
+				});
+				return removeDocumentListener;
+			});
+			<div>
+				<button class="test-btn">{'Click me'}</button>
+				<div class="document-count">{documentClickCount.value}</div>
+			</div>
+		}
+
+		render(Basic);
+		flushSync();
+
+		const button = container.querySelector('.test-btn');
+		const documentCountDiv = container.querySelector('.document-count');
+
+		expect(documentCountDiv.textContent).toBe('0');
+
+		// Click on button should bubble to document
+		button.click();
+		flushSync();
+		expect(documentCountDiv.textContent).toBe('1');
+
+		// Click directly on document
+		document.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+		flushSync();
+		expect(documentCountDiv.textContent).toBe('2');
+	});
+
+	it('should handle click events on body', () => {
+		function Basic() @{
+			const bodyClickCount = track(0);
+			effect(() => {
+				const removeBodyListener = on(document.body, 'click', () => {
+					bodyClickCount.value++;
+				});
+				return removeBodyListener;
+			});
+			<div>
+				<button class="test-btn">{'Click me'}</button>
+				<div class="body-count">{bodyClickCount.value}</div>
+			</div>
+		}
+
+		render(Basic);
+		flushSync();
+
+		const button = container.querySelector('.test-btn');
+		const bodyCountDiv = container.querySelector('.body-count');
+
+		expect(bodyCountDiv.textContent).toBe('0');
+
+		// Click on button should bubble to body
+		button.click();
+		flushSync();
+		expect(bodyCountDiv.textContent).toBe('1');
+
+		// Click directly on body
+		document.body.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+		flushSync();
+		expect(bodyCountDiv.textContent).toBe('2');
+	});
+});
+
+describe('root event delegation lifecycle', () => {
+	it('ignores a repeated unmount() so a later mount on the same target keeps delegation', () => {
+		// The target's delegated listeners are ref-counted per mount/portal. A
+		// disposer called twice (remount, HMR, a stale reference) must not
+		// release the count a fresh mount now owns.
+		const target = document.createElement('div');
+
+		function Counter() @{
+			const count = track(0);
+			<button onClick={() => count.value++}>{count.value}</button>
+		}
+
+		const unmount_first = mount(Counter, { target });
+		unmount_first();
+
+		const unmount_second = mount(Counter, { target });
+		unmount_first();
+
+		target.querySelector('button').click();
+		flushSync();
+		expect(target.querySelector('button').textContent).toBe('1');
+
+		unmount_second();
+	});
+});

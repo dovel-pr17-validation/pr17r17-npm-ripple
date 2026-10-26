@@ -1,0 +1,30 @@
+---
+title: Head Management in Ripple
+---
+
+# Head Management in Ripple
+
+To manage the content within `<head>`, you may simply use the `<head>` tag
+directly within the component. It works with both static and reactive data.
+
+```tsrx
+import { track } from 'ripple';
+
+export function App() @{
+  const curr_step = track(0);
+
+  <>
+    <head>
+      <title>Step {curr_step.value}</title>
+    </head>
+
+    <button
+      onClick={() => {
+        curr_step.value++;
+      }}
+    >
+      Next Step
+    </button>
+  </>
+}
+```

@@ -1,0 +1,52 @@
+name: Release PR
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}
+
+permissions: {}
+
+jobs:
+  release-pr:
+    if: github.repository == 'Ripple-TS/ripple'
+    permissions:
+      contents: write
+      issues: read
+      pull-requests: write
+    name: Release PR
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24.x
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Disallow major bumps in changesets
+        run: pnpm changeset:check
+
+      - name: Create or update release pull request
+        id: changesets
+        # v2 pairs with @changesets/cli 3 (see publish.yml); the v1 inputs
+        # `version`, `commit`, and `title` were renamed.
+        uses: changesets/action@v2
+        with:
+          github-token: ${{ github.token }}
+          version-script: pnpm changeset:version
+          commit-message: Version Packages
+          pr-title: Version Packages

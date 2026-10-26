@@ -1,0 +1,1521 @@
+# @ripple-ts/vite-plugin
+
+## 0.4.7
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/adapter@0.4.7
+
+## 0.4.6
+
+### Patch Changes
+
+- [#1501](https://github.com/Ripple-TS/ripple/pull/1501)
+  [`fa676f4`](https://github.com/Ripple-TS/ripple/commit/fa676f48da58f6fa0cc969013b3eae0722fa5d52)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Update devalue to 5.9.4 and
+  refresh the patched `stringify` fast paths to the current state of
+  sveltejs/devalue#190: error paths are recorded without per-entry work, Map
+  entries no longer allocate, quoted property names are cached, and the `tagOf`
+  shortcut is gone.
+- Updated dependencies []:
+  - @ripple-ts/adapter@0.4.6
+
+## 0.4.5
+
+### Patch Changes
+
+- Updated dependencies
+  [[`2469ccf`](https://github.com/Ripple-TS/ripple/commit/2469ccfba1a6afad4af6658a777dc735767c5625)]:
+  - @tsrx/ripple@0.2.4
+  - @ripple-ts/adapter@0.4.5
+
+## 0.4.4
+
+### Patch Changes
+
+- [#1496](https://github.com/Ripple-TS/ripple/pull/1496)
+  [`0473e93`](https://github.com/Ripple-TS/ripple/commit/0473e93006e53cd15fcf6d851443d427ccf13e8b)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Update `@tsrx/core` to ^0.2.3
+  and use its SVG and MathML tag-name predicates for dynamic class handling,
+  removing the compiler's duplicate tag-name list.
+- Updated dependencies
+  [[`0473e93`](https://github.com/Ripple-TS/ripple/commit/0473e93006e53cd15fcf6d851443d427ccf13e8b),
+  [`2702373`](https://github.com/Ripple-TS/ripple/commit/27023731ee8da64bba45b245a4fa0b33444e40b8),
+  [`b3bf787`](https://github.com/Ripple-TS/ripple/commit/b3bf78756d9235412a2af264e42897652e8f911e),
+  [`1b8381f`](https://github.com/Ripple-TS/ripple/commit/1b8381f31f98f84049764ca56676fc320721e844),
+  [`ff3a26a`](https://github.com/Ripple-TS/ripple/commit/ff3a26acef0c9584cf41d32bc8cbcc39d863d74c)]:
+  - @tsrx/ripple@0.2.3
+  - @ripple-ts/adapter@0.4.4
+
+## 0.4.3
+
+### Patch Changes
+
+- [#1487](https://github.com/Ripple-TS/ripple/pull/1487)
+  [`b4abea0`](https://github.com/Ripple-TS/ripple/commit/b4abea0ab4830eed99adf14dc95a0ef214b24af1)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - perf: smaller production
+  bundles without a runtime cost. The compiler lowers a static `onBlur`-style
+  handler (an event its name keeps off delegation) to a direct `listen` call with
+  the DOM name and phase resolved at compile time, packs the locals a hoisted
+  `@if`/`@switch` captures under positional keys, writes template strings without
+  attribute quotes or implied end tags where the parser reads them back the same,
+  gives a plain function no `_$_.scope()` call when its body never reads the
+  block, and omits `set_class`'s default trailing arguments. The runtime keeps its
+  hydration paths (template adoption, expression text, append cursor, streamed
+  boundaries) in a module `hydrate()` installs and its `trackAsync` machinery in a
+  module that registers with the runtime on first use, and the catch routing is
+  registered by the first boundary, so a client-only mount without `trackAsync`
+  ships neither and the core runtime no longer imports the boundary module; the
+  try boundary state, the root event ref and the template cache use short keys,
+  the keyed and reference list diffs share one patch helper, and symbol constants
+  carry no descriptions. The runtime's errors are thrown as in Svelte: the message
+  and a link to `https://ripple-ts.com/e/<code>` in development, the link alone in
+  production, so the message text stays out of production bundles; `set_class`
+  composes non-string values with its own clsx-style joiner instead of importing
+  `clsx`; hoisted render blocks store captured locals under positional keys; a
+  `template()` with no flags passes none; and the hash a `track()` call carries
+  encodes the same 32 bits in base 36. The Vite plugin leaves Vite's modulepreload
+  polyfill out of production builds unless `build.modulePreload` is configured.
+
+- [#1487](https://github.com/Ripple-TS/ripple/pull/1487)
+  [`b4abea0`](https://github.com/Ripple-TS/ripple/commit/b4abea0ab4830eed99adf14dc95a0ef214b24af1)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - feat: build shapes.
+  `ripple({ ssr: false })` builds a client-only app: components compile without
+  the hydration cursor or `track()` serialization hashes (`hydration: false` on
+  the compiler), the runtime's hydration paths are compiled out through its
+  `HYDRATION` build constant, and `hydrate()` throws; `ssr: true` compiles every
+  module for the server. `prerender()` on `ripple/server` renders a component to
+  static HTML with every boundary settled and the CSS as text, and a `RenderRoute`
+  marked `prerender: true` is rendered through the built server entry at build
+  time into `<outDir>/client<path>/index.html`, which the node and bun adapters
+  now serve for a directory request before the server renders. The client build's
+  `index.html` template moves to the server output so a static handler never
+  serves its placeholders.
+
+- [#1487](https://github.com/Ripple-TS/ripple/pull/1487)
+  [`b4abea0`](https://github.com/Ripple-TS/ripple/commit/b4abea0ab4830eed99adf14dc95a0ef214b24af1)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - perf: a `class` expression
+  the compiler can prove to be a string writes through a string-only `set_class`,
+  so the clsx-style joiner ships only with a bundle that composes classes from
+  arrays or objects; templates in the SVG or MathML namespace parse through a
+  `template_ns` entry that an HTML-only bundle never loads; and the class joiner
+  is one module shared by the client and server renderers, so `ripple` no longer
+  depends on `clsx`. `ripple({ rootBoundary: false })` builds an app that renders
+  without the default root try/pending/catch boundary and leaves the boundary
+  runtime out of the bundle; a `rootBoundary` option on `mount()` or `hydrate()`
+  then throws. The `ripple` package declares `sideEffects: false`, and dynamic
+  attribute, style and spread helpers live in their own runtime module, so a
+  bundle that never sets an attribute dynamically drops them along with the
+  attribute tables they consult. The plugin's `ssr: false` and
+  `rootBoundary: false` rewrite the runtime's build-constant imports to literals
+  at transform time, which every bundler folds while tree-shaking.
+- Updated dependencies
+  [[`304ba6c`](https://github.com/Ripple-TS/ripple/commit/304ba6c2d9098752396fff6c2545e3ef2546381c),
+  [`b4abea0`](https://github.com/Ripple-TS/ripple/commit/b4abea0ab4830eed99adf14dc95a0ef214b24af1),
+  [`b4abea0`](https://github.com/Ripple-TS/ripple/commit/b4abea0ab4830eed99adf14dc95a0ef214b24af1),
+  [`b4abea0`](https://github.com/Ripple-TS/ripple/commit/b4abea0ab4830eed99adf14dc95a0ef214b24af1),
+  [`1ea71f1`](https://github.com/Ripple-TS/ripple/commit/1ea71f14fcee5a976ea81e2bedf5010251eaa70c),
+  [`b4abea0`](https://github.com/Ripple-TS/ripple/commit/b4abea0ab4830eed99adf14dc95a0ef214b24af1)]:
+  - @tsrx/ripple@0.2.2
+  - @ripple-ts/adapter@0.4.3
+
+## 0.4.2
+
+### Patch Changes
+
+- Updated dependencies
+  [[`1032539`](https://github.com/Ripple-TS/ripple/commit/10325392e4b1ec7fba78b8ddaf57bc5376adaab1),
+  [`e9382ed`](https://github.com/Ripple-TS/ripple/commit/e9382ed7538779aeb8671b8e3f3fdfd3a897b85a),
+  [`0030be0`](https://github.com/Ripple-TS/ripple/commit/0030be0aa3c7f1d2ce40500dc57ea980b69c69ec)]:
+  - @tsrx/ripple@0.2.1
+  - @ripple-ts/adapter@0.4.2
+
+## 0.4.1
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/adapter@0.4.1
+
+## 0.4.0
+
+### Patch Changes
+
+- [#1469](https://github.com/Ripple-TS/ripple/pull/1469)
+  [`b3a38ce`](https://github.com/Ripple-TS/ripple/commit/b3a38ce0aae66a9dcac0b663c30161eed0d7547a)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Add custom serialization for
+  trackAsync hydration and RPC arguments/results using `transport` handlers in
+  ripple.config.ts. Register matching encoders and decoders automatically in
+  development and production, and expose `setTransport` for custom integrations.
+  Apps without a transport retain the plain JSON hydration fast path. Provide a
+  browser entry for config helpers so importing defineConfig does not load the
+  Vite plugin's Node.js dependencies during hydration. A configured hydration
+  payload embeds devalue's flattened form directly, so the client revives it
+  without a second string encoding.
+
+- [#1461](https://github.com/Ripple-TS/ripple/pull/1461)
+  [`69d50d9`](https://github.com/Ripple-TS/ripple/commit/69d50d9849d8484a88d39b2908bb682d27ec7bc9)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Expand primitive text
+  inference to BigInt and Date calls, sequences, and satisfies expressions while
+  respecting shadowed or replaced built-ins. Add optional TypeScript project
+  proofs for imported primitive types and function return values, with matching
+  client/server text classification and one-shot Vite production build
+  integration.
+- Updated dependencies
+  [[`bbc1445`](https://github.com/Ripple-TS/ripple/commit/bbc14455485e054c145ebc78f08a771d41ea16f1),
+  [`0321791`](https://github.com/Ripple-TS/ripple/commit/03217912651e0a49edb8060a92602fd0e0abe193),
+  [`2ef5da5`](https://github.com/Ripple-TS/ripple/commit/2ef5da52b26fc13e11537dd28df0e2b376ca0f52),
+  [`0321791`](https://github.com/Ripple-TS/ripple/commit/03217912651e0a49edb8060a92602fd0e0abe193),
+  [`020d269`](https://github.com/Ripple-TS/ripple/commit/020d2699f8e1333367ac9f7abe9247bab55e272d),
+  [`453bf4b`](https://github.com/Ripple-TS/ripple/commit/453bf4ba8b1b31963df26696545e446ab4b1658e),
+  [`411809f`](https://github.com/Ripple-TS/ripple/commit/411809fb38f25b259a1078a901839318e4207871),
+  [`82bc9ee`](https://github.com/Ripple-TS/ripple/commit/82bc9ee585c6b273bf69890bc2f230aba922bf19),
+  [`69d50d9`](https://github.com/Ripple-TS/ripple/commit/69d50d9849d8484a88d39b2908bb682d27ec7bc9),
+  [`0321791`](https://github.com/Ripple-TS/ripple/commit/03217912651e0a49edb8060a92602fd0e0abe193),
+  [`5d3e60d`](https://github.com/Ripple-TS/ripple/commit/5d3e60d86129ac20d23c86a923914ee44efea9d1)]:
+  - @tsrx/ripple@0.2.0
+  - @ripple-ts/adapter@0.4.0
+
+## 0.3.128
+
+### Patch Changes
+
+- Updated dependencies
+  [[`26be014`](https://github.com/Ripple-TS/ripple/commit/26be014dfd06da9eae7e2d9e0fbd332ddf1bc9ca)]:
+  - @tsrx/ripple@0.1.65
+  - @ripple-ts/adapter@0.3.128
+
+## 0.3.127
+
+### Patch Changes
+
+- Updated dependencies
+  [[`ac4361e`](https://github.com/Ripple-TS/ripple/commit/ac4361e2dd1e93c29f44196cfe3b703124083fd0)]:
+  - @tsrx/ripple@0.1.64
+  - @ripple-ts/adapter@0.3.127
+
+## 0.3.126
+
+### Patch Changes
+
+- Updated dependencies
+  [[`2404ad4`](https://github.com/Ripple-TS/ripple/commit/2404ad4a4fcca21a1887bab25bb94671698f0c9d)]:
+  - @tsrx/ripple@0.1.63
+  - @ripple-ts/adapter@0.3.126
+
+## 0.3.125
+
+### Patch Changes
+
+- [#1437](https://github.com/Ripple-TS/ripple/pull/1437)
+  [`71747c0`](https://github.com/Ripple-TS/ripple/commit/71747c088d549cd3ec85fb78744acf0273b8f6a8)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Consume the shared TSRX
+  compiler and tooling from their published packages after moving target-neutral
+  source to `tsrx-org/tsrx`. New Ripple projects now use the
+  `@tsrx/language-server`, TSRX editor identity, and published TSRX integrations.
+- Updated dependencies
+  [[`71747c0`](https://github.com/Ripple-TS/ripple/commit/71747c088d549cd3ec85fb78744acf0273b8f6a8)]:
+  - @tsrx/ripple@0.1.62
+  - @ripple-ts/adapter@0.3.125
+
+## 0.3.124
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/adapter@0.3.124
+
+## 0.3.123
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/adapter@0.3.123
+
+## 0.3.122
+
+### Patch Changes
+
+- Updated dependencies
+  [[`481d934`](https://github.com/Ripple-TS/ripple/commit/481d934aa17a275aa588d945b4c65b421076f89c)]:
+  - @tsrx/core@0.1.60
+  - @tsrx/ripple@0.1.61
+  - @ripple-ts/adapter@0.3.122
+
+## 0.3.121
+
+### Patch Changes
+
+- Updated dependencies
+  [[`4fea7fc`](https://github.com/Ripple-TS/ripple/commit/4fea7fc9a1277abe47a5b5c67eeda2e253c9e6d5),
+  [`2aa2b6f`](https://github.com/Ripple-TS/ripple/commit/2aa2b6f4beff43b61badd1fb7d11433e9e4f52b3),
+  [`6d3417e`](https://github.com/Ripple-TS/ripple/commit/6d3417eb3852a9f0085b273f07079a3b12323712)]:
+  - @tsrx/core@0.1.59
+  - @tsrx/ripple@0.1.60
+  - @ripple-ts/adapter@0.3.121
+
+## 0.3.120
+
+### Patch Changes
+
+- Updated dependencies
+  [[`10c6c3d`](https://github.com/Ripple-TS/ripple/commit/10c6c3df0f5dfccf9be34c556afee1c87c678bde)]:
+  - @tsrx/core@0.1.58
+  - @tsrx/ripple@0.1.59
+  - @ripple-ts/adapter@0.3.120
+
+## 0.3.119
+
+### Patch Changes
+
+- Updated dependencies
+  [[`2e65731`](https://github.com/Ripple-TS/ripple/commit/2e657313feb272ef7c32510f8e2aa3de1b53ccb3)]:
+  - @tsrx/core@0.1.57
+  - @tsrx/ripple@0.1.58
+  - @ripple-ts/adapter@0.3.119
+
+## 0.3.118
+
+### Patch Changes
+
+- Updated dependencies
+  [[`f03a5af`](https://github.com/Ripple-TS/ripple/commit/f03a5af4c455135767a959f6b45eb3ddb7fadd8f)]:
+  - @tsrx/core@0.1.56
+  - @tsrx/ripple@0.1.57
+  - @ripple-ts/adapter@0.3.118
+
+## 0.3.117
+
+### Patch Changes
+
+- Updated dependencies
+  [[`9b654b2`](https://github.com/Ripple-TS/ripple/commit/9b654b29339c14e79f8377491946c1419417a002),
+  [`5e4b38e`](https://github.com/Ripple-TS/ripple/commit/5e4b38ec26c8268b60e3ca4319eb37f8a07b3078),
+  [`7136920`](https://github.com/Ripple-TS/ripple/commit/7136920028537f336c9404493d8c9fde80105408)]:
+  - @tsrx/core@0.1.55
+  - @tsrx/ripple@0.1.56
+  - @ripple-ts/adapter@0.3.117
+
+## 0.3.116
+
+### Patch Changes
+
+- Updated dependencies
+  [[`d85f9f3`](https://github.com/Ripple-TS/ripple/commit/d85f9f3a8a4f8ed8f77ce54f87fa4387d586884c)]:
+  - @tsrx/core@0.1.54
+  - @tsrx/ripple@0.1.55
+  - @ripple-ts/adapter@0.3.116
+
+## 0.3.115
+
+### Patch Changes
+
+- Updated dependencies
+  [[`7eaf6e8`](https://github.com/Ripple-TS/ripple/commit/7eaf6e8b21f83b73845b8bcd6bc50cc9f8886871)]:
+  - @tsrx/core@0.1.53
+  - @tsrx/ripple@0.1.54
+  - @ripple-ts/adapter@0.3.115
+
+## 0.3.114
+
+### Patch Changes
+
+- Updated dependencies
+  [[`7ec87d9`](https://github.com/Ripple-TS/ripple/commit/7ec87d910c62e39e0dc95c80daace036cc6f041c)]:
+  - @tsrx/core@0.1.52
+  - @tsrx/ripple@0.1.53
+  - @ripple-ts/adapter@0.3.114
+
+## 0.3.113
+
+### Patch Changes
+
+- [#1394](https://github.com/Ripple-TS/ripple/pull/1394)
+  [`6404d3c`](https://github.com/Ripple-TS/ripple/commit/6404d3cc679fde2eb83ec85c9cd98b653f3f2fed)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - fix: make `.tsrx` imports
+  visible to Vite's dependency scanner in every plugin
+
+  Vite's dep scanner runs through Rolldown without the main plugin pipeline, so
+  any npm dependency imported only from `.tsrx` files was invisible at startup and
+  got discovered at request time instead, forcing a re-optimize and a full page
+  reload. Only `@tsrx/vite-plugin-react` handled this; `@tsrx/vite-plugin-preact`,
+  `@tsrx/vite-plugin-solid` and `@ripple-ts/vite-plugin` now do too.
+
+  `@tsrx/core` gains a `@tsrx/core/vite/dep-scan` entry point with the two plugin
+  shapes this needs: `createDepScanTransformPlugin` for plugins that transform
+  `.tsrx` ids directly, and `createDepScanLoadPlugin` for plugins that rewrite
+  them to a virtual `<path>.tsx` form. Both swallow compile failures, so a single
+  malformed file no longer costs the whole project its dependency pre-bundling.
+
+  Also fixes the scan's own JSX transform, which defaults to React's automatic
+  runtime. It was emitting an unresolvable `react/jsx-dev-runtime` import into
+  Preact, Solid and Vue projects, which failed the scan outright — the React-only
+  form of this bug appeared when `jsxImportSource` was set to a non-React runtime.
+  The React and Preact plugins now point that transform at the configured import
+  source, and the Solid and Vue plugins leave JSX untransformed during the scan
+  since their own JSX stage runs downstream.
+
+- Updated dependencies
+  [[`6404d3c`](https://github.com/Ripple-TS/ripple/commit/6404d3cc679fde2eb83ec85c9cd98b653f3f2fed),
+  [`6025176`](https://github.com/Ripple-TS/ripple/commit/6025176000cafa50d924add8e9a878fe37c0c22b),
+  [`6025176`](https://github.com/Ripple-TS/ripple/commit/6025176000cafa50d924add8e9a878fe37c0c22b),
+  [`6025176`](https://github.com/Ripple-TS/ripple/commit/6025176000cafa50d924add8e9a878fe37c0c22b),
+  [`7ad580e`](https://github.com/Ripple-TS/ripple/commit/7ad580efd24b338b4774add06afdcdd8876c954c),
+  [`6eaa2f3`](https://github.com/Ripple-TS/ripple/commit/6eaa2f3e6cd18973d57df06eae770313dd061a1a),
+  [`6025176`](https://github.com/Ripple-TS/ripple/commit/6025176000cafa50d924add8e9a878fe37c0c22b),
+  [`9ffd4ba`](https://github.com/Ripple-TS/ripple/commit/9ffd4ba3e5982acb79a02efe0379abdc14c092a1)]:
+  - @tsrx/core@0.1.51
+  - @tsrx/ripple@0.1.52
+  - @ripple-ts/adapter@0.3.113
+
+## 0.3.112
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @tsrx/ripple@0.1.51
+  - @ripple-ts/adapter@0.3.112
+
+## 0.3.111
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @tsrx/ripple@0.1.50
+  - @ripple-ts/adapter@0.3.111
+
+## 0.3.110
+
+### Patch Changes
+
+- Updated dependencies
+  [[`81859da`](https://github.com/Ripple-TS/ripple/commit/81859da03464b8865304c70ea2b8b1245018af2c)]:
+  - @tsrx/ripple@0.1.49
+  - @ripple-ts/adapter@0.3.110
+
+## 0.3.109
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @tsrx/ripple@0.1.48
+  - @ripple-ts/adapter@0.3.109
+
+## 0.3.108
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/adapter@0.3.108
+
+## 0.3.107
+
+### Patch Changes
+
+- Updated dependencies
+  [[`21a43da`](https://github.com/Ripple-TS/ripple/commit/21a43da09713f28c5d2ae73633e5ca56e4cd8d1f)]:
+  - @tsrx/ripple@0.1.47
+  - @ripple-ts/adapter@0.3.107
+
+## 0.3.106
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @tsrx/ripple@0.1.46
+  - @ripple-ts/adapter@0.3.106
+
+## 0.3.105
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/adapter@0.3.105
+
+## 0.3.104
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/adapter@0.3.104
+
+## 0.3.103
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @tsrx/ripple@0.1.45
+  - @ripple-ts/adapter@0.3.103
+
+## 0.3.102
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/adapter@0.3.102
+
+## 0.3.101
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @tsrx/ripple@0.1.44
+  - @ripple-ts/adapter@0.3.101
+
+## 0.3.100
+
+### Patch Changes
+
+- Updated dependencies
+  [[`b36ec19`](https://github.com/Ripple-TS/ripple/commit/b36ec1930764f447585a6c31c17bc63b3596511a)]:
+  - @tsrx/ripple@0.1.43
+  - @ripple-ts/adapter@0.3.100
+
+## 0.3.99
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @tsrx/ripple@0.1.42
+  - @ripple-ts/adapter@0.3.99
+
+## 0.3.98
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/adapter@0.3.98
+
+## 0.3.97
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @tsrx/ripple@0.1.41
+  - @ripple-ts/adapter@0.3.97
+
+## 0.3.96
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @tsrx/ripple@0.1.40
+  - @ripple-ts/adapter@0.3.96
+
+## 0.3.95
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/adapter@0.3.95
+
+## 0.3.94
+
+### Patch Changes
+
+- Updated dependencies
+  [[`78502e4`](https://github.com/Ripple-TS/ripple/commit/78502e46929df2165d288dbb2483f48e9254ef35)]:
+  - @tsrx/ripple@0.1.39
+  - @ripple-ts/adapter@0.3.94
+
+## 0.3.93
+
+### Patch Changes
+
+- [`9db5a49`](https://github.com/Ripple-TS/ripple/commit/9db5a49e45c2eb3bb4f6b46c65c0aaf9016633ad)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Rename the `ripple/server`
+  helper exports to camelCase: `create_ssr_stream` is now `createStream` and
+  `get_css_for_hashes` is now `getCss` (returning the CSS text for the scoped
+  style hashes collected by `render()`). The old snake_case exports are removed;
+  update imports accordingly. The vite plugin consumes the new names internally.
+- Updated dependencies []:
+  - @ripple-ts/adapter@0.3.93
+
+## 0.3.92
+
+### Patch Changes
+
+- [#1326](https://github.com/Ripple-TS/ripple/pull/1326)
+  [`fea49bf`](https://github.com/Ripple-TS/ripple/commit/fea49bfb4410a05e0c915dfa39acdaba7f542737)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Streaming SSR:
+  `render(App, { stream })` now streams progressively. The synchronous shell (with
+  pending fallbacks for suspended `@try` boundaries and all CSS registered so far)
+  is flushed immediately; each boundary's content streams out of order as a framed
+  chunk once its async work settles, including per-chunk CSS, trackAsync envelopes
+  and `<head>` content. A tiny inline runtime swaps chunks into their slots before
+  hydration, and hydrated boundaries activate streamed chunks in place afterwards
+  — claiming the streamed DOM without re-rendering. Catch-only async boundaries
+  stream an empty slot and resolve to their body or server-rendered catch; errors
+  whose catch region is already on the wire hand off to the client boundary via an
+  error envelope. `render` also gains a `streamTemplate` option for document
+  scaffolding, and the vite plugin streams render-route responses when
+  `ssr.streaming` is enabled in ripple.config.ts (falling back to buffered SSR
+  when index.html lacks the `<!--ssr-head-->`/`<!--ssr-body-->` markers).
+- Updated dependencies []:
+  - @ripple-ts/adapter@0.3.92
+
+## 0.3.91
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @tsrx/ripple@0.1.38
+  - @ripple-ts/adapter@0.3.91
+
+## 0.3.90
+
+### Patch Changes
+
+- Updated dependencies
+  [[`1925074`](https://github.com/Ripple-TS/ripple/commit/1925074254de0e61c8578cba136c50ea8f89cd35)]:
+  - @tsrx/ripple@0.1.37
+  - @ripple-ts/adapter@0.3.90
+
+## 0.3.89
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @tsrx/ripple@0.1.36
+  - @ripple-ts/adapter@0.3.89
+
+## 0.3.88
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/adapter@0.3.88
+
+## 0.3.87
+
+### Patch Changes
+
+- Updated dependencies
+  [[`cc95ffa`](https://github.com/Ripple-TS/ripple/commit/cc95ffaef3f3d3cd252176ea94308f89739f0212),
+  [`6f78b7f`](https://github.com/Ripple-TS/ripple/commit/6f78b7ff5a5e1f9873a839b709f38e9506545a63)]:
+  - @tsrx/ripple@0.1.35
+  - @ripple-ts/adapter@0.3.87
+
+## 0.3.86
+
+### Patch Changes
+
+- Updated dependencies
+  [[`e4e6d7b`](https://github.com/Ripple-TS/ripple/commit/e4e6d7b854786ad19a2c86276ea7e0ffb062e61a)]:
+  - @tsrx/ripple@0.1.34
+  - @ripple-ts/adapter@0.3.86
+
+## 0.3.85
+
+### Patch Changes
+
+- Updated dependencies
+  [[`ba498cd`](https://github.com/Ripple-TS/ripple/commit/ba498cde76e9f83235ce91da825f403a28441bff),
+  [`35ac700`](https://github.com/Ripple-TS/ripple/commit/35ac70052d79efae41bb1df2440fee3f052ca115),
+  [`0e9f523`](https://github.com/Ripple-TS/ripple/commit/0e9f52358a615c2fc7759544e96c43dccb533c86),
+  [`35ac700`](https://github.com/Ripple-TS/ripple/commit/35ac70052d79efae41bb1df2440fee3f052ca115),
+  [`35ac700`](https://github.com/Ripple-TS/ripple/commit/35ac70052d79efae41bb1df2440fee3f052ca115),
+  [`35ac700`](https://github.com/Ripple-TS/ripple/commit/35ac70052d79efae41bb1df2440fee3f052ca115),
+  [`f55466b`](https://github.com/Ripple-TS/ripple/commit/f55466bde65d0cff00c0c4525af9d68ae794ffd2),
+  [`bbc3843`](https://github.com/Ripple-TS/ripple/commit/bbc384387e33c538234be36c07cc4b30ef6ce136)]:
+  - @tsrx/ripple@0.1.33
+  - @ripple-ts/adapter@0.3.85
+
+## 0.3.84
+
+### Patch Changes
+
+- Updated dependencies
+  [[`cc3176b`](https://github.com/Ripple-TS/ripple/commit/cc3176b4e40021021986830bdfa3295530715432)]:
+  - @tsrx/ripple@0.1.32
+  - @ripple-ts/adapter@0.3.84
+
+## 0.3.83
+
+### Patch Changes
+
+- Updated dependencies
+  [[`3d93339`](https://github.com/Ripple-TS/ripple/commit/3d93339e851818b547c43c29c8965700c069b037),
+  [`5646eb4`](https://github.com/Ripple-TS/ripple/commit/5646eb4e4c101b34100acf30ea57ad4065a47720),
+  [`8747e8f`](https://github.com/Ripple-TS/ripple/commit/8747e8f306628443d3c4d73bce0d79e986f5966e),
+  [`8747e8f`](https://github.com/Ripple-TS/ripple/commit/8747e8f306628443d3c4d73bce0d79e986f5966e)]:
+  - @tsrx/ripple@0.1.31
+  - @ripple-ts/adapter@0.3.83
+
+## 0.3.82
+
+### Patch Changes
+
+- [`67f3794`](https://github.com/Ripple-TS/ripple/commit/67f3794d2f1ffd55dd23a47327d925d9a76a4171)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Compose `RenderRoute` layouts
+  during client hydration. The generated client entry hydrated the bare page
+  component, so a route's `layout` only existed in the server-rendered HTML: the
+  layout component never ran in the browser, its CSS was missing from the client
+  graph, and once the SSR style block was removed after hydration the layout's
+  styles disappeared (visible as a flash of unstyled content). The client entry
+  now loads the layout module and wraps the page the same way the server does, and
+  layout entries are included in the client build's static route imports so their
+  CSS is bundled.
+- Updated dependencies []:
+  - @tsrx/ripple@0.1.30
+  - @ripple-ts/adapter@0.3.82
+
+## 0.3.81
+
+### Patch Changes
+
+- Updated dependencies
+  [[`3b6fb73`](https://github.com/Ripple-TS/ripple/commit/3b6fb73170d4ad6a383befdda951ce0da4fcbb46),
+  [`1c645c8`](https://github.com/Ripple-TS/ripple/commit/1c645c8f854df23bb1271b3402d1885616b525cd),
+  [`b1256fd`](https://github.com/Ripple-TS/ripple/commit/b1256fdb5bf279ee7dd20bf1a71dcfccc47e279c)]:
+  - @tsrx/ripple@0.1.29
+  - @ripple-ts/adapter@0.3.81
+
+## 0.3.80
+
+### Patch Changes
+
+- Updated dependencies
+  [[`4af2591`](https://github.com/Ripple-TS/ripple/commit/4af259139d118a27d177531aa6a21435a3f3a015),
+  [`87afc5d`](https://github.com/Ripple-TS/ripple/commit/87afc5d3f4c73e604cd245865e27d29e40435482)]:
+  - @tsrx/ripple@0.1.28
+  - @ripple-ts/adapter@0.3.80
+
+## 0.3.79
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @tsrx/ripple@0.1.27
+  - @ripple-ts/adapter@0.3.79
+
+## 0.3.78
+
+### Patch Changes
+
+- Updated dependencies
+  [[`92982ee`](https://github.com/Ripple-TS/ripple/commit/92982ee5cd2e6d971b5b650ec1df70483c9716aa),
+  [`92982ee`](https://github.com/Ripple-TS/ripple/commit/92982ee5cd2e6d971b5b650ec1df70483c9716aa),
+  [`b826234`](https://github.com/Ripple-TS/ripple/commit/b8262342111a977ba5a0d44086154e386b06f4b9),
+  [`b826234`](https://github.com/Ripple-TS/ripple/commit/b8262342111a977ba5a0d44086154e386b06f4b9)]:
+  - @tsrx/ripple@0.1.26
+  - @ripple-ts/adapter@0.3.78
+
+## 0.3.77
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @tsrx/ripple@0.1.25
+  - @ripple-ts/adapter@0.3.77
+
+## 0.3.76
+
+### Patch Changes
+
+- Updated dependencies
+  [[`6fd49c9`](https://github.com/Ripple-TS/ripple/commit/6fd49c9dd737e889844e254763f66e13ea4a7241)]:
+  - @tsrx/ripple@0.1.24
+  - @ripple-ts/adapter@0.3.76
+
+## 0.3.75
+
+### Patch Changes
+
+- Updated dependencies
+  [[`88a254c`](https://github.com/Ripple-TS/ripple/commit/88a254c69953a5ace33bc10047f11052ec598672),
+  [`4c5f992`](https://github.com/Ripple-TS/ripple/commit/4c5f992b9a11e1f26abee476a6add89f959169bc),
+  [`186b3b2`](https://github.com/Ripple-TS/ripple/commit/186b3b2557761ff06c9056bf2e0b7ab8c7692477)]:
+  - @tsrx/ripple@0.1.23
+  - @ripple-ts/adapter@0.3.75
+
+## 0.3.74
+
+### Patch Changes
+
+- Updated dependencies
+  [[`5d33325`](https://github.com/Ripple-TS/ripple/commit/5d3332564109d228af5e02c0f68ca4a318766649),
+  [`5d33325`](https://github.com/Ripple-TS/ripple/commit/5d3332564109d228af5e02c0f68ca4a318766649),
+  [`5d33325`](https://github.com/Ripple-TS/ripple/commit/5d3332564109d228af5e02c0f68ca4a318766649),
+  [`5d33325`](https://github.com/Ripple-TS/ripple/commit/5d3332564109d228af5e02c0f68ca4a318766649),
+  [`5d33325`](https://github.com/Ripple-TS/ripple/commit/5d3332564109d228af5e02c0f68ca4a318766649),
+  [`5d33325`](https://github.com/Ripple-TS/ripple/commit/5d3332564109d228af5e02c0f68ca4a318766649),
+  [`5d33325`](https://github.com/Ripple-TS/ripple/commit/5d3332564109d228af5e02c0f68ca4a318766649),
+  [`5d33325`](https://github.com/Ripple-TS/ripple/commit/5d3332564109d228af5e02c0f68ca4a318766649),
+  [`5d33325`](https://github.com/Ripple-TS/ripple/commit/5d3332564109d228af5e02c0f68ca4a318766649),
+  [`5d33325`](https://github.com/Ripple-TS/ripple/commit/5d3332564109d228af5e02c0f68ca4a318766649),
+  [`5d33325`](https://github.com/Ripple-TS/ripple/commit/5d3332564109d228af5e02c0f68ca4a318766649),
+  [`5d33325`](https://github.com/Ripple-TS/ripple/commit/5d3332564109d228af5e02c0f68ca4a318766649),
+  [`5d33325`](https://github.com/Ripple-TS/ripple/commit/5d3332564109d228af5e02c0f68ca4a318766649)]:
+  - @tsrx/ripple@0.1.22
+  - @ripple-ts/adapter@0.3.74
+
+## 0.3.73
+
+### Patch Changes
+
+- [#1198](https://github.com/Ripple-TS/ripple/pull/1198)
+  [`1de66b8`](https://github.com/Ripple-TS/ripple/commit/1de66b8f851849597b6078dab7af2699e49b0e21)
+  Thanks [@trueadm](https://github.com/trueadm)! - Remove the unused namespaced
+  TSX island feature and React bridge package.
+
+- Updated dependencies
+  [[`e738e11`](https://github.com/Ripple-TS/ripple/commit/e738e1153694f56f35cfcab8982d897d7199d85a),
+  [`1de66b8`](https://github.com/Ripple-TS/ripple/commit/1de66b8f851849597b6078dab7af2699e49b0e21)]:
+  - @tsrx/ripple@0.1.21
+  - @ripple-ts/adapter@0.3.73
+
+## 0.3.72
+
+### Patch Changes
+
+- Updated dependencies
+  [[`0ea87fb`](https://github.com/Ripple-TS/ripple/commit/0ea87fb3cbef21c3c00d63cc2a1f3c9f34d01c24)]:
+  - @tsrx/ripple@0.1.20
+  - @ripple-ts/adapter@0.3.72
+
+## 0.3.71
+
+### Patch Changes
+
+- Updated dependencies
+  [[`0574e73`](https://github.com/Ripple-TS/ripple/commit/0574e73830a549f515cef6aa8c0a1e38c79b06cc),
+  [`0574e73`](https://github.com/Ripple-TS/ripple/commit/0574e73830a549f515cef6aa8c0a1e38c79b06cc)]:
+  - @tsrx/ripple@0.1.19
+  - @ripple-ts/adapter@0.3.71
+
+## 0.3.70
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @tsrx/ripple@0.1.18
+  - @ripple-ts/adapter@0.3.70
+
+## 0.3.69
+
+### Patch Changes
+
+- Updated dependencies
+  [[`054bd1e`](https://github.com/Ripple-TS/ripple/commit/054bd1e75347e395f6c096f8e293d1baf8e03549),
+  [`054bd1e`](https://github.com/Ripple-TS/ripple/commit/054bd1e75347e395f6c096f8e293d1baf8e03549)]:
+  - @tsrx/ripple@0.1.17
+  - @ripple-ts/adapter@0.3.69
+
+## 0.3.68
+
+### Patch Changes
+
+- Updated dependencies
+  [[`d045396`](https://github.com/Ripple-TS/ripple/commit/d0453962cfe1df7a98a0981b0bf3e5729195a9ae)]:
+  - @tsrx/ripple@0.1.16
+  - @ripple-ts/adapter@0.3.68
+
+## 0.3.67
+
+### Patch Changes
+
+- Updated dependencies
+  [[`d083ab8`](https://github.com/Ripple-TS/ripple/commit/d083ab8e802259fa6d8b7bf9bb64d4be899848c4)]:
+  - @tsrx/ripple@0.1.15
+  - @ripple-ts/adapter@0.3.67
+
+## 0.3.66
+
+### Patch Changes
+
+- [#1168](https://github.com/Ripple-TS/ripple/pull/1168)
+  [`146cbf5`](https://github.com/Ripple-TS/ripple/commit/146cbf58120aad05161d503118a47bdc566ba869)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Add global root pending/catch
+  boundary support and allow Ripple config routes to reference named entry
+  exports.
+
+  Refactor vite-plugin to keep code generation in one place, produce cache as
+  necessary and generate actual files for inspection.
+
+- Updated dependencies
+  [[`1dc0331`](https://github.com/Ripple-TS/ripple/commit/1dc0331f7b7296545ee459dc31a92057871cbb0d),
+  [`bf1cb96`](https://github.com/Ripple-TS/ripple/commit/bf1cb96f2ea9b325e30f5a051c451f92659d20f9)]:
+  - @tsrx/ripple@0.1.14
+  - @ripple-ts/adapter@0.3.66
+
+## 0.3.65
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @tsrx/ripple@0.1.13
+  - @ripple-ts/adapter@0.3.65
+
+## 0.3.64
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/adapter@0.3.64
+
+## 0.3.63
+
+### Patch Changes
+
+- Updated dependencies
+  [[`9df9fe3`](https://github.com/Ripple-TS/ripple/commit/9df9fe3a2d26978e69172db84994ac496761cd04),
+  [`9df9fe3`](https://github.com/Ripple-TS/ripple/commit/9df9fe3a2d26978e69172db84994ac496761cd04),
+  [`9df9fe3`](https://github.com/Ripple-TS/ripple/commit/9df9fe3a2d26978e69172db84994ac496761cd04),
+  [`9df9fe3`](https://github.com/Ripple-TS/ripple/commit/9df9fe3a2d26978e69172db84994ac496761cd04)]:
+  - @tsrx/ripple@0.1.12
+  - @ripple-ts/adapter@0.3.63
+
+## 0.3.62
+
+### Patch Changes
+
+- [#1148](https://github.com/Ripple-TS/ripple/pull/1148)
+  [`78d766a`](https://github.com/Ripple-TS/ripple/commit/78d766ad263152cd7a8decf64979d33be52a0124)
+  Thanks [@aleclarson](https://github.com/aleclarson)! - Chain TSRX compiler
+  source maps through the Vite JSX transform so browser devtools show original
+  `.tsrx` sources instead of generated TSX.
+
+- Updated dependencies []:
+  - @ripple-ts/adapter@0.3.62
+
+## 0.3.61
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @tsrx/ripple@0.1.11
+  - @ripple-ts/adapter@0.3.61
+
+## 0.3.60
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @tsrx/ripple@0.1.10
+  - @ripple-ts/adapter@0.3.60
+
+## 0.3.59
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @tsrx/ripple@0.1.9
+  - @ripple-ts/adapter@0.3.59
+
+## 0.3.58
+
+### Patch Changes
+
+- Updated dependencies
+  [[`165703c`](https://github.com/Ripple-TS/ripple/commit/165703c588b52f3dc0d26c06187f21700d448693)]:
+  - @tsrx/ripple@0.1.8
+  - @ripple-ts/adapter@0.3.58
+
+## 0.3.57
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @tsrx/ripple@0.1.7
+  - @ripple-ts/adapter@0.3.57
+
+## 0.3.56
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @tsrx/ripple@0.1.6
+  - @ripple-ts/adapter@0.3.56
+
+## 0.3.55
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @tsrx/ripple@0.1.5
+  - @ripple-ts/adapter@0.3.55
+
+## 0.3.54
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @tsrx/ripple@0.1.4
+  - @ripple-ts/adapter@0.3.54
+
+## 0.3.53
+
+### Patch Changes
+
+- Updated dependencies
+  [[`c042672`](https://github.com/Ripple-TS/ripple/commit/c04267255d35945753ca8090006622c96fa0a14f)]:
+  - @tsrx/ripple@0.1.3
+  - @ripple-ts/adapter@0.3.53
+
+## 0.3.52
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @tsrx/ripple@0.1.2
+  - @ripple-ts/adapter@0.3.52
+
+## 0.3.51
+
+### Patch Changes
+
+- [`f1b1f94`](https://github.com/Ripple-TS/ripple/commit/f1b1f9475553cbe3632a5cc9794a8f54615c29f2)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Patch packages currently
+  versioned at 0.3.50 to fix the bump that caused major 1.0.0 release with a minor
+  changeset.
+
+- Updated dependencies
+  [[`f1b1f94`](https://github.com/Ripple-TS/ripple/commit/f1b1f9475553cbe3632a5cc9794a8f54615c29f2)]:
+  - @ripple-ts/adapter@0.3.51
+  - @tsrx/ripple@0.1.1
+
+## 0.3.50
+
+### Patch Changes
+
+- Updated dependencies
+  [[`2a85e9b`](https://github.com/Ripple-TS/ripple/commit/2a85e9bb73f4d82f2bd2273c33735b4dc7b82d5f)]:
+  - @tsrx/ripple@0.1.0
+  - @ripple-ts/adapter@0.3.50
+
+## 0.3.49
+
+### Patch Changes
+
+- Updated dependencies
+  [[`b54a72f`](https://github.com/Ripple-TS/ripple/commit/b54a72f721adb5f08a5bf3e3d006780b7e1eb471)]:
+  - @tsrx/ripple@0.0.30
+  - @ripple-ts/adapter@0.3.49
+
+## 0.3.48
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/adapter@0.3.48
+
+## 0.3.47
+
+### Patch Changes
+
+- [#1063](https://github.com/Ripple-TS/ripple/pull/1063)
+  [`a960343`](https://github.com/Ripple-TS/ripple/commit/a960343169aee906162211c502b6cc6b74e2a124)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Standardizes compile api
+  across all packages, including forcing types to adhere to the standard. Adds
+  more debug compile options to the playgrounds.
+- Updated dependencies
+  [[`eae7b40`](https://github.com/Ripple-TS/ripple/commit/eae7b4047f4d8cc7a0278fb48ffe630d73a592c6),
+  [`b34b95a`](https://github.com/Ripple-TS/ripple/commit/b34b95a808ec801109d1818f4d24ae0bbc00f66b),
+  [`a960343`](https://github.com/Ripple-TS/ripple/commit/a960343169aee906162211c502b6cc6b74e2a124)]:
+  - @tsrx/ripple@0.0.29
+  - @ripple-ts/adapter@0.3.47
+
+## 0.3.46
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @tsrx/ripple@0.0.28
+  - @ripple-ts/adapter@0.3.46
+
+## 0.3.45
+
+### Patch Changes
+
+- Updated dependencies
+  [[`d1acf12`](https://github.com/Ripple-TS/ripple/commit/d1acf129cdd0bf2ee596dbab26ec4df829a33880),
+  [`3928ac8`](https://github.com/Ripple-TS/ripple/commit/3928ac8816399f9eccfd40081d480042a9d74030)]:
+  - @tsrx/ripple@0.0.27
+  - @ripple-ts/adapter@0.3.45
+
+## 0.3.44
+
+### Patch Changes
+
+- Updated dependencies
+  [[`f5a3c1b`](https://github.com/Ripple-TS/ripple/commit/f5a3c1b9e915c250c8cd1a7dcf4e80c44abe720f)]:
+  - @tsrx/ripple@0.0.26
+  - @ripple-ts/adapter@0.3.44
+
+## 0.3.43
+
+### Patch Changes
+
+- Updated dependencies
+  [[`5c6ee71`](https://github.com/Ripple-TS/ripple/commit/5c6ee71bfd4f5dc443c43eb34e631bb032606faf),
+  [`83b19fd`](https://github.com/Ripple-TS/ripple/commit/83b19fd67aa27eb10e93205dd88c61b13ffbc523)]:
+  - @tsrx/ripple@0.0.25
+  - @ripple-ts/adapter@0.3.43
+
+## 0.3.42
+
+### Patch Changes
+
+- Updated dependencies
+  [[`b4cc83f`](https://github.com/Ripple-TS/ripple/commit/b4cc83f07d8777d5882d1e853493941a3f6224ae)]:
+  - @tsrx/ripple@0.0.24
+  - @ripple-ts/adapter@0.3.42
+
+## 0.3.41
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @tsrx/ripple@0.0.23
+  - @ripple-ts/adapter@0.3.41
+
+## 0.3.40
+
+### Patch Changes
+
+- Updated dependencies
+  [[`31193f2`](https://github.com/Ripple-TS/ripple/commit/31193f23aa6b6b5b79cd858f57e8aca69cd44b6d)]:
+  - @tsrx/ripple@0.0.22
+  - @ripple-ts/adapter@0.3.40
+
+## 0.3.39
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @tsrx/ripple@0.0.21
+  - @ripple-ts/adapter@0.3.39
+
+## 0.3.38
+
+### Patch Changes
+
+- Updated dependencies
+  [[`088299c`](https://github.com/Ripple-TS/ripple/commit/088299ce94a6022c017ce2e56c7e1b59bd5973f7)]:
+  - @tsrx/ripple@0.0.20
+  - @ripple-ts/adapter@0.3.38
+
+## 0.3.37
+
+### Patch Changes
+
+- Updated dependencies
+  [[`c631ab0`](https://github.com/Ripple-TS/ripple/commit/c631ab0076b7e2cb30f4998101b54c3a86e78c61)]:
+  - @tsrx/ripple@0.0.19
+  - @ripple-ts/adapter@0.3.37
+
+## 0.3.36
+
+### Patch Changes
+
+- [#999](https://github.com/Ripple-TS/ripple/pull/999)
+  [`aa6628b`](https://github.com/Ripple-TS/ripple/commit/aa6628b3318f1bdad6a6e12286d3002f8d591e2e)
+  Thanks [@trueadm](https://github.com/trueadm)! - Pass RenderRoute params to
+  SSR-compiled page components.
+
+- Updated dependencies []:
+  - @tsrx/ripple@0.0.18
+  - @ripple-ts/adapter@0.3.36
+
+## 0.3.35
+
+### Patch Changes
+
+- [#966](https://github.com/Ripple-TS/ripple/pull/966)
+  [`caf83e3`](https://github.com/Ripple-TS/ripple/commit/caf83e386faa9133df70460f266fc27ab323082b)
+  Thanks [@RazinShafayet2007](https://github.com/RazinShafayet2007)! - fix:
+  register SSR/API middleware as a pre-hook so it runs before Vite's HTML fallback
+  middleware
+
+  The dev server's `configureServer` hook previously returned a function
+  (post-hook), which registered SSR/API middleware after Vite's internal
+  middleware stack. Vite's HTML fallback middleware would intercept all non-file
+  GET requests first, preventing SSR rendering and API routes from ever executing.
+
+  Switched to a pre-hook (no return value) so middleware is registered before Vite
+  internals. Config loading is deferred to the first request via
+  `ensureConfigLoaded()`, which retries on missing config and surfaces load errors
+  as dev-server 500 pages instead of silently falling through.
+
+- Updated dependencies []:
+  - @tsrx/ripple@0.0.17
+  - @ripple-ts/adapter@0.3.35
+
+## 0.3.34
+
+### Patch Changes
+
+- Updated dependencies
+  [[`fee8620`](https://github.com/Ripple-TS/ripple/commit/fee8620fa4e82a7c7e4adb3e434e9db552a3e157),
+  [`2fcacb4`](https://github.com/Ripple-TS/ripple/commit/2fcacb471d7780074f92b20c9b394f7650a941bb)]:
+  - @tsrx/ripple@0.0.16
+  - @ripple-ts/adapter@0.3.34
+
+## 0.3.33
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @tsrx/ripple@0.0.15
+  - @ripple-ts/adapter@0.3.33
+
+## 0.3.32
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @tsrx/ripple@0.0.14
+  - @ripple-ts/adapter@0.3.32
+
+## 0.3.31
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @tsrx/ripple@0.0.13
+  - @ripple-ts/adapter@0.3.31
+
+## 0.3.30
+
+### Patch Changes
+
+- Updated dependencies
+  [[`7f59ed8`](https://github.com/Ripple-TS/ripple/commit/7f59ed80d7b44c847fb9eb8bf00d4fe9835c3136)]:
+  - @tsrx/ripple@0.0.12
+  - @ripple-ts/adapter@0.3.30
+
+## 0.3.29
+
+### Patch Changes
+
+- Updated dependencies
+  [[`4543794`](https://github.com/Ripple-TS/ripple/commit/45437944a99decfb4bc56f7171772614a7f5691a)]:
+  - @tsrx/ripple@0.0.11
+  - @ripple-ts/adapter@0.3.29
+
+## 0.3.28
+
+### Patch Changes
+
+- Updated dependencies
+  [[`e4b5555`](https://github.com/Ripple-TS/ripple/commit/e4b5555fb5b1651a2bf1bf232565c7e0e40213b8),
+  [`e4b5555`](https://github.com/Ripple-TS/ripple/commit/e4b5555fb5b1651a2bf1bf232565c7e0e40213b8)]:
+  - @tsrx/ripple@0.0.10
+  - @ripple-ts/adapter@0.3.28
+
+## 0.3.27
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/adapter@0.3.27
+
+## 0.3.26
+
+### Patch Changes
+
+- [`68d80f8`](https://github.com/Ripple-TS/ripple/commit/68d80f8c7a6398692e00497b90cb3d0ba981aea3)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Correct package versions.
+
+- Updated dependencies
+  [[`68d80f8`](https://github.com/Ripple-TS/ripple/commit/68d80f8c7a6398692e00497b90cb3d0ba981aea3)]:
+  - @ripple-ts/adapter@0.3.26
+  - @tsrx/ripple@0.0.9
+
+## 1.0.1
+
+### Patch Changes
+
+- Updated dependencies
+  [[`316cba1`](https://github.com/Ripple-TS/ripple/commit/316cba18614e5ef59dce15e0de6e720eb922955f)]:
+  - @tsrx/ripple@0.0.8
+  - @ripple-ts/adapter@1.0.1
+
+## 1.0.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @tsrx/ripple@0.0.7
+  - @ripple-ts/adapter@1.0.0
+
+## 0.3.25
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/adapter@0.3.25
+
+## 0.3.24
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/adapter@0.3.24
+
+## 0.3.23
+
+### Patch Changes
+
+- Updated dependencies
+  [[`73ceaac`](https://github.com/Ripple-TS/ripple/commit/73ceaacd029fb634a62252abdda59ab5f2bec15d)]:
+  - @tsrx/ripple@0.0.6
+  - @ripple-ts/adapter@0.3.23
+
+## 0.3.22
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/adapter@0.3.22
+
+## 0.3.21
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/adapter@0.3.21
+
+## 0.3.20
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/adapter@0.3.20
+
+## 0.3.19
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/adapter@0.3.19
+
+## 0.3.18
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/adapter@0.3.18
+
+## 0.3.17
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @tsrx/ripple@0.0.5
+  - @ripple-ts/adapter@0.3.17
+
+## 0.3.16
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @tsrx/ripple@0.0.4
+  - @ripple-ts/adapter@0.3.16
+
+## 0.3.15
+
+### Patch Changes
+
+- Updated dependencies
+  [[`a14097a`](https://github.com/Ripple-TS/ripple/commit/a14097a688ad85c236a6619cef527c78787ab367)]:
+  - @tsrx/ripple@0.0.3
+  - @ripple-ts/adapter@0.3.15
+
+## 0.3.14
+
+### Patch Changes
+
+- Updated dependencies
+  [[`228f1bb`](https://github.com/Ripple-TS/ripple/commit/228f1bb36cd3e8506c422ed0997164bf5a0b5fe2)]:
+  - @tsrx/ripple@0.0.2
+  - @ripple-ts/adapter@0.3.14
+
+## 0.3.13
+
+### Patch Changes
+
+- [`6e11177`](https://github.com/Ripple-TS/ripple/commit/6e111778cae4e7d9876e51e293520f0859eb5890)
+  Thanks [@trueadm](https://github.com/trueadm)! - Add `.tsrx` support across
+  Ripple tooling and rename the repository's tracked `.tsrx` modules to `.tsrx`.
+- Updated dependencies []:
+  - @ripple-ts/adapter@0.3.13
+
+## 0.3.12
+
+### Patch Changes
+
+- [#859](https://github.com/Ripple-TS/ripple/pull/859)
+  [`cdd31ba`](https://github.com/Ripple-TS/ripple/commit/cdd31ba4c07ce504b01d56533e19a6ba37879f5a)
+  Thanks [@trueadm](https://github.com/trueadm)! - Add first-phase `.tsrx` support
+  across the core Ripple tooling so Vite, Rollup, TypeScript, the language server,
+  Prettier, ESLint, and editor integrations accept both `.tsrx` and `.tsrx` files.
+
+- Updated dependencies []:
+  - @ripple-ts/adapter@0.3.12
+
+## 0.3.11
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/adapter@0.3.11
+
+## 0.3.10
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/adapter@0.3.10
+
+## 0.3.9
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/adapter@0.3.9
+
+## 0.3.8
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/adapter@0.3.8
+
+## 0.3.7
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/adapter@0.3.7
+
+## 0.3.6
+
+### Patch Changes
+
+- [#819](https://github.com/Ripple-TS/ripple/pull/819)
+  [`472c4c4`](https://github.com/Ripple-TS/ripple/commit/472c4c4b80a69ed22a258a3f3c03c4ca2d20a95b)
+  Thanks [@trueadm](https://github.com/trueadm)! - Fix HMR update causing
+  component styling to disappear
+
+  When editing a component's scoped CSS, the CSS hash changes but the virtual CSS
+  module was not being invalidated or included in the HMR update. This caused the
+  browser to keep stale CSS selectors that no longer matched the component's new
+  hash-scoped class names, making all styling disappear until a full dev server
+  restart.
+
+  The fix eagerly re-compiles the `.tsrx` file in the `hotUpdate` hook to update
+  the CSS cache, then invalidates and includes the virtual CSS module in the HMR
+  update so the browser receives fresh CSS in sync with the re-rendered component.
+
+- Updated dependencies []:
+  - @ripple-ts/adapter@0.3.6
+
+## 0.3.5
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/adapter@0.3.5
+
+## 0.3.4
+
+### Patch Changes
+
+- [#807](https://github.com/Ripple-TS/ripple/pull/807)
+  [`56cdf54`](https://github.com/Ripple-TS/ripple/commit/56cdf54afb1b96e49faa273c18e0489ad70897b2)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Upgrade to Vite 8
+
+- [`2956743`](https://github.com/Ripple-TS/ripple/commit/2956743ccbf8ebad6ae9fde27fb8809634fa3a91)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Split the production subpath
+  declarations into a dedicated type file so the exported types resolve cleanly
+  without self-import workarounds.
+
+- Updated dependencies []:
+  - @ripple-ts/adapter@0.3.4
+
+## 0.3.3
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/adapter@0.3.3
+
+## 0.3.2
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/adapter@0.3.2
+
+## 0.3.1
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/adapter@0.3.1
+
+## 0.3.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/adapter@0.3.0
+
+## 0.2.216
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/adapter@0.2.216
+
+## 0.2.215
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @ripple-ts/adapter@0.2.215
+
+## 0.2.214
+
+### Patch Changes
+
+- [#730](https://github.com/Ripple-TS/ripple/pull/730)
+  [`6efde20`](https://github.com/Ripple-TS/ripple/commit/6efde20a7fe1e29b27ac98823362cba2001340fa)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Force patch version bump for
+  vite-plugin package.
+
+- Updated dependencies []:
+  - @ripple-ts/adapter@0.2.214
+
+## 0.2.213
+
+## 0.2.212
+
+## 0.2.211
+
+## 0.2.210
+
+## 0.2.209
+
+### Patch Changes
+
+- [#682](https://github.com/Ripple-TS/ripple/pull/682)
+  [`96a5614`](https://github.com/Ripple-TS/ripple/commit/96a56141de8aa667a64bf53ad06f63292e38b1d9)
+  Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Add
+  invalid HTML nesting error detection during SSR in dev mode
+
+  During SSR, if the HTML is malformed (e.g., `<button>` elements nested inside
+  other `<button>` elements), the browser tries to repair the HTML, making
+  hydration impossible. This change adds runtime validation of HTML nesting during
+  SSR to detect these cases and provide clear error messages.
+  - Added `push_element` and `pop_element` functions to the server runtime that
+    track the element stack during SSR
+  - Added comprehensive HTML nesting validation rules based on the HTML spec
+  - The server compiler now emits `push_element`/`pop_element` calls when the
+    `dev` option is enabled
+  - Added `dev` option to `CompileOptions`
+  - The Vite plugin now automatically enables dev mode during `vite dev` (serve
+    command)

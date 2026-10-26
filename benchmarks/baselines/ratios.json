@@ -1,0 +1,2801 @@
+[
+  {
+    "suite": "js-framework",
+    "op": "run",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1.5573,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "js-framework",
+    "op": "replace",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1.4008,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "js-framework",
+    "op": "add",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1.5271,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "js-framework",
+    "op": "clear",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1.4601,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "js-framework",
+    "op": "live_inserts_1k",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 0,
+    "unit": "count",
+    "note": "Maximum paired count ratio in three correctness-verified normal runs."
+  },
+  {
+    "suite": "js-framework",
+    "op": "live_inserts_10k",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 0,
+    "unit": "count",
+    "note": "Maximum paired count ratio in three correctness-verified normal runs."
+  },
+  {
+    "suite": "js-framework",
+    "op": "live_inserts_append_1k",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 0,
+    "unit": "count",
+    "note": "Maximum paired count ratio in three correctness-verified normal runs."
+  },
+  {
+    "suite": "js-framework",
+    "op": "live_inserts_prepend_100",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 0,
+    "unit": "count",
+    "note": "Maximum paired count ratio in three correctness-verified normal runs."
+  },
+  {
+    "suite": "js-framework",
+    "op": "live_inserts_append_100",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 0,
+    "unit": "count",
+    "note": "Maximum paired count ratio in three correctness-verified normal runs."
+  },
+  {
+    "suite": "js-framework",
+    "op": "live_inserts_middle_100",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 0,
+    "unit": "count",
+    "note": "Maximum paired count ratio in three correctness-verified normal runs."
+  },
+  {
+    "suite": "js-framework",
+    "op": "run",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 1.7705,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "js-framework",
+    "op": "replace",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 1.3303,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "js-framework",
+    "op": "add",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 1.4869,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "js-framework",
+    "op": "select",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 1.5366,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "js-framework",
+    "op": "select_lots",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 1.3364,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "js-framework",
+    "op": "clear",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 1.4718,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "js-framework",
+    "op": "live_inserts_1k",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 0,
+    "unit": "count",
+    "note": "Maximum paired count ratio in three correctness-verified normal runs."
+  },
+  {
+    "suite": "js-framework",
+    "op": "live_inserts_10k",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 0,
+    "unit": "count",
+    "note": "Maximum paired count ratio in three correctness-verified normal runs."
+  },
+  {
+    "suite": "js-framework",
+    "op": "live_inserts_append_1k",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 0,
+    "unit": "count",
+    "note": "Maximum paired count ratio in three correctness-verified normal runs."
+  },
+  {
+    "suite": "js-framework",
+    "op": "live_inserts_prepend_100",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 0,
+    "unit": "count",
+    "note": "Maximum paired count ratio in three correctness-verified normal runs."
+  },
+  {
+    "suite": "js-framework",
+    "op": "live_inserts_append_100",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 0,
+    "unit": "count",
+    "note": "Maximum paired count ratio in three correctness-verified normal runs."
+  },
+  {
+    "suite": "js-framework",
+    "op": "live_inserts_middle_100",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 0,
+    "unit": "count",
+    "note": "Maximum paired count ratio in three correctness-verified normal runs."
+  },
+  {
+    "suite": "js-framework",
+    "op": "run",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 1.3334,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "js-framework",
+    "op": "replace",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 1.4666,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "js-framework",
+    "op": "add",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 1.5551,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "js-framework",
+    "op": "runlots",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 1.4374,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "js-framework",
+    "op": "clear",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 1.6498,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "js-framework",
+    "op": "live_inserts_1k",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 0,
+    "unit": "count",
+    "note": "Maximum paired count ratio in three correctness-verified normal runs."
+  },
+  {
+    "suite": "js-framework",
+    "op": "live_inserts_10k",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 0,
+    "unit": "count",
+    "note": "Maximum paired count ratio in three correctness-verified normal runs."
+  },
+  {
+    "suite": "js-framework",
+    "op": "live_inserts_append_1k",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 0,
+    "unit": "count",
+    "note": "Maximum paired count ratio in three correctness-verified normal runs."
+  },
+  {
+    "suite": "js-framework",
+    "op": "live_inserts_prepend_100",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 0,
+    "unit": "count",
+    "note": "Maximum paired count ratio in three correctness-verified normal runs."
+  },
+  {
+    "suite": "js-framework",
+    "op": "live_inserts_append_100",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 0,
+    "unit": "count",
+    "note": "Maximum paired count ratio in three correctness-verified normal runs."
+  },
+  {
+    "suite": "js-framework",
+    "op": "live_inserts_middle_100",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 0,
+    "unit": "count",
+    "note": "Maximum paired count ratio in three correctness-verified normal runs."
+  },
+  {
+    "suite": "js-framework-reorder",
+    "op": "reverse",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1.5971,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "js-framework-reorder",
+    "op": "shuffle",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 2.1372,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "js-framework-reorder",
+    "op": "rotatef",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1.6403,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "js-framework-reorder",
+    "op": "rotateb",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1.921,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "js-framework-reorder",
+    "op": "prepend100",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1.6501,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "js-framework-reorder",
+    "op": "insertmid100",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1.5264,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "js-framework-reorder",
+    "op": "removefirst",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 2.0724,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "js-framework-reorder",
+    "op": "displace3",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 2.0111,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "js-framework-reorder",
+    "op": "displace4",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1.7879,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "js-framework-reorder",
+    "op": "displace5",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1.8751,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "js-framework-reorder",
+    "op": "rotatef",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 1.6229,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "js-framework-reorder",
+    "op": "rotateb",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 1.8899,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "js-framework-reorder",
+    "op": "prepend100",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 1.4773,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "js-framework-reorder",
+    "op": "append100",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 1.5804,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "js-framework-reorder",
+    "op": "removefirst",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 1.419,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "js-framework-reorder",
+    "op": "displace3",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 1.5971,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "js-framework-reorder",
+    "op": "displace4",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 1.4198,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "js-framework-reorder",
+    "op": "displace5",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 1.3229,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "js-framework-reorder",
+    "op": "displace4",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 0.8456,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "js-framework-reorder",
+    "op": "displace5",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 0.8317,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "recursive-context",
+    "op": "mount",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1.234,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "recursive-context",
+    "op": "partial_remount",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1.8971,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "recursive-context",
+    "op": "mount",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 1.5752,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "recursive-context",
+    "op": "mount",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 0.7262,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "recursive-context",
+    "op": "update_root",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 2.2194,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "recursive-context",
+    "op": "partial_remount",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 1.4595,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "signal-favoring",
+    "op": "mount",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1.1176,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "signal-favoring",
+    "op": "mount",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 1.7018,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "signal-favoring",
+    "op": "mount",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 1.6547,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "news",
+    "op": "hydrate",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1.057,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "news",
+    "op": "hydrate",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 0.9046,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "news",
+    "op": "hydrate",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 1.1963,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "todomvc",
+    "op": "add100",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 0.9926,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "todomvc",
+    "op": "filterCycle",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1.0472,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "todomvc",
+    "op": "destroy25",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1.0787,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "todomvc",
+    "op": "row_class_writes_complete25",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1,
+    "unit": "count",
+    "note": "Maximum paired count ratio in three correctness-verified normal runs."
+  },
+  {
+    "suite": "todomvc",
+    "op": "nodes_100",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 0.9972565157750343,
+    "unit": "count",
+    "note": "Maximum paired count ratio in three correctness-verified normal runs."
+  },
+  {
+    "suite": "todomvc",
+    "op": "elements_100",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1,
+    "unit": "count",
+    "note": "Maximum paired count ratio in three correctness-verified normal runs."
+  },
+  {
+    "suite": "todomvc",
+    "op": "text_100",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1.0188679245283019,
+    "unit": "count",
+    "note": "Maximum paired count ratio in three correctness-verified normal runs."
+  },
+  {
+    "suite": "todomvc",
+    "op": "comments_100",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 0.9622641509433962,
+    "unit": "count",
+    "note": "Maximum paired count ratio in three correctness-verified normal runs."
+  },
+  {
+    "suite": "todomvc",
+    "op": "add100",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 1.2368,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "todomvc",
+    "op": "filterCycle",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 1.0572,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "todomvc",
+    "op": "destroy25",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 1.1118,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "todomvc",
+    "op": "nodes_100",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 1.0041436464088398,
+    "unit": "count",
+    "note": "Maximum paired count ratio in three correctness-verified normal runs."
+  },
+  {
+    "suite": "todomvc",
+    "op": "elements_100",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 1,
+    "unit": "count",
+    "note": "Maximum paired count ratio in three correctness-verified normal runs."
+  },
+  {
+    "suite": "todomvc",
+    "op": "text_100",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 0.5217391304347826,
+    "unit": "count",
+    "note": "Maximum paired count ratio in three correctness-verified normal runs."
+  },
+  {
+    "suite": "todomvc",
+    "op": "empty_text_100",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 0.019801980198019802,
+    "unit": "count",
+    "note": "Maximum paired count ratio in three correctness-verified normal runs."
+  },
+  {
+    "suite": "todomvc",
+    "op": "add100",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 1.3766,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "todomvc",
+    "op": "filterCycle",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 1.2308,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "todomvc",
+    "op": "row_class_writes_complete25",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 1,
+    "unit": "count",
+    "note": "Maximum paired count ratio in three correctness-verified normal runs."
+  },
+  {
+    "suite": "todomvc",
+    "op": "nodes_100",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 1.0013774104683195,
+    "unit": "count",
+    "note": "Maximum paired count ratio in three correctness-verified normal runs."
+  },
+  {
+    "suite": "todomvc",
+    "op": "elements_100",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 1,
+    "unit": "count",
+    "note": "Maximum paired count ratio in three correctness-verified normal runs."
+  },
+  {
+    "suite": "todomvc",
+    "op": "text_100",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 0.5167464114832536,
+    "unit": "count",
+    "note": "Maximum paired count ratio in three correctness-verified normal runs."
+  },
+  {
+    "suite": "todomvc",
+    "op": "empty_text_100",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 0.019417475728155338,
+    "unit": "count",
+    "note": "Maximum paired count ratio in three correctness-verified normal runs."
+  },
+  {
+    "suite": "chat-stream",
+    "op": "streamFine",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1.024,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "chat-stream",
+    "op": "nodes_conv",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 0.8942307692307693,
+    "unit": "count",
+    "note": "Maximum paired count ratio in three correctness-verified normal runs."
+  },
+  {
+    "suite": "chat-stream",
+    "op": "elements_conv",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1,
+    "unit": "count",
+    "note": "Maximum paired count ratio in three correctness-verified normal runs."
+  },
+  {
+    "suite": "chat-stream",
+    "op": "text_conv",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1.52,
+    "unit": "count",
+    "note": "Maximum paired count ratio in three correctness-verified normal runs."
+  },
+  {
+    "suite": "chat-stream",
+    "op": "comments_conv",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 0,
+    "unit": "count",
+    "note": "Maximum paired count ratio in three correctness-verified normal runs."
+  },
+  {
+    "suite": "chat-stream",
+    "op": "streamFine",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 0.4562,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "chat-stream",
+    "op": "nodes_conv",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 1.1625,
+    "unit": "count",
+    "note": "Maximum paired count ratio in three correctness-verified normal runs."
+  },
+  {
+    "suite": "chat-stream",
+    "op": "elements_conv",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 1,
+    "unit": "count",
+    "note": "Maximum paired count ratio in three correctness-verified normal runs."
+  },
+  {
+    "suite": "chat-stream",
+    "op": "text_conv",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 1.52,
+    "unit": "count",
+    "note": "Maximum paired count ratio in three correctness-verified normal runs."
+  },
+  {
+    "suite": "chat-stream",
+    "op": "streamFine",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 1.6957,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "chat-stream",
+    "op": "nodes_conv",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 0.8230088495575221,
+    "unit": "count",
+    "note": "Maximum paired count ratio in three correctness-verified normal runs."
+  },
+  {
+    "suite": "chat-stream",
+    "op": "elements_conv",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 1,
+    "unit": "count",
+    "note": "Maximum paired count ratio in three correctness-verified normal runs."
+  },
+  {
+    "suite": "chat-stream",
+    "op": "text_conv",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 0.6551724137931034,
+    "unit": "count",
+    "note": "Maximum paired count ratio in three correctness-verified normal runs."
+  },
+  {
+    "suite": "chat-stream",
+    "op": "empty_text_conv",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 0.3939393939393939,
+    "unit": "count",
+    "note": "Maximum paired count ratio in three correctness-verified normal runs."
+  },
+  {
+    "suite": "dbmon",
+    "op": "mount",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 2.1876,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "dbmon",
+    "op": "tick",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1.4386,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "dbmon",
+    "op": "tick_partial",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1.864,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "dbmon",
+    "op": "remount",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1.7191,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "dbmon",
+    "op": "mount",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 0.651,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "dbmon",
+    "op": "tick",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 0.4767,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "dbmon",
+    "op": "remount",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 0.6727,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "dbmon",
+    "op": "mount",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 1.9187,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "dbmon",
+    "op": "tick",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 1.7378,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "dbmon",
+    "op": "tick_partial",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 2.2465,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "dbmon",
+    "op": "remount",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 1.7501,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "uibench",
+    "op": "table/[100,4]/render",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1.1374,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "uibench",
+    "op": "table/[100,4]/sort/0",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1.4721,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "uibench",
+    "op": "table/[100,4]/sort/1",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1.4222,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "uibench",
+    "op": "table/[50,4]/render",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1.0453,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "uibench",
+    "op": "table/[100,2]/render",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1.0312,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "uibench",
+    "op": "table/[100,2]/sort/0",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1.3833,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "uibench",
+    "op": "table/[50,2]/render",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1.1476,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "uibench",
+    "op": "tree/[500]/render",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1.5166,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "uibench",
+    "op": "tree/[50,10]/render",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1.287,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "uibench",
+    "op": "tree/[10,50]/render",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1.1749,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "uibench",
+    "op": "tree/[5,100]/render",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1.1464,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "uibench",
+    "op": "tree/[2,2,2,2,2,2,2,2,2,2]/render",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1.2273,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "uibench",
+    "op": "tree/[2,2,2,2,2,2,2,2,2,2]/removeAll",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1.4472,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "uibench",
+    "op": "tree/[500]/[reverse]",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1.6885,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "uibench",
+    "op": "tree/[50,10]/[reverse]",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 2.0282,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "uibench",
+    "op": "tree/[500]/[kivi_worst_case]",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1.6016,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "uibench",
+    "op": "tree/[2,2,2,2,2,2,2,2,2,2]/no_change",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 0.1763,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "uibench",
+    "op": "cases",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1,
+    "unit": "count",
+    "note": "Maximum paired count ratio in three correctness-verified normal runs."
+  },
+  {
+    "suite": "uibench",
+    "op": "elements_largest",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1,
+    "unit": "count",
+    "note": "Maximum paired count ratio in three correctness-verified normal runs."
+  },
+  {
+    "suite": "uibench",
+    "op": "identity_shared",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1,
+    "unit": "count",
+    "note": "Maximum paired count ratio in three correctness-verified normal runs."
+  },
+  {
+    "suite": "uibench",
+    "op": "table/[100,4]/render",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 0.5266,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "uibench",
+    "op": "table/[100,4]/sort/0",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 0.3109,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "uibench",
+    "op": "table/[100,4]/sort/1",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 0.28,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "uibench",
+    "op": "table/[50,4]/render",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 0.5087,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "uibench",
+    "op": "table/[100,2]/render",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 0.4804,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "uibench",
+    "op": "tree/[500]/render",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 0.7594,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "uibench",
+    "op": "tree/[50,10]/render",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 0.664,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "uibench",
+    "op": "tree/[10,50]/render",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 0.6148,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "uibench",
+    "op": "tree/[5,100]/render",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 0.6157,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "uibench",
+    "op": "tree/[2,2,2,2,2,2,2,2,2,2]/render",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 0.653,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "uibench",
+    "op": "tree/[2,2,2,2,2,2,2,2,2,2]/removeAll",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 0.6761,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "uibench",
+    "op": "tree/[500]/[reverse]",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 0.4865,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "uibench",
+    "op": "tree/[50,10]/[reverse]",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 0.3293,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "uibench",
+    "op": "tree/[10,50]/[reverse]",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 0.2201,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "uibench",
+    "op": "tree/[5,100]/[reverse]",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 0.1948,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "uibench",
+    "op": "tree/[500]/[kivi_worst_case]",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 0.4568,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "uibench",
+    "op": "tree/[500]/[snabbdom_worst_case]",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 0.1397,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "uibench",
+    "op": "tree/[500]/[react_worst_case]",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 0.1397,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "uibench",
+    "op": "tree/[500]/[virtual_dom_worst_case]",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 0.146,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "uibench",
+    "op": "tree/[2,2,2,2,2,2,2,2,2,2]/no_change",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 0.0921,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "uibench",
+    "op": "cases",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 1,
+    "unit": "count",
+    "note": "Maximum paired count ratio in three correctness-verified normal runs."
+  },
+  {
+    "suite": "uibench",
+    "op": "elements_largest",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 1,
+    "unit": "count",
+    "note": "Maximum paired count ratio in three correctness-verified normal runs."
+  },
+  {
+    "suite": "uibench",
+    "op": "identity_shared",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 1,
+    "unit": "count",
+    "note": "Maximum paired count ratio in three correctness-verified normal runs."
+  },
+  {
+    "suite": "uibench",
+    "op": "table/[100,4]/render",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 1.6325,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "uibench",
+    "op": "table/[100,4]/sort/0",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 1.6615,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "uibench",
+    "op": "table/[100,4]/sort/1",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 1.6225,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "uibench",
+    "op": "table/[50,4]/render",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 1.3576,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "uibench",
+    "op": "table/[50,2]/render",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 1.3163,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "uibench",
+    "op": "tree/[50,10]/render",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 0.8094,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "uibench",
+    "op": "tree/[10,50]/render",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 0.7832,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "uibench",
+    "op": "tree/[5,100]/render",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 0.8079,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "uibench",
+    "op": "tree/[2,2,2,2,2,2,2,2,2,2]/render",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 1.0314,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "uibench",
+    "op": "tree/[500]/[reverse]",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 1.1825,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "uibench",
+    "op": "tree/[50,10]/[reverse]",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 1.6601,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "uibench",
+    "op": "tree/[10,50]/[reverse]",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 1.7834,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "uibench",
+    "op": "tree/[500]/[kivi_worst_case]",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 1.2131,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "uibench",
+    "op": "tree/[500]/[snabbdom_worst_case]",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 1.2145,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "uibench",
+    "op": "tree/[500]/[virtual_dom_worst_case]",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 1.1289,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "uibench",
+    "op": "cases",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 1,
+    "unit": "count",
+    "note": "Maximum paired count ratio in three correctness-verified normal runs."
+  },
+  {
+    "suite": "uibench",
+    "op": "elements_largest",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 1,
+    "unit": "count",
+    "note": "Maximum paired count ratio in three correctness-verified normal runs."
+  },
+  {
+    "suite": "uibench",
+    "op": "identity_shared",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 1,
+    "unit": "count",
+    "note": "Maximum paired count ratio in three correctness-verified normal runs."
+  },
+  {
+    "suite": "effectful-list",
+    "op": "mount_1k",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1.5096,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "effectful-list",
+    "op": "update_nodeps",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 0.4822,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "effectful-list",
+    "op": "update_deps",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1.5517,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "effectful-list",
+    "op": "clear",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1.4608,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "effectful-list",
+    "op": "remount",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1.5996,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "effectful-list",
+    "op": "remove_100_scattered",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1.0019,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "effectful-list",
+    "op": "mount_1k",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 1.7104,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "effectful-list",
+    "op": "update_deps",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 1.922,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "effectful-list",
+    "op": "clear",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 1.2845,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "effectful-list",
+    "op": "remount",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 1.7433,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "effectful-list",
+    "op": "remove_100_scattered",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 1.0324,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "effectful-list",
+    "op": "mount_1k",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 1.5428,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "effectful-list",
+    "op": "update_deps",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 1.816,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "effectful-list",
+    "op": "clear",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 0.9484,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "effectful-list",
+    "op": "remount",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 1.3759,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "effectful-list",
+    "op": "remove_100_scattered",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 0.8759,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "memo-wall",
+    "op": "mount",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1.354,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "memo-wall",
+    "op": "one_change_B",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 0.4045,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "memo-wall",
+    "op": "ctx_through_wall_A",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 0.865,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "memo-wall",
+    "op": "ctx_through_wall_B",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 0.8384,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "memo-wall",
+    "op": "mount",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 1.6536,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "memo-wall",
+    "op": "ctx_through_wall_A",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 1.5237,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "memo-wall",
+    "op": "mount",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 1.1902,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "memo-wall",
+    "op": "ctx_through_wall_A",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 1.7081,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "portal-swarm",
+    "op": "mount_closed",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 0.8469,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "portal-swarm",
+    "op": "open_all",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 2.2289,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "portal-swarm",
+    "op": "open_close_cycle",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1.6999,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "portal-swarm",
+    "op": "open_close_distinct",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1.807,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "portal-swarm",
+    "op": "mount_closed",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 0.7982,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "portal-swarm",
+    "op": "open_all",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 4.1509,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "portal-swarm",
+    "op": "open_close_cycle",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 2.7918,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "portal-swarm",
+    "op": "open_close_distinct",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 3.1404,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "portal-swarm",
+    "op": "mount_closed",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 0.9294,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "portal-swarm",
+    "op": "open_all",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 1.9418,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "portal-swarm",
+    "op": "open_close_cycle",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 1.6806,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "portal-swarm",
+    "op": "open_close_distinct",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 1.9606,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "async-waterfall",
+    "op": "init",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1.1407,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "async-waterfall",
+    "op": "update",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1.1522,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "async-waterfall",
+    "op": "init",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 1.3836,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "async-waterfall",
+    "op": "update",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 1.4064,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "streaming-ssr",
+    "op": "shell_staggered",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1.3649,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "streaming-ssr",
+    "op": "total_staggered",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1.4995,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "streaming-ssr",
+    "op": "shell_allfast",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1.2567,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "streaming-ssr",
+    "op": "shell_cpu_10",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1.2296,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "streaming-ssr",
+    "op": "total_cpu_10",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1.7155,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "streaming-ssr",
+    "op": "total_cpu_100",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1.5322,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "streaming-ssr",
+    "op": "shell_cpu_800",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 0.6875,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "streaming-ssr",
+    "op": "total_cpu_800",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1.6004,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "streaming-ssr",
+    "op": "shell_cpu_waves_50",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 0.699,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "streaming-ssr",
+    "op": "total_cpu_waves_50",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 0.3618,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "streaming-ssr",
+    "op": "shell_staggered",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 0.5763,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "streaming-ssr",
+    "op": "total_staggered",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 1.5097,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "streaming-ssr",
+    "op": "shell_allfast",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 0.6097,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "ssr-throughput",
+    "op": "render",
+    "target": "news-50/ripple",
+    "reference": "news-50/solid",
+    "maxRatio": 2.0713,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "ssr-throughput",
+    "op": "render",
+    "target": "news-500/ripple",
+    "reference": "news-500/octane-tsrx",
+    "maxRatio": 2.8191,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "ssr-throughput",
+    "op": "render",
+    "target": "news-500/ripple",
+    "reference": "news-500/solid",
+    "maxRatio": 2.6497,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "ssr-throughput",
+    "op": "render",
+    "target": "news-500/ripple",
+    "reference": "news-500/vue-vapor",
+    "maxRatio": 3.0687,
+    "unit": "ms",
+    "note": "Maximum paired ratio in three normal runs plus 50% headroom."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "js_raw",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 0.29051339285714284,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "js_gzip",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 0.33149776082269033,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "js_brotli",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 0.3346717228046695,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "app_raw",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 1.061849873488895,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes. The app-chunk limits are above the initial recording: hoisted render blocks with per-instance state objects (the recursive-context and uibench timing work) grew the compiled app output before this recording, and the client-only compile recovered part of it."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "app_gzip",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 0.9651452282157676,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes. The app-chunk limits are above the initial recording: hoisted render blocks with per-instance state objects (the recursive-context and uibench timing work) grew the compiled app output before this recording, and the client-only compile recovered part of it."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "app_brotli",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 0.9717114568599717,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes. The app-chunk limits are above the initial recording: hoisted render blocks with per-instance state objects (the recursive-context and uibench timing work) grew the compiled app output before this recording, and the client-only compile recovered part of it."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "fw_raw",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 0.22437747011614093,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "fw_gzip",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 0.2775914908959798,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "fw_brotli",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 0.2814303588005005,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "todo_js_raw",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 0.26054374711776296,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "todo_js_gzip",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 0.31672477092524604,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "todo_js_brotli",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 0.32006529818346013,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "todo_app_raw",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 0.9269181311615945,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes. The app-chunk limits are above the initial recording: hoisted render blocks with per-instance state objects (the recursive-context and uibench timing work) grew the compiled app output before this recording, and the client-only compile recovered part of it."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "todo_app_gzip",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 0.8302976454908929,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes. The app-chunk limits are above the initial recording: hoisted render blocks with per-instance state objects (the recursive-context and uibench timing work) grew the compiled app output before this recording, and the client-only compile recovered part of it."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "todo_app_brotli",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 0.8236196319018405,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes. The app-chunk limits are above the initial recording: hoisted render blocks with per-instance state objects (the recursive-context and uibench timing work) grew the compiled app output before this recording, and the client-only compile recovered part of it."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "todo_fw_raw",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 0.22663257884645052,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "todo_fw_gzip",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 0.2794575956501558,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "todo_fw_brotli",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 0.284553754425191,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "chat_js_raw",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 0.2787195566882753,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "chat_js_gzip",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 0.34525805850568286,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "chat_js_brotli",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 0.3496564472812249,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "chat_app_raw",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 0.894675150703282,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes. The app-chunk limits are above the initial recording: hoisted render blocks with per-instance state objects (the recursive-context and uibench timing work) grew the compiled app output before this recording, and the client-only compile recovered part of it."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "chat_app_gzip",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 0.888728323699422,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes. The app-chunk limits are above the initial recording: hoisted render blocks with per-instance state objects (the recursive-context and uibench timing work) grew the compiled app output before this recording, and the client-only compile recovered part of it."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "chat_app_brotli",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 0.898034398034398,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes. The app-chunk limits are above the initial recording: hoisted render blocks with per-instance state objects (the recursive-context and uibench timing work) grew the compiled app output before this recording, and the client-only compile recovered part of it."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "chat_fw_raw",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 0.23755771032520967,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "chat_fw_gzip",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 0.2952368009784603,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "chat_fw_brotli",
+    "target": "ripple",
+    "reference": "octane-tsrx",
+    "maxRatio": 0.29982080902817493,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "js_raw",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 0.6244302643573382,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "js_gzip",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 0.6371867627367213,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "js_brotli",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 0.6346587704455725,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "app_raw",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 1.1849411764705882,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes. The app-chunk limits are above the initial recording: hoisted render blocks with per-instance state objects (the recursive-context and uibench timing work) grew the compiled app output before this recording, and the client-only compile recovered part of it."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "app_gzip",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 1.1688442211055277,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes. The app-chunk limits are above the initial recording: hoisted render blocks with per-instance state objects (the recursive-context and uibench timing work) grew the compiled app output before this recording, and the client-only compile recovered part of it."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "app_brotli",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 1.1690300623936472,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes. The app-chunk limits are above the initial recording: hoisted render blocks with per-instance state objects (the recursive-context and uibench timing work) grew the compiled app output before this recording, and the client-only compile recovered part of it."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "fw_raw",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 0.5241426184475093,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "fw_gzip",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 0.5622580880741985,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "fw_brotli",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 0.5613879719829321,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "todo_js_raw",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 0.6430825745033113,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "todo_js_gzip",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 0.6780265504259957,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "todo_js_brotli",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 0.6742025168276266,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "todo_app_raw",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 1.4567194341529135,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes. The app-chunk limits are above the initial recording: hoisted render blocks with per-instance state objects (the recursive-context and uibench timing work) grew the compiled app output before this recording, and the client-only compile recovered part of it."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "todo_app_gzip",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 1.4432432432432432,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes. The app-chunk limits are above the initial recording: hoisted render blocks with per-instance state objects (the recursive-context and uibench timing work) grew the compiled app output before this recording, and the client-only compile recovered part of it."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "todo_app_brotli",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 1.442256042972247,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes. The app-chunk limits are above the initial recording: hoisted render blocks with per-instance state objects (the recursive-context and uibench timing work) grew the compiled app output before this recording, and the client-only compile recovered part of it."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "todo_fw_raw",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 0.5762882842491663,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "todo_fw_gzip",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 0.6087678751986133,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "todo_fw_brotli",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 0.608397737232093,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "chat_js_raw",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 0.6509904658400435,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "chat_js_gzip",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 0.6906448005963474,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "chat_js_brotli",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 0.6875857338820301,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "chat_app_raw",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 1.2212571428571428,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes. The app-chunk limits are above the initial recording: hoisted render blocks with per-instance state objects (the recursive-context and uibench timing work) grew the compiled app output before this recording, and the client-only compile recovered part of it."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "chat_app_gzip",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 1.170313986679353,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes. The app-chunk limits are above the initial recording: hoisted render blocks with per-instance state objects (the recursive-context and uibench timing work) grew the compiled app output before this recording, and the client-only compile recovered part of it."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "chat_app_brotli",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 1.170848905499199,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes. The app-chunk limits are above the initial recording: hoisted render blocks with per-instance state objects (the recursive-context and uibench timing work) grew the compiled app output before this recording, and the client-only compile recovered part of it."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "chat_fw_raw",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 0.5827864085735649,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "chat_fw_gzip",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 0.6208916833380966,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "chat_fw_brotli",
+    "target": "ripple",
+    "reference": "solid",
+    "maxRatio": 0.6188714881561345,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "js_raw",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 0.40529388867263527,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "js_gzip",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 0.41535392160937695,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "js_brotli",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 0.41246277205040094,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "app_raw",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 1.1492469192149704,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes. The app-chunk limits are above the initial recording: hoisted render blocks with per-instance state objects (the recursive-context and uibench timing work) grew the compiled app output before this recording, and the client-only compile recovered part of it."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "app_gzip",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 1.1139846743295019,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes. The app-chunk limits are above the initial recording: hoisted render blocks with per-instance state objects (the recursive-context and uibench timing work) grew the compiled app output before this recording, and the client-only compile recovered part of it."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "app_brotli",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 1.0986140724946696,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes. The app-chunk limits are above the initial recording: hoisted render blocks with per-instance state objects (the recursive-context and uibench timing work) grew the compiled app output before this recording, and the client-only compile recovered part of it."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "fw_raw",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 0.32102962603205437,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "fw_gzip",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 0.35041645805834964,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "fw_brotli",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 0.3495413303925009,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "todo_js_raw",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 0.38945026711159153,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "todo_js_gzip",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 0.42059980334316616,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "todo_js_brotli",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 0.41717596993978906,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "todo_app_raw",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 1.4005829015544042,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes. The app-chunk limits are above the initial recording: hoisted render blocks with per-instance state objects (the recursive-context and uibench timing work) grew the compiled app output before this recording, and the client-only compile recovered part of it."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "todo_app_gzip",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 1.3793357933579335,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes. The app-chunk limits are above the initial recording: hoisted render blocks with per-instance state objects (the recursive-context and uibench timing work) grew the compiled app output before this recording, and the client-only compile recovered part of it."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "todo_app_brotli",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 1.3458646616541354,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes. The app-chunk limits are above the initial recording: hoisted render blocks with per-instance state objects (the recursive-context and uibench timing work) grew the compiled app output before this recording, and the client-only compile recovered part of it."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "todo_fw_raw",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 0.3385739920649293,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "todo_fw_gzip",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 0.365635709018349,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "todo_fw_brotli",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 0.36549875550449934,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "chat_js_raw",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 0.3915032679738562,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "chat_js_gzip",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 0.4278128366938587,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "chat_js_brotli",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 0.425419053681307,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "chat_app_raw",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 1.168379619505795,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes. The app-chunk limits are above the initial recording: hoisted render blocks with per-instance state objects (the recursive-context and uibench timing work) grew the compiled app output before this recording, and the client-only compile recovered part of it."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "chat_app_gzip",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 1.1410018552875696,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes. The app-chunk limits are above the initial recording: hoisted render blocks with per-instance state objects (the recursive-context and uibench timing work) grew the compiled app output before this recording, and the client-only compile recovered part of it."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "chat_app_brotli",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 1.1269270298047276,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes. The app-chunk limits are above the initial recording: hoisted render blocks with per-instance state objects (the recursive-context and uibench timing work) grew the compiled app output before this recording, and the client-only compile recovered part of it."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "chat_fw_raw",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 0.3353945208535866,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "chat_fw_gzip",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 0.36463578382007383,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes."
+  },
+  {
+    "suite": "bundle-size",
+    "op": "chat_fw_brotli",
+    "target": "ripple",
+    "reference": "vue-vapor",
+    "maxRatio": 0.3637541051852537,
+    "unit": "bytes",
+    "note": "Paired ratio from the client-only, no-root-boundary fixture recording of 2026-09-16, allowing 32 target bytes."
+  }
+]

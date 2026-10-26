@@ -1,0 +1,51 @@
+{
+  "name": "ripple-monorepo",
+  "private": true,
+  "type": "module",
+  "description": "",
+  "author": "Dominic Gannaway",
+  "license": "MIT",
+  "packageManager": "pnpm@11.15.1",
+  "engines": {
+    "node": ">=22.0.0",
+    "pnpm": "11.15.1",
+    "npm": ">=11.6.2"
+  },
+  "engineStrict": true,
+  "scripts": {
+    "prepare": "rulesync generate || true",
+    "rules:generate": "rulesync generate",
+    "rules:check": "rulesync generate --check",
+    "test": "vitest run",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "changeset": "changeset && node scripts/check-changesets.js",
+    "changeset:check": "node scripts/check-changesets.js",
+    "changeset:version": "pnpm changeset:check && changeset version",
+    "changeset:publish": "pnpm changeset:check && changeset publish",
+    "bench": "node benchmarks/bench.mjs",
+    "typecheck": "tsgo --noEmit -p packages/ripple/tsconfig.typecheck.json && tsgo --noEmit -p packages/tsrx-ripple/tsconfig.json && tsgo --noEmit -p packages/cli/tsconfig.json && tsgo --noEmit -p packages/create-ripple/tsconfig.json && tsgo --noEmit -p packages/adapter/tsconfig.typecheck.json && tsgo --noEmit -p packages/adapter-bun/tsconfig.typecheck.json && tsgo --noEmit -p packages/adapter-node/tsconfig.typecheck.json && tsgo --noEmit -p packages/adapter-vercel/tsconfig.typecheck.json && tsgo --noEmit -p packages/rollup-plugin/tsconfig.typecheck.json && tsgo --noEmit -p packages/vite-plugin/tsconfig.typecheck.json",
+    "bench:all": "node benchmarks/bench.mjs",
+    "bench:quick": "node benchmarks/bench.mjs --quick"
+  },
+  "devDependencies": {
+    "@changesets/changelog-github": "catalog:default",
+    "@changesets/cli": "catalog:default",
+    "@tsrx/core": "catalog:default",
+    "@tsrx/prettier-plugin": "catalog:default",
+    "@tsrx/ripple": "workspace:*",
+    "@ripple-ts/vite-plugin": "workspace:*",
+    "@types/node": "catalog:default",
+    "@typescript/native-preview": "7.0.0-dev.20260707.2",
+    "eslint": "catalog:default",
+    "jsdom": "catalog:default",
+    "linkedom": "catalog:default",
+    "prettier": "catalog:default",
+    "rulesync": "catalog:default",
+    "source-map": "catalog:default",
+    "type-fest": "catalog:default",
+    "typescript": "catalog:default",
+    "vitest": "catalog:default",
+    "wait-on": "catalog:default"
+  }
+}

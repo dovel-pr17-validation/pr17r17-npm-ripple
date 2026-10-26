@@ -1,0 +1,2630 @@
+# ripple
+
+## 0.4.7
+
+### Patch Changes
+
+- [#1503](https://github.com/Ripple-TS/ripple/pull/1503)
+  [`81e1859`](https://github.com/Ripple-TS/ripple/commit/81e185994c5196ed44281517f49c59001a0ee30f)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Upgrade devalue to 6.0.1 and
+  remove the local performance patch now included in the upstream release. Devalue
+  now requires Node.js 22.17 or newer.
+
+## 0.4.6
+
+### Patch Changes
+
+- [#1501](https://github.com/Ripple-TS/ripple/pull/1501)
+  [`fa676f4`](https://github.com/Ripple-TS/ripple/commit/fa676f48da58f6fa0cc969013b3eae0722fa5d52)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Update devalue to 5.9.4 and
+  refresh the patched `stringify` fast paths to the current state of
+  sveltejs/devalue#190: error paths are recorded without per-entry work, Map
+  entries no longer allocate, quoted property names are cached, and the `tagOf`
+  shortcut is gone.
+
+## 0.4.5
+
+### Patch Changes
+
+- [#1497](https://github.com/Ripple-TS/ripple/pull/1497)
+  [`2469ccf`](https://github.com/Ripple-TS/ripple/commit/2469ccfba1a6afad4af6658a777dc735767c5625)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Trim the cold path of a first
+  mount: `template_el` builds nested templates and builds a master in the document
+  itself unless the compiler flagged a resource-loading element; Firefox is
+  detected without reading `navigator` (about 0.1 ms on a fresh page);
+  `Event.prototype.__root` is declared with the first delegated listener instead
+  of at mount; `set_attribute` skips the property-setter walk for `data-` and
+  `aria-` names; the first flush of a mounted app's effects runs in one phase;
+  `track()` and deferred component effects call one function less each; and a
+  mount before any delegated event is registered attaches no listeners.
+
+  New `set_attribute_value` and `set_property_value` helpers write an attribute
+  the compiler classified with the Web IDL setter table, so a standard element
+  never triggers the descriptor walk of `set_attribute`.
+
+- Updated dependencies
+  [[`2469ccf`](https://github.com/Ripple-TS/ripple/commit/2469ccfba1a6afad4af6658a777dc735767c5625)]:
+  - @tsrx/ripple@0.2.4
+
+## 0.4.4
+
+### Patch Changes
+
+- [#1496](https://github.com/Ripple-TS/ripple/pull/1496)
+  [`0473e93`](https://github.com/Ripple-TS/ripple/commit/0473e93006e53cd15fcf6d851443d427ccf13e8b)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Update `@tsrx/core` to ^0.2.3
+  and use its SVG and MathML tag-name predicates for dynamic class handling,
+  removing the compiler's duplicate tag-name list.
+
+- [#1490](https://github.com/Ripple-TS/ripple/pull/1490)
+  [`ff3a26a`](https://github.com/Ripple-TS/ripple/commit/ff3a26acef0c9584cf41d32bc8cbcc39d863d74c)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Blocks keep the namespace
+  they were created in when they rerun. A dynamic element whose tag changes, an
+  `@if` that toggles, or an `@for` that grows inside an SVG that is only known at
+  runtime (children rendered into a component's `<svg>`, a leaf component rendered
+  there) now creates its elements in the SVG namespace instead of HTML, and a
+  nested template cloned in that context no longer throws before a namespaced
+  template has been parsed. A dynamic element whose tag becomes `foreignObject`
+  renders its children as HTML.
+
+- [#1488](https://github.com/Ripple-TS/ripple/pull/1488)
+  [`b3bf787`](https://github.com/Ripple-TS/ripple/commit/b3bf78756d9235412a2af264e42897652e8f911e)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Build a template that is one
+  element with static attributes and at most a text child with DOM calls instead
+  of parsing it. Parsing a `<template>` has a fixed cost that dwarfs such an
+  element, and an app's first render pays it once per distinct template; a chain
+  of 100 single-element components mounts about 35% faster.
+
+- [#1495](https://github.com/Ripple-TS/ripple/pull/1495)
+  [`1b8381f`](https://github.com/Ripple-TS/ripple/commit/1b8381f31f98f84049764ca56676fc320721e844)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Faster element spreads,
+  dynamic elements and list items. An element spread is applied from the element's
+  own render function instead of a render block of its own, and a spread object
+  identical to the one applied last is skipped without a diff (a spread of a
+  tracked object or of tracked values is always diffed). A dynamic element
+  (`<{tag}>`) is one block that owns its element and applies its attributes
+  itself; a tag that does not change keeps its element and diffs the attributes,
+  so a swap between variants with the same tag no longer recreates the element. An
+  `@if` whose condition reads tracked state is evaluated by the render function of
+  the enclosing content (a list item's, an element's), so the if keeps a block for
+  its branch but not one that runs the condition. A dynamic element or component
+  called inside an `<svg>` or `<math>` template receives the namespace as an
+  argument instead of a `with_ns` closure. A dynamic element without children is
+  driven by the render function of the content it sits in, with no block or
+  closures of its own (`_$_.dynamic`); a build that can hydrate lets a composite
+  block claim the server element while hydrating. With `textTypes`, an attribute
+  value TypeScript proves to be a string is set with a direct `setAttribute` call,
+  and a proven `class` takes the string-only path. On the SVG dashboard benchmark,
+  mounting is about 20% faster and swapping 150 dynamic icons 40% faster.
+- Updated dependencies
+  [[`0473e93`](https://github.com/Ripple-TS/ripple/commit/0473e93006e53cd15fcf6d851443d427ccf13e8b),
+  [`b3bf787`](https://github.com/Ripple-TS/ripple/commit/b3bf78756d9235412a2af264e42897652e8f911e),
+  [`1b8381f`](https://github.com/Ripple-TS/ripple/commit/1b8381f31f98f84049764ca56676fc320721e844),
+  [`ff3a26a`](https://github.com/Ripple-TS/ripple/commit/ff3a26acef0c9584cf41d32bc8cbcc39d863d74c)]:
+  - @tsrx/ripple@0.2.3
+
+## 0.4.3
+
+### Patch Changes
+
+- [#1486](https://github.com/Ripple-TS/ripple/pull/1486)
+  [`304ba6c`](https://github.com/Ripple-TS/ripple/commit/304ba6c2d9098752396fff6c2545e3ef2546381c)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - perf: a static component,
+  template `@if`, or template `@for` followed by a static element sibling inserts
+  before that element instead of before a `<!>` placeholder of its own: the
+  element is part of the template and never moves, so the compiled template holds
+  no comment node for it and the client reuses the element's variable where
+  hydration steps to the sibling. The `RippleArray` statics (`from`, `of`,
+  `fromAsync`) lower to standalone runtime functions, so a bundle that never
+  constructs a `RippleArray` drops the array proxy instead of keeping it through
+  property assignments on the constructor's compiled form (the server's
+  `fromAsync` lowering previously named a function that did not exist).
+
+- [#1487](https://github.com/Ripple-TS/ripple/pull/1487)
+  [`b4abea0`](https://github.com/Ripple-TS/ripple/commit/b4abea0ab4830eed99adf14dc95a0ef214b24af1)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - perf: smaller production
+  bundles without a runtime cost. The compiler lowers a static `onBlur`-style
+  handler (an event its name keeps off delegation) to a direct `listen` call with
+  the DOM name and phase resolved at compile time, packs the locals a hoisted
+  `@if`/`@switch` captures under positional keys, writes template strings without
+  attribute quotes or implied end tags where the parser reads them back the same,
+  gives a plain function no `_$_.scope()` call when its body never reads the
+  block, and omits `set_class`'s default trailing arguments. The runtime keeps its
+  hydration paths (template adoption, expression text, append cursor, streamed
+  boundaries) in a module `hydrate()` installs and its `trackAsync` machinery in a
+  module that registers with the runtime on first use, and the catch routing is
+  registered by the first boundary, so a client-only mount without `trackAsync`
+  ships neither and the core runtime no longer imports the boundary module; the
+  try boundary state, the root event ref and the template cache use short keys,
+  the keyed and reference list diffs share one patch helper, and symbol constants
+  carry no descriptions. The runtime's errors are thrown as in Svelte: the message
+  and a link to `https://ripple-ts.com/e/<code>` in development, the link alone in
+  production, so the message text stays out of production bundles; `set_class`
+  composes non-string values with its own clsx-style joiner instead of importing
+  `clsx`; hoisted render blocks store captured locals under positional keys; a
+  `template()` with no flags passes none; and the hash a `track()` call carries
+  encodes the same 32 bits in base 36. The Vite plugin leaves Vite's modulepreload
+  polyfill out of production builds unless `build.modulePreload` is configured.
+
+- [#1487](https://github.com/Ripple-TS/ripple/pull/1487)
+  [`b4abea0`](https://github.com/Ripple-TS/ripple/commit/b4abea0ab4830eed99adf14dc95a0ef214b24af1)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - feat: build shapes.
+  `ripple({ ssr: false })` builds a client-only app: components compile without
+  the hydration cursor or `track()` serialization hashes (`hydration: false` on
+  the compiler), the runtime's hydration paths are compiled out through its
+  `HYDRATION` build constant, and `hydrate()` throws; `ssr: true` compiles every
+  module for the server. `prerender()` on `ripple/server` renders a component to
+  static HTML with every boundary settled and the CSS as text, and a `RenderRoute`
+  marked `prerender: true` is rendered through the built server entry at build
+  time into `<outDir>/client<path>/index.html`, which the node and bun adapters
+  now serve for a directory request before the server renders. The client build's
+  `index.html` template moves to the server output so a static handler never
+  serves its placeholders.
+
+- [#1487](https://github.com/Ripple-TS/ripple/pull/1487)
+  [`b4abea0`](https://github.com/Ripple-TS/ripple/commit/b4abea0ab4830eed99adf14dc95a0ef214b24af1)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - perf: a `class` expression
+  the compiler can prove to be a string writes through a string-only `set_class`,
+  so the clsx-style joiner ships only with a bundle that composes classes from
+  arrays or objects; templates in the SVG or MathML namespace parse through a
+  `template_ns` entry that an HTML-only bundle never loads; and the class joiner
+  is one module shared by the client and server renderers, so `ripple` no longer
+  depends on `clsx`. `ripple({ rootBoundary: false })` builds an app that renders
+  without the default root try/pending/catch boundary and leaves the boundary
+  runtime out of the bundle; a `rootBoundary` option on `mount()` or `hydrate()`
+  then throws. The `ripple` package declares `sideEffects: false`, and dynamic
+  attribute, style and spread helpers live in their own runtime module, so a
+  bundle that never sets an attribute dynamically drops them along with the
+  attribute tables they consult. The plugin's `ssr: false` and
+  `rootBoundary: false` rewrite the runtime's build-constant imports to literals
+  at transform time, which every bundler folds while tree-shaking.
+
+- [#1484](https://github.com/Ripple-TS/ripple/pull/1484)
+  [`1ea71f1`](https://github.com/Ripple-TS/ripple/commit/1ea71f14fcee5a976ea81e2bedf5010251eaa70c)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - perf: a template `@if` that
+  closes the trailing run of an element's children (nothing rendered follows it)
+  never materializes an anchor node: the element's tail is its position for its
+  whole life. An `@if (outer === item.key)` in a `@for` body lowers to the loop's
+  selector like an attribute comparison, and a comparison against the item's key
+  reads the block's key (fixed for its life) rather than the item, so a change of
+  the outer value re-runs the ifs of its previous and next key alone and a
+  replaced item leaves its ifs untouched; comparisons against the same outer value
+  share one selector per loop. Event delegation reads the composed path only for a
+  nested root and looks the handler property up by one string, and `checked` is
+  compared against the element instead of a cached write.
+
+- [#1487](https://github.com/Ripple-TS/ripple/pull/1487)
+  [`b4abea0`](https://github.com/Ripple-TS/ripple/commit/b4abea0ab4830eed99adf14dc95a0ef214b24af1)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - `trackReadOnly(value)`
+  replaces the `readOnly()` method on tracked and derived values: it returns a
+  derived that follows a tracked or writable derived, or a read-only derived as it
+  is. The method is removed, so `count.readOnly()` becomes `trackReadOnly(count)`,
+  imported from `ripple`. Dropping the prototype methods lets a bundle that never
+  takes a read-only view leave the code out.
+- Updated dependencies
+  [[`304ba6c`](https://github.com/Ripple-TS/ripple/commit/304ba6c2d9098752396fff6c2545e3ef2546381c),
+  [`b4abea0`](https://github.com/Ripple-TS/ripple/commit/b4abea0ab4830eed99adf14dc95a0ef214b24af1),
+  [`b4abea0`](https://github.com/Ripple-TS/ripple/commit/b4abea0ab4830eed99adf14dc95a0ef214b24af1),
+  [`b4abea0`](https://github.com/Ripple-TS/ripple/commit/b4abea0ab4830eed99adf14dc95a0ef214b24af1),
+  [`1ea71f1`](https://github.com/Ripple-TS/ripple/commit/1ea71f14fcee5a976ea81e2bedf5010251eaa70c),
+  [`b4abea0`](https://github.com/Ripple-TS/ripple/commit/b4abea0ab4830eed99adf14dc95a0ef214b24af1)]:
+  - @tsrx/ripple@0.2.2
+
+## 0.4.2
+
+### Patch Changes
+
+- [#1478](https://github.com/Ripple-TS/ripple/pull/1478)
+  [`1032539`](https://github.com/Ripple-TS/ripple/commit/10325392e4b1ec7fba78b8ddaf57bc5376adaab1)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Faster buffered server
+  rendering. Static text and attribute values are emitted with characters above
+  U+00FF as numeric character references (raw-text elements such as `<script>`
+  excluded), so a server response stays a one-byte string whenever its dynamic
+  data is Latin-1 too: a single static em dash no longer widens the whole body to
+  two bytes per character, which halved the flatten, byte-length and UTF-8 encode
+  cost of a page. The runtime text escaper checks for `&` and `<` with two
+  single-character searches instead of a regex test.
+
+- [#1481](https://github.com/Ripple-TS/ripple/pull/1481)
+  [`e9382ed`](https://github.com/Ripple-TS/ripple/commit/e9382ed7538779aeb8671b8e3f3fdfd3a897b85a)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Cheaper text-only elements
+  and typed loop items. An element whose only child is a typed text expression
+  (`<td>{row.name}</td>`) is cloned without a placeholder text node and written
+  through the element (`set_text_content`): the first write creates the text node
+  with `textContent`, later writes update it in place, and hydration adopts the
+  server-rendered text with no cursor descent, which removes a DOM read and a text
+  node per cell from every list row. A keyed `@for` key callback reads the item
+  directly instead of unwrapping it. Type inference now follows a binding's
+  declared type through property writes (`items.value = next` no longer hides
+  `track<Row[]>()` from the loop item) and through array and tuple indexing
+  (`row.queries[0].elapsed`), so those reads lower to direct text updates in one
+  render block per row.
+
+- [#1483](https://github.com/Ripple-TS/ripple/pull/1483)
+  [`5de359e`](https://github.com/Ripple-TS/ripple/commit/5de359e430391b0e1609795b42d26161fd5c2ff9)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - perf: a list item without a
+  tracked of its own (a plain list's item, or a local keyed item) is created
+  through a lean first run (`run_branch`) instead of the generic block runner:
+  fewer checks and no re-run bookkeeping per item.
+
+- [#1482](https://github.com/Ripple-TS/ripple/pull/1482)
+  [`0030be0`](https://github.com/Ripple-TS/ripple/commit/0030be0aa3c7f1d2ce40500dc57ea980b69c69ec)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - perf: cheaper keyed lists. A
+  `@for` or `@if` that trails template siblings appends into its parent element
+  instead of inserting before a `<!>` placeholder. A list item whose updates live
+  in one render block carries that block on the item block itself (`_$_.item`),
+  and a keyed item that only its render block reads is held as it is instead of in
+  a tracked, re-running its block directly when the key's item is replaced. Leaf
+  text is written without a DOM read, from the value the render block last wrote.
+  A keyed diff that re-lays most of its items walks the range front to back
+  instead of appending every item at the end, about half the reorder cost in
+  Chromium and far less right after a layout flush.
+- Updated dependencies
+  [[`1032539`](https://github.com/Ripple-TS/ripple/commit/10325392e4b1ec7fba78b8ddaf57bc5376adaab1),
+  [`e9382ed`](https://github.com/Ripple-TS/ripple/commit/e9382ed7538779aeb8671b8e3f3fdfd3a897b85a),
+  [`0030be0`](https://github.com/Ripple-TS/ripple/commit/0030be0aa3c7f1d2ce40500dc57ea980b69c69ec)]:
+  - @tsrx/ripple@0.2.1
+
+## 0.4.1
+
+### Patch Changes
+
+- [#1477](https://github.com/Ripple-TS/ripple/pull/1477)
+  [`670d669`](https://github.com/Ripple-TS/ripple/commit/670d66916a0b2d58254adb3248abc9d3e816fd8d)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Use property-specific CSS
+  types for HTML and SVG style objects and export `CSSProperties` from `ripple`
+  and `ripple/jsx-runtime`. Numeric lengths such as `width: 400` now produce a
+  type error; specify units with `width: '400px'` or `width: '24rem'`. Unitless
+  CSS properties, zero lengths, camelCase and kebab-case names, and CSS custom
+  properties remain supported.
+
+  Style properties set to `null` or `undefined` are omitted during server
+  rendering and removed on the client, matching the nullable and optional property
+  types and supporting conditional style values. Ripple does not infer or add CSS
+  units.
+
+  Re-export the `JSX` and `Ripple` namespaces as types from `ripple` so element
+  prop and event types can be imported from the main package. The
+  `ripple/jsx-runtime` exports remain available.
+
+- [#1475](https://github.com/Ripple-TS/ripple/pull/1475)
+  [`e008b3f`](https://github.com/Ripple-TS/ripple/commit/e008b3f933a5a5b54ca8b74ae80aa98b6ddfb82f)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Show public Tracked, Derived,
+  and WritableDerived type names in value property hovers.
+
+## 0.4.0
+
+### Minor Changes
+
+- [#1472](https://github.com/Ripple-TS/ripple/pull/1472)
+  [`5d3e60d`](https://github.com/Ripple-TS/ripple/commit/5d3e60d86129ac20d23c86a923914ee44efea9d1)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Lazy destructuring is removed
+  from the language (tsrx RFC
+  [#106](https://github.com/Ripple-TS/ripple/issues/106)). `&[ ... ]` and
+  `&{ ... }` are syntax errors now; a tracked value is read and written through
+  `.value`, and a `Tracked`, `Derived`, or `WritableDerived` object is passed to a
+  child as it is (`<Child {count} />`, or `count={track(() => count.value)}` for a
+  read-only view).
+
+  | Before                                                           | After                                                                    |
+  | ---------------------------------------------------------------- | ------------------------------------------------------------------------ |
+  | `let &[count] = track(0); count++; {count}`                      | `const count = track(0); count.value++; {count.value}`                   |
+  | `let &[count, countT] = track(0); <Child count={countT} />`      | `const count = track(0); <Child {count} />`                              |
+  | `let &[double] = track(() => count * 2)`                         | `const double = track(() => count.value * 2)`                            |
+  | `function Card({ count: &[count] }: { count: Tracked<number> })` | `function Card({ count }: { count: Tracked<number> })` and `count.value` |
+
+  `Tracked<V>`, `Derived<V>`, and `WritableDerived<V>` are plain `{ value: V }`
+  shapes; the `[V, Tracked<V>]` tuple member, the runtime `[0]`/`[1]` accessors,
+  and the `lazy_array_*` helpers are gone, and `count[0]` reports the ordinary
+  "use `.value`" error. Rest and default patterns lower to native destructuring: a
+  keyed `@for` pattern with a rest element or a default is destructured once per
+  item change, and a destructuring assignment onto boxed `let`s writes the boxes
+  in place; the `fallback`, `exclude_from_object`, and `array_slice` runtime
+  helpers are gone. On the server a dynamic tag `<{tag} />` is lowered to
+  `_$_.dynamic_element(tag, props)`, with the tag and the element's own props
+  passed separately, so the props never carry an `is` entry.
+
+### Patch Changes
+
+- [#1458](https://github.com/Ripple-TS/ripple/pull/1458)
+  [`bbc1445`](https://github.com/Ripple-TS/ripple/commit/bbc14455485e054c145ebc78f08a771d41ea16f1)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Lighter list, `@if`, and
+  mount output on the client. A controlled `@for` (the sole content of its
+  element) appends its items into the parent instead of inserting before an empty
+  text anchor, and an `@if` at the root of such an item creates an anchor only
+  once it needs a position of its own (a branch swap, or a branch that renders
+  nothing), so a keyed list of `@if` items keeps no anchor nodes in the DOM;
+  `mount()` likewise renders into the target without an anchor node. An `@if`
+  block now renders its branch directly and owns the branch's DOM range, and a
+  list keeps its inputs in block state, so every `@if` and `@for` allocates one
+  block less and no closures. Text and class updates compare against the last
+  value in the render block's state instead of a cache on the DOM node; the
+  compiler emits that compared form for single updates as well.
+
+  A selector key whose subscribers all left stays in the selector's map for reuse
+  when the key comes back, and is swept once more than 1024 released keys pile up.
+
+- [#1469](https://github.com/Ripple-TS/ripple/pull/1469)
+  [`b3a38ce`](https://github.com/Ripple-TS/ripple/commit/b3a38ce0aae66a9dcac0b663c30161eed0d7547a)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Add custom serialization for
+  trackAsync hydration and RPC arguments/results using `transport` handlers in
+  ripple.config.ts. Register matching encoders and decoders automatically in
+  development and production, and expose `setTransport` for custom integrations.
+  Apps without a transport retain the plain JSON hydration fast path. Provide a
+  browser entry for config helpers so importing defineConfig does not load the
+  Vite plugin's Node.js dependencies during hydration. A configured hydration
+  payload embeds devalue's flattened form directly, so the client revives it
+  without a second string encoding.
+
+- [#1460](https://github.com/Ripple-TS/ripple/pull/1460)
+  [`2ef5da5`](https://github.com/Ripple-TS/ripple/commit/2ef5da52b26fc13e11537dd28df0e2b376ca0f52)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Cheaper element refs,
+  effects, and component templates on the client. A `ref` is one effect block
+  keyed on its state instead of a render block that re-evaluates the thunk and
+  creates a branch and an effect for it, since the ref value is read untracked and
+  fixed for the life of the enclosing block. Effects deferred until a component
+  has rendered are recorded as flat entries, and an effect's first run skips the
+  child and teardown sweep. A tracked value written during a flush keeps its
+  previous value for teardowns on itself instead of in a map, and `flushSync`
+  releases those values when it finishes (they were only released by the microtask
+  flush before).
+
+  The compiler types the bindings of a destructured pattern
+  (`{ item }: { item: Item }` as component props, or `const { item } = props` from
+  a typed initializer), so their property reads lower to direct text and attribute
+  writes. A component whose body has setup statements beside a single root element
+  clones that element instead of a fragment.
+
+- [#1470](https://github.com/Ripple-TS/ripple/pull/1470)
+  [`0321791`](https://github.com/Ripple-TS/ripple/commit/03217912651e0a49edb8060a92602fd0e0abe193)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Component props are plain
+  objects, evaluated once. A call site such as `<Child a={x} b="y" />` compiles to
+  the object literal `{ a: x, b: 'y' }` and passes it to the component as is: no
+  getters, no props class, no Proxy for spreads, no `Props` helpers, and no
+  `Object.keys`/spread lowering, so props behave like any other object in `.tsrx`
+  and `.ts` code alike. A prop expression is evaluated when the component is
+  called, so a child that must follow a change now receives a live value
+  explicitly: a tracked object (`count={count}`) or a derived
+  (`title={track(() => label + count.value)}`), read through `.value`.
+  `count={count.value}` passes the current number. `track(fn)` is typed
+  `Derived<V>` with a read-only `value`; `track(fn, get, set)` or
+  `track(fn, undefined, true)` is a `WritableDerived<V>`, and a write to a
+  read-only derived warns in development. A dynamic element
+  (`<{tag} class={x} />`) still updates its attributes reactively. `Props.keys`,
+  `Props.values`, `Props.entries`, `Props.has`, `Props.spread`, `Props.rest`,
+  `Props.ownSymbolKeys` and `Props.ownAllKeys` are removed, as they are plain
+  `Object` operations now.
+
+- [#1457](https://github.com/Ripple-TS/ripple/pull/1457)
+  [`020d269`](https://github.com/Ripple-TS/ripple/commit/020d2699f8e1333367ac9f7abe9247bab55e272d)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Fix hydration when a fragment
+  root or a slot is followed by siblings. The compiler's closing `next(n)` for a
+  fragment root now counts from wherever the cursor was last positioned, so a
+  trailing element navigated to for an event or attribute, tracked text, a
+  control-flow block, a component, or a `{expression}` no longer makes the cursor
+  overshoot or fall short of the fragment's last node; a trailing element that was
+  descended into is popped back to. Control-flow bodies nested inside an element
+  now emit that `next(n)` too. At runtime, a `{expression}` leaves the cursor on
+  its own end marker like every other block, and a multi-node branch or `@for`
+  item steps to its block's end marker after appending, so the next sibling, item,
+  or component adopts the right node.
+
+- [#1462](https://github.com/Ripple-TS/ripple/pull/1462)
+  [`453bf4b`](https://github.com/Ripple-TS/ripple/commit/453bf4ba8b1b31963df26696545e446ab4b1658e)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Faster keyed lists and
+  lighter component output on the client. A `@for` keyed by the item itself
+  (`key item`) keys by identity with no key callback, so a re-run compares the
+  item arrays directly and skips the per-item value update; a same-length keyed
+  re-run rewrites the list's block array in place instead of allocating a new one,
+  with the unchanged prefix and suffix skipped by plain compares. Static child
+  components that follow their template siblings append into the parent element
+  instead of inserting before a `<!>` placeholder, so a component with trailing
+  child components clones fewer nodes and leaves no comment anchors in the DOM.
+  The compiler also infers a primitive text type through a call whose callee is
+  declared to return one (a binding typed as a function type, an `as` assertion, a
+  function with a declared return type, or a method or function-typed property of
+  an annotated object), so such text lowers to `set_text` instead of a generic
+  expression block.
+
+- [#1463](https://github.com/Ripple-TS/ripple/pull/1463)
+  [`411809f`](https://github.com/Ripple-TS/ripple/commit/411809fb38f25b259a1078a901839318e4207871)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Faster cold hydration and
+  server rendering. `hydrate()` accepts `rootBoundary: false` like `mount()`,
+  stepping over the server's root marker itself instead of rendering under a `try`
+  block (a streamed shell whose root suspended still hydrates under the default
+  boundary, which alone can adopt and activate its slot). The client runtime
+  compiles less on a cold page: the hydration cursor steps live in one module and
+  assign the cursor directly, a list's first render never compiles the diff, a
+  template's clone path stays out of its hydrating closure, `run_block` keeps
+  re-run and teardown handling in separate functions, and the compiler adopts an
+  element's lone text child in place (`hydrate_text`) with no `pop()`. A `@for`
+  whose `index` nothing reads allocates no tracked index per item. Removing the
+  server's inline styles now starts from an animation frame rather than inside
+  `mount()`/`hydrate()`.
+
+  On the server, `render()` joins its buffer tree with a plain walk instead of
+  `flat(Infinity).join('')`, `escape()` returns strings without `&`, `<` or `"`
+  after a single regex test, and an `Output` allocates its stream, css and
+  async-operation collections only for the root or on first use.
+
+- [#1453](https://github.com/Ripple-TS/ripple/pull/1453)
+  [`82bc9ee`](https://github.com/Ripple-TS/ripple/commit/82bc9ee585c6b273bf69890bc2f230aba922bf19)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Speed up portals and root
+  event delegation. `<Portal>` now lowers to a dedicated `portal()` runtime call,
+  portal content appends straight into its target without a placeholder node,
+  delegated root listeners are shared per target instead of per portal, event
+  registration no longer scans every root target, and `@if` blocks and compiled
+  `event()` calls allocate fewer closures. `mount()` accepts `rootBoundary: false`
+  to render without the default root try/pending boundary. Cold code paths
+  (keyed-list diff, block error handling, effect-phase flushing, hydration
+  branches) live in their own functions so a first mount compiles less. A
+  component whose root is `@if`, `@for`, `@switch`, or `@try` now re-renders at
+  its own position when it is portal content or one of an element's all-component
+  children, instead of at the end of the parent; `mount()`/`hydrate()` disposers
+  are safe to call more than once.
+
+- [#1470](https://github.com/Ripple-TS/ripple/pull/1470)
+  [`0321791`](https://github.com/Ripple-TS/ripple/commit/03217912651e0a49edb8060a92602fd0e0abe193)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Cheaper component
+  instantiation and `@if` chains on the client. An `@else if`, and a branch whose
+  only statement is another `@if`, fold into the enclosing `@if` block on both the
+  client and the server, so a chain costs one block and one hydration boundary. An
+  `@if` whose condition reads no tracked state renders its branch directly under
+  the enclosing block with no block of its own (a block without dependencies is
+  never scheduled, so nothing is lost); a dynamic condition keeps its block and
+  adopts the dependencies recorded while it was evaluated. A module-level
+  component also carries a direct render entry so `render_component` skips the
+  element it would otherwise return. An `@if` condition and its branches compile
+  to module-level functions when they capture at most one local (passed through
+  the if runtime), a condition returns the branch function to render instead of
+  calling a selection callback, and a render block's function is module-level with
+  its captured locals carried on the block state, so a component instantiation
+  creates no closures for its ifs or its reactive text and attribute updates.
+  `Context.get()` walks a chain of the context entries that were set rather than
+  every ancestor component. A module-level component's render body is a
+  module-level function that receives the props from the element instead of a
+  closure created per instantiation, `Context.get()`/`set()` calls on a
+  `new Context()` binding skip the `with_scope` wrapper, and `mount()` only
+  schedules the SSR style removal when the page has server-rendered inline styles.
+  A `@switch` now lowers onto the same runtime as `@if`: its selector returns the
+  case to render, so a `@switch` over a value that reads no tracked state renders
+  its case with no block, its cases are module-level functions when they capture
+  at most one local, and the separate switch runtime is gone. The probe that
+  decides whether an `@if` needs a block now renders a static branch itself, one
+  runtime call instead of four. A module-level component with a destructuring
+  parameter gets the direct render entry as well, and an `@if` or `@switch` is
+  hoisted whatever number of locals it captures: several travel as one object
+  literal destructured in the hoisted signatures. A binding that hoisted template
+  code writes (a `ref={name}` setter, a handler that assigns it) or that is
+  reassigned after template code reads it is compiled to a `{ v }` box, so the
+  hoisted functions share the variable with the component exactly as a closure
+  would: a plain `let`, a name inside a destructuring pattern of any shape, a
+  function or catch parameter (reboxed first thing in the body), and a `let`
+  written through a destructuring or `for...of` assignment target.
+
+- [#1473](https://github.com/Ripple-TS/ripple/pull/1473)
+  [`eb638ea`](https://github.com/Ripple-TS/ripple/commit/eb638ea4a3c73b7ecb98ccedfffc576661dc67b3)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - A derived created during a
+  block's run (a `track(() => ...)` or `tracked.readOnly()` in an `@if` branch, a
+  keyed `@for` item, a render expression, or component setup) is now unsubscribed
+  from its sources when that block reruns or is destroyed, unless a reader that is
+  still alive holds it. Before, such deriveds stayed subscribed until the block
+  that owned them was destroyed, so a branch that toggled repeatedly accumulated
+  one stale derived per toggle, each walked on every write to the source. The
+  bookkeeping lives in a side table keyed by the creating block, so blocks that
+  create no deriveds pay nothing.
+
+- [#1466](https://github.com/Ripple-TS/ripple/pull/1466)
+  [`2631804`](https://github.com/Ripple-TS/ripple/commit/2631804cd28980b213643ac4ef5e5bcb814eae57)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Faster streaming SSR. A
+  resolved `trackAsync` value made of plain data (strings, finite numbers,
+  booleans, `null`, arrays and plain objects, each reachable once) now travels in
+  its hydration script as raw JSON that `JSON.parse` of the envelope yields
+  directly, instead of a devalue-encoded string; values JSON cannot represent
+  (`undefined`, `NaN`, `-0`, bigints, Dates, Maps, Sets, shared references,
+  cycles) keep the devalue encoding, and the client reads either form. Boundaries
+  that settle in the same task (data arriving together, a batch of promises
+  resolved by one timer or I/O callback) stream as one chunk, flushed once the
+  task's microtasks have drained; closing the stream flushes whatever is still
+  queued first. `devalue` is updated to 5.9.2, with the stringify performance
+  patch proposed upstream in sveltejs/devalue#190 applied through pnpm's
+  `patchedDependencies` until it is released.
+
+- [#1472](https://github.com/Ripple-TS/ripple/pull/1472)
+  [`5d3e60d`](https://github.com/Ripple-TS/ripple/commit/5d3e60d86129ac20d23c86a923914ee44efea9d1)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - `tracked.readOnly()` returns
+  a read-only view of a `Tracked` or `WritableDerived`: a `Derived<V>` that
+  follows the value and rejects writes, for a child, function, or context that
+  should only read it. It is equivalent to `track(() => tracked.value)`. On a
+  derived that is already read-only, `readOnly()` returns the derived itself.
+
+- [#1465](https://github.com/Ripple-TS/ripple/pull/1465)
+  [`8ace206`](https://github.com/Ripple-TS/ripple/commit/8ace206bfed2cd80b758e6e72f94084d2ffe1455)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - `@try` blocks and the root
+  boundary keep their state in one explicit `TryState` object, and the pending,
+  catch, request and streaming helpers are module functions that take it. A
+  boundary allocates its state and one branch closure instead of a closure per
+  helper.
+- Updated dependencies
+  [[`bbc1445`](https://github.com/Ripple-TS/ripple/commit/bbc14455485e054c145ebc78f08a771d41ea16f1),
+  [`0321791`](https://github.com/Ripple-TS/ripple/commit/03217912651e0a49edb8060a92602fd0e0abe193),
+  [`2ef5da5`](https://github.com/Ripple-TS/ripple/commit/2ef5da52b26fc13e11537dd28df0e2b376ca0f52),
+  [`0321791`](https://github.com/Ripple-TS/ripple/commit/03217912651e0a49edb8060a92602fd0e0abe193),
+  [`020d269`](https://github.com/Ripple-TS/ripple/commit/020d2699f8e1333367ac9f7abe9247bab55e272d),
+  [`453bf4b`](https://github.com/Ripple-TS/ripple/commit/453bf4ba8b1b31963df26696545e446ab4b1658e),
+  [`411809f`](https://github.com/Ripple-TS/ripple/commit/411809fb38f25b259a1078a901839318e4207871),
+  [`82bc9ee`](https://github.com/Ripple-TS/ripple/commit/82bc9ee585c6b273bf69890bc2f230aba922bf19),
+  [`69d50d9`](https://github.com/Ripple-TS/ripple/commit/69d50d9849d8484a88d39b2908bb682d27ec7bc9),
+  [`0321791`](https://github.com/Ripple-TS/ripple/commit/03217912651e0a49edb8060a92602fd0e0abe193),
+  [`5d3e60d`](https://github.com/Ripple-TS/ripple/commit/5d3e60d86129ac20d23c86a923914ee44efea9d1)]:
+  - @tsrx/ripple@0.2.0
+
+## 0.3.128
+
+### Patch Changes
+
+- [#1450](https://github.com/Ripple-TS/ripple/pull/1450)
+  [`26be014`](https://github.com/Ripple-TS/ripple/commit/26be014dfd06da9eae7e2d9e0fbd332ddf1bc9ca)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Faster updates and list
+  rendering in the client runtime. Tracked values now keep a subscriber list, so a
+  write schedules exactly the blocks that read it and the flush no longer scans
+  the owner's subtree; scheduled blocks run in creation order from a queue. Text
+  expressions, keyed list items, and class updates allocate less per row, and
+  `set_class` skips DOM writes when the class is unchanged. Adds the `selector` /
+  `selector_match` internals the compiler uses to share one subscription across
+  `outer === item` comparisons in `@for` templates. Keyed list reconciliation
+  matches moved end items before falling back to the map and LIS, so reversals,
+  rotations, and swaps complete with plain moves. An empty dynamic `class` no
+  longer writes a `class=""` attribute; the server omits it as well. Exposes
+  `hydrating`, `hydrate_child`, and `hydrate_sibling` from the internal client
+  entry for the compiler's inline traversal. When most surviving items of a keyed
+  list would have to move, the list is re-laid in order before a fixed node, which
+  is cheaper than moving each item into place.
+
+- Updated dependencies
+  [[`26be014`](https://github.com/Ripple-TS/ripple/commit/26be014dfd06da9eae7e2d9e0fbd332ddf1bc9ca)]:
+  - @tsrx/ripple@0.1.65
+
+## 0.3.127
+
+### Patch Changes
+
+- [#1447](https://github.com/Ripple-TS/ripple/pull/1447)
+  [`d824f7b`](https://github.com/Ripple-TS/ripple/commit/d824f7b790991f89b0935e05ceb78e2214ab3394)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Align JSX component types
+  with the public `Component` type so component props and functions returning
+  renderable primitives or arrays are accepted as JSX tags.
+
+- [#1448](https://github.com/Ripple-TS/ripple/pull/1448)
+  [`6c47f52`](https://github.com/Ripple-TS/ripple/commit/6c47f527a790e1b86ed7ff770e9c19f213d4881a)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Qualify JSX element types
+  with the Ripple namespace and use DetailedHTMLProps for HTML tag hovers while
+  preserving Ripple's attribute, event, and ref types.
+
+- Updated dependencies
+  [[`ac4361e`](https://github.com/Ripple-TS/ripple/commit/ac4361e2dd1e93c29f44196cfe3b703124083fd0)]:
+  - @tsrx/ripple@0.1.64
+
+## 0.3.126
+
+### Patch Changes
+
+- [#1441](https://github.com/Ripple-TS/ripple/pull/1441)
+  [`2404ad4`](https://github.com/Ripple-TS/ripple/commit/2404ad4a4fcca21a1887bab25bb94671698f0c9d)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Implement sibling-scoped
+  `<style>` blocks, `$class`, and `apply`
+  ([TSRX RFC #1](https://github.com/tsrx-org/RFCs/discussions/1)) for the Ripple
+  target.
+
+  - A `<style>` block is scoped to its siblings: it styles the items beside it and
+    everything below them, never the element that contains it. Blocks among the
+    same children share one hash and one stylesheet; nested children lists that
+    hold blocks are nested scopes, and every element carries the hash of each
+    enclosing scope, outer first. Control-flow branches and templates assigned to
+    variables host scopes too.
+  - Assigning a block to a variable exposes `$class`. Exported, applied, or
+    `$class`-read blocks are themes that keep every selector; other assigned
+    blocks stay class maps. `<style apply={theme} />` attaches a theme to a whole
+    scope, `<style apply={theme}>…</style>` applies and declares in one tag,
+    arrays apply several themes, and a theme may apply other themes. Same-module
+    themes inline as literals; imported themes are read through `theme.$class` at
+    runtime.
+  - CSS is emitted in lexical order (an applied theme before the block that
+    applies it, a scope's blocks together, nested scopes after their parent). On
+    the server a render registers the sheets it needs in that order, class-map
+    reads register their own sheet, and reading `theme.$class` outside a render no
+    longer throws.
+  - The style diagnostics of the RFC (`tsrx-style-*` codes) are reported, and
+    type-only output verifies `apply` targets through a `$class` read.
+  - Fixed: a `@{ … }` block rendered as the child of a DOM element on the client
+    was dropped; it now renders in place. The `#class` spread attribute accepts
+    several class tokens.
+
+  Raw CSS in a `<style>` inside a plain function that returns JSX is now an error
+  (`tsrx-style-standalone-outside-template`): use a `@{ … }` body, or
+  `<style>{css}</style>`. Elements are stamped with the scope class after their
+  authored classes, and every element of a scope carries it, not only those a
+  selector matches.
+
+- Updated dependencies
+  [[`2404ad4`](https://github.com/Ripple-TS/ripple/commit/2404ad4a4fcca21a1887bab25bb94671698f0c9d)]:
+  - @tsrx/ripple@0.1.63
+
+## 0.3.125
+
+### Patch Changes
+
+- [#1437](https://github.com/Ripple-TS/ripple/pull/1437)
+  [`71747c0`](https://github.com/Ripple-TS/ripple/commit/71747c088d549cd3ec85fb78744acf0273b8f6a8)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Consume the shared TSRX
+  compiler and tooling from their published packages after moving target-neutral
+  source to `tsrx-org/tsrx`. New Ripple projects now use the
+  `@tsrx/language-server`, TSRX editor identity, and published TSRX integrations.
+- Updated dependencies
+  [[`71747c0`](https://github.com/Ripple-TS/ripple/commit/71747c088d549cd3ec85fb78744acf0273b8f6a8)]:
+  - @tsrx/ripple@0.1.62
+
+## 0.3.124
+
+### Patch Changes
+
+- [#1434](https://github.com/Ripple-TS/ripple/pull/1434)
+  [`2f4d02d`](https://github.com/Ripple-TS/ripple/commit/2f4d02d6a6ab83fd1af7e16b86967223990f1aa3)
+  Thanks [@chenzylab](https://github.com/chenzylab)! - Fix event delegation
+  breaking when multiple roots (Portals, mounts) share or mix targets.
+
+  - `handle_root_events(target)` had no notion of multiple callers sharing the
+    same `target` element. Each Portal (or the app root) calls it once on mount;
+    its cleanup unconditionally removed the delegated event listeners from
+    `target`. When two Portals both mount to `document.body` (e.g. a Modal and a
+    SideSheet), closing the first tore down the delegated listeners for
+    `document.body` entirely, silently breaking every click inside the second — no
+    error, no warning. `handle_root_events` now ref-counts callers per target, and
+    the delegated listeners are only torn down once every caller for that target
+    has released it.
+  - The single `root_target` global is gone. `on()` now checks the element against
+    every active root target, so attaching a listener directly to one root's
+    target while another root (e.g. a Portal to a sibling layer) was acquired
+    later no longer silently takes the broken delegated path.
+  - `Portal` acquires root event delegation in its own render block keyed on
+    `target`, so a children-only update no longer releases and re-adds every
+    delegated listener on the target.
+
+## 0.3.123
+
+### Patch Changes
+
+- [#1432](https://github.com/Ripple-TS/ripple/pull/1432)
+  [`8b5abd7`](https://github.com/Ripple-TS/ripple/commit/8b5abd7021a23b7651608fb26ff7e59ed5b4a18c)
+  Thanks [@chenzylab](https://github.com/chenzylab)! - Fix insertion order when a
+  keyed or ref-based `@for` inserts multiple new items in the middle of the list.
+  The pure-insert reconciliation path resolved the DOM anchor per new item by
+  indexing the old blocks with a new-list index, so the anchor drifted into the
+  matched suffix and later items landed after it (e.g. `[A, C, D]` →
+  `[A, B1, B2, C, D]` rendered as `A, B1, C, B2, D`). The anchor is now resolved
+  once, at the start of the matched suffix, and reused for the whole run of
+  inserts.
+
+## 0.3.122
+
+### Patch Changes
+
+- Updated dependencies
+  [[`481d934`](https://github.com/Ripple-TS/ripple/commit/481d934aa17a275aa588d945b4c65b421076f89c)]:
+  - @tsrx/core@0.1.60
+  - @tsrx/ripple@0.1.61
+
+## 0.3.121
+
+### Patch Changes
+
+- Updated dependencies
+  [[`4fea7fc`](https://github.com/Ripple-TS/ripple/commit/4fea7fc9a1277abe47a5b5c67eeda2e253c9e6d5),
+  [`2aa2b6f`](https://github.com/Ripple-TS/ripple/commit/2aa2b6f4beff43b61badd1fb7d11433e9e4f52b3),
+  [`6d3417e`](https://github.com/Ripple-TS/ripple/commit/6d3417eb3852a9f0085b273f07079a3b12323712)]:
+  - @tsrx/core@0.1.59
+  - @tsrx/ripple@0.1.60
+
+## 0.3.120
+
+### Patch Changes
+
+- Updated dependencies
+  [[`10c6c3d`](https://github.com/Ripple-TS/ripple/commit/10c6c3df0f5dfccf9be34c556afee1c87c678bde)]:
+  - @tsrx/core@0.1.58
+  - @tsrx/ripple@0.1.59
+
+## 0.3.119
+
+### Patch Changes
+
+- Updated dependencies
+  [[`2e65731`](https://github.com/Ripple-TS/ripple/commit/2e657313feb272ef7c32510f8e2aa3de1b53ccb3)]:
+  - @tsrx/core@0.1.57
+  - @tsrx/ripple@0.1.58
+
+## 0.3.118
+
+### Patch Changes
+
+- Updated dependencies
+  [[`f03a5af`](https://github.com/Ripple-TS/ripple/commit/f03a5af4c455135767a959f6b45eb3ddb7fadd8f)]:
+  - @tsrx/core@0.1.56
+  - @tsrx/ripple@0.1.57
+
+## 0.3.117
+
+### Patch Changes
+
+- Updated dependencies
+  [[`9b654b2`](https://github.com/Ripple-TS/ripple/commit/9b654b29339c14e79f8377491946c1419417a002),
+  [`5e4b38e`](https://github.com/Ripple-TS/ripple/commit/5e4b38ec26c8268b60e3ca4319eb37f8a07b3078),
+  [`7136920`](https://github.com/Ripple-TS/ripple/commit/7136920028537f336c9404493d8c9fde80105408)]:
+  - @tsrx/core@0.1.55
+  - @tsrx/ripple@0.1.56
+
+## 0.3.116
+
+### Patch Changes
+
+- Updated dependencies
+  [[`d85f9f3`](https://github.com/Ripple-TS/ripple/commit/d85f9f3a8a4f8ed8f77ce54f87fa4387d586884c)]:
+  - @tsrx/core@0.1.54
+  - @tsrx/ripple@0.1.55
+
+## 0.3.115
+
+### Patch Changes
+
+- Updated dependencies
+  [[`7eaf6e8`](https://github.com/Ripple-TS/ripple/commit/7eaf6e8b21f83b73845b8bcd6bc50cc9f8886871)]:
+  - @tsrx/core@0.1.53
+  - @tsrx/ripple@0.1.54
+
+## 0.3.114
+
+### Patch Changes
+
+- Updated dependencies
+  [[`7ec87d9`](https://github.com/Ripple-TS/ripple/commit/7ec87d910c62e39e0dc95c80daace036cc6f041c)]:
+  - @tsrx/core@0.1.52
+  - @tsrx/ripple@0.1.53
+
+## 0.3.113
+
+### Patch Changes
+
+- [#1389](https://github.com/Ripple-TS/ripple/pull/1389)
+  [`7ad580e`](https://github.com/Ripple-TS/ripple/commit/7ad580efd24b338b4774add06afdcdd8876c954c)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - fix(types): widen
+  `Component`'s return type to everything the runtime renders
+
+  `Component` declared `(props: T) => void | TSRXElement`, so a component that
+  returned a string, number, bigint, boolean, `null`, or an array — all of which
+  both runtimes render — was rejected at `mount`, `hydrate`, and the server
+  `render`. The return type is now the new exported `Renderable` union, which
+  mirrors the shared dispatch in `render_value`/`render_expression`: elements
+  render, arrays flatten recursively, nullish renders nothing, everything else is
+  stringified. Promises, functions, and symbols stay rejected because neither
+  runtime renders them.
+
+- Updated dependencies
+  [[`6404d3c`](https://github.com/Ripple-TS/ripple/commit/6404d3cc679fde2eb83ec85c9cd98b653f3f2fed),
+  [`6025176`](https://github.com/Ripple-TS/ripple/commit/6025176000cafa50d924add8e9a878fe37c0c22b),
+  [`6025176`](https://github.com/Ripple-TS/ripple/commit/6025176000cafa50d924add8e9a878fe37c0c22b),
+  [`6025176`](https://github.com/Ripple-TS/ripple/commit/6025176000cafa50d924add8e9a878fe37c0c22b),
+  [`7ad580e`](https://github.com/Ripple-TS/ripple/commit/7ad580efd24b338b4774add06afdcdd8876c954c),
+  [`6eaa2f3`](https://github.com/Ripple-TS/ripple/commit/6eaa2f3e6cd18973d57df06eae770313dd061a1a),
+  [`6025176`](https://github.com/Ripple-TS/ripple/commit/6025176000cafa50d924add8e9a878fe37c0c22b),
+  [`9ffd4ba`](https://github.com/Ripple-TS/ripple/commit/9ffd4ba3e5982acb79a02efe0379abdc14c092a1)]:
+  - @tsrx/core@0.1.51
+  - @tsrx/ripple@0.1.52
+
+## 0.3.112
+
+### Patch Changes
+
+- Updated dependencies
+  [[`98cc95c`](https://github.com/Ripple-TS/ripple/commit/98cc95ce2af7edcb9637ff56072bbeda5b837a30)]:
+  - @tsrx/core@0.1.50
+  - @tsrx/ripple@0.1.51
+
+## 0.3.111
+
+### Patch Changes
+
+- Updated dependencies
+  [[`979b230`](https://github.com/Ripple-TS/ripple/commit/979b2303a98cc85669c899bd3aff757f72a1e7c8)]:
+  - @tsrx/core@0.1.49
+  - @tsrx/ripple@0.1.50
+
+## 0.3.110
+
+### Patch Changes
+
+- Updated dependencies
+  [[`81859da`](https://github.com/Ripple-TS/ripple/commit/81859da03464b8865304c70ea2b8b1245018af2c)]:
+  - @tsrx/core@0.1.48
+  - @tsrx/ripple@0.1.49
+
+## 0.3.109
+
+### Patch Changes
+
+- Updated dependencies
+  [[`302dc74`](https://github.com/Ripple-TS/ripple/commit/302dc74143f4143ec7136c036510d258a7866c8a)]:
+  - @tsrx/core@0.1.47
+  - @tsrx/ripple@0.1.48
+
+## 0.3.108
+
+## 0.3.107
+
+### Patch Changes
+
+- Updated dependencies
+  [[`21a43da`](https://github.com/Ripple-TS/ripple/commit/21a43da09713f28c5d2ae73633e5ca56e4cd8d1f)]:
+  - @tsrx/core@0.1.46
+  - @tsrx/ripple@0.1.47
+
+## 0.3.106
+
+### Patch Changes
+
+- Updated dependencies
+  [[`e9e122f`](https://github.com/Ripple-TS/ripple/commit/e9e122f8620c4b52671b294364a12a65091e0c98)]:
+  - @tsrx/core@0.1.45
+  - @tsrx/ripple@0.1.46
+
+## 0.3.105
+
+## 0.3.104
+
+## 0.3.103
+
+### Patch Changes
+
+- Updated dependencies
+  [[`c66215d`](https://github.com/Ripple-TS/ripple/commit/c66215dbd13313a45bc799d5643d2599b3d70d85)]:
+  - @tsrx/core@0.1.44
+  - @tsrx/ripple@0.1.45
+
+## 0.3.102
+
+## 0.3.101
+
+### Patch Changes
+
+- Updated dependencies
+  [[`73f7eb4`](https://github.com/Ripple-TS/ripple/commit/73f7eb457dd9cc37364ba49b2ddfd56995fd07b0)]:
+  - @tsrx/core@0.1.43
+  - @tsrx/ripple@0.1.44
+
+## 0.3.100
+
+### Patch Changes
+
+- [#1352](https://github.com/Ripple-TS/ripple/pull/1352)
+  [`b36ec19`](https://github.com/Ripple-TS/ripple/commit/b36ec1930764f447585a6c31c17bc63b3596511a)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - various type, volar fixes and
+  lib upgrades
+
+- Updated dependencies
+  [[`b36ec19`](https://github.com/Ripple-TS/ripple/commit/b36ec1930764f447585a6c31c17bc63b3596511a),
+  [`b36ec19`](https://github.com/Ripple-TS/ripple/commit/b36ec1930764f447585a6c31c17bc63b3596511a)]:
+  - @tsrx/core@0.1.42
+  - @tsrx/ripple@0.1.43
+
+## 0.3.99
+
+### Patch Changes
+
+- Updated dependencies
+  [[`5f5726d`](https://github.com/Ripple-TS/ripple/commit/5f5726d164926f480454143895bf035c9c30929b)]:
+  - @tsrx/core@0.1.41
+  - @tsrx/ripple@0.1.42
+
+## 0.3.98
+
+## 0.3.97
+
+### Patch Changes
+
+- Updated dependencies
+  [[`586c6df`](https://github.com/Ripple-TS/ripple/commit/586c6df1dfe52f098d6b48fd94414f69d5e2020d)]:
+  - @tsrx/core@0.1.40
+  - @tsrx/ripple@0.1.41
+
+## 0.3.96
+
+### Patch Changes
+
+- Updated dependencies
+  [[`09efc09`](https://github.com/Ripple-TS/ripple/commit/09efc09d5149b8ffe9b6334c48ea6b2b4a1795dc)]:
+  - @tsrx/core@0.1.39
+  - @tsrx/ripple@0.1.40
+
+## 0.3.95
+
+## 0.3.94
+
+### Patch Changes
+
+- Updated dependencies
+  [[`78502e4`](https://github.com/Ripple-TS/ripple/commit/78502e46929df2165d288dbb2483f48e9254ef35)]:
+  - @tsrx/core@0.1.38
+  - @tsrx/ripple@0.1.39
+
+## 0.3.93
+
+### Patch Changes
+
+- [`9db5a49`](https://github.com/Ripple-TS/ripple/commit/9db5a49e45c2eb3bb4f6b46c65c0aaf9016633ad)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Rename the `ripple/server`
+  helper exports to camelCase: `create_ssr_stream` is now `createStream` and
+  `get_css_for_hashes` is now `getCss` (returning the CSS text for the scoped
+  style hashes collected by `render()`). The old snake_case exports are removed;
+  update imports accordingly. The vite plugin consumes the new names internally.
+
+## 0.3.92
+
+### Patch Changes
+
+- [#1326](https://github.com/Ripple-TS/ripple/pull/1326)
+  [`fea49bf`](https://github.com/Ripple-TS/ripple/commit/fea49bfb4410a05e0c915dfa39acdaba7f542737)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Streaming SSR:
+  `render(App, { stream })` now streams progressively. The synchronous shell (with
+  pending fallbacks for suspended `@try` boundaries and all CSS registered so far)
+  is flushed immediately; each boundary's content streams out of order as a framed
+  chunk once its async work settles, including per-chunk CSS, trackAsync envelopes
+  and `<head>` content. A tiny inline runtime swaps chunks into their slots before
+  hydration, and hydrated boundaries activate streamed chunks in place afterwards
+  — claiming the streamed DOM without re-rendering. Catch-only async boundaries
+  stream an empty slot and resolve to their body or server-rendered catch; errors
+  whose catch region is already on the wire hand off to the client boundary via an
+  error envelope. `render` also gains a `streamTemplate` option for document
+  scaffolding, and the vite plugin streams render-route responses when
+  `ssr.streaming` is enabled in ripple.config.ts (falling back to buffered SSR
+  when index.html lacks the `<!--ssr-head-->`/`<!--ssr-body-->` markers).
+
+## 0.3.91
+
+### Patch Changes
+
+- Updated dependencies
+  [[`a109586`](https://github.com/Ripple-TS/ripple/commit/a109586774227b4026ffbd813a956e231edb1005)]:
+  - @tsrx/core@0.1.37
+  - @tsrx/ripple@0.1.38
+
+## 0.3.90
+
+### Patch Changes
+
+- [#1324](https://github.com/Ripple-TS/ripple/pull/1324)
+  [`1925074`](https://github.com/Ripple-TS/ripple/commit/1925074254de0e61c8578cba136c50ea8f89cd35)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Minor adjustments from
+  @tsrx/ripple moving to the parser ast vs its own version
+
+- Updated dependencies
+  [[`1925074`](https://github.com/Ripple-TS/ripple/commit/1925074254de0e61c8578cba136c50ea8f89cd35),
+  [`1925074`](https://github.com/Ripple-TS/ripple/commit/1925074254de0e61c8578cba136c50ea8f89cd35)]:
+  - @tsrx/core@0.1.36
+  - @tsrx/ripple@0.1.37
+
+## 0.3.89
+
+### Patch Changes
+
+- Updated dependencies
+  [[`51eed86`](https://github.com/Ripple-TS/ripple/commit/51eed869b7ea26b5554893c9f8dd363f2d2121bc)]:
+  - @tsrx/core@0.1.35
+  - @tsrx/ripple@0.1.36
+
+## 0.3.88
+
+## 0.3.87
+
+### Patch Changes
+
+- Updated dependencies
+  [[`cc95ffa`](https://github.com/Ripple-TS/ripple/commit/cc95ffaef3f3d3cd252176ea94308f89739f0212),
+  [`6f78b7f`](https://github.com/Ripple-TS/ripple/commit/6f78b7ff5a5e1f9873a839b709f38e9506545a63)]:
+  - @tsrx/core@0.1.34
+  - @tsrx/ripple@0.1.35
+
+## 0.3.86
+
+### Patch Changes
+
+- [#1310](https://github.com/Ripple-TS/ripple/pull/1310)
+  [`4ebd58d`](https://github.com/Ripple-TS/ripple/commit/4ebd58dfe853c1ed945072822eaba8a7a9e19a6c)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Fix
+  `Cannot use 'in' operator to search for 'parent' in null` thrown from `append()`
+  when reordering or inserting into a keyed `@for` whose item body is a single
+  control-flow / component root (e.g. `@for (...; key ...) { <Card {item} /> }`
+  where `Card`'s own body is a single `@if`/`@for`/component). The 0.3.85
+  wrapper-anchor optimization leaves such an item block's `s.start` null because
+  its DOM is rendered through a descendant block, and keyed reconciliation read
+  `s.start` directly as the insertion anchor. Reconciliation now resolves the real
+  first/last DOM node by descending child blocks, so no `<!>` comment marker is
+  reintroduced and the optimization's reduced DOM-mutation cost is preserved. The
+  same resolution is applied to `@switch` case reordering.
+- Updated dependencies
+  [[`e4e6d7b`](https://github.com/Ripple-TS/ripple/commit/e4e6d7b854786ad19a2c86276ea7e0ffb062e61a)]:
+  - @tsrx/ripple@0.1.34
+
+## 0.3.85
+
+### Patch Changes
+
+- [#1307](https://github.com/Ripple-TS/ripple/pull/1307)
+  [`f55466b`](https://github.com/Ripple-TS/ripple/commit/f55466bde65d0cff00c0c4525af9d68ae794ffd2)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Skip the wrapper anchor for
+  single control-flow / code-block / component root scopes. When a scope's entire
+  renderable output is a single `@if`, `@switch`, `@for`, `@try`, or static child
+  component — i.e. a component body, a control-flow branch, or a `@{}` body whose
+  only output after setup is one of these — the compiler now renders it directly
+  before the parent-provided `__anchor` instead of synthesizing a `<!>` fragment
+  wrapper and an extra append + clone. For deep recursive trees this measurably
+  cuts mount time and shrinks generated output; in the recursive-context benchmark
+  it brought mount DOM operations to one clone + one append per element (from
+  ~1.5×) and halved the comment-anchor nodes.
+
+  Hydration is preserved. The control-flow runtimes
+  (`if_block`/`switch_block`/`for_block`/`for_block_keyed`/`try_block`) capture
+  the SSR boundary marker and hand it to `append()` afterward, so the existing
+  context-aware cursor advance still runs — including for a root scope used as a
+  child of a composite/slot with following siblings. Single-component roots need
+  no runtime change at all, since a component's own content advances the hydration
+  cursor.
+
+  Also relaxes the compiler's text-expression detection: `string + anything` (e.g.
+  `{a + '|' + b}`) is now recognized as text and lowered to the fast `set_text`
+  path without requiring an explicit `as string`, since such an expression always
+  evaluates to a string in JS.
+
+- [#1307](https://github.com/Ripple-TS/ripple/pull/1307)
+  [`f55466b`](https://github.com/Ripple-TS/ripple/commit/f55466bde65d0cff00c0c4525af9d68ae794ffd2)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Scope the client flush
+  traversal to the updated subtree. Previously every flush walked the whole root
+  block tree to find dirty subscribers, so a deeply-scoped update (e.g. mutating
+  state read by only a small subtree) paid a cost proportional to the entire tree
+  rather than the affected branch. `flush_updates` now descends only along the
+  routing path to each directly-scheduled block and fully scans just that block's
+  subtree, where its subscribers live. A tracked read from outside its owner's
+  subtree (e.g. smuggled across sibling subtrees via a module-level variable) is
+  detected in `register_dependency` and transparently falls back to the original
+  full-tree scan, so behavior is unchanged.
+
+- Updated dependencies
+  [[`ba498cd`](https://github.com/Ripple-TS/ripple/commit/ba498cde76e9f83235ce91da825f403a28441bff),
+  [`313b351`](https://github.com/Ripple-TS/ripple/commit/313b3513e4a959dd80b546da41c798066c5ccb0f),
+  [`35ac700`](https://github.com/Ripple-TS/ripple/commit/35ac70052d79efae41bb1df2440fee3f052ca115),
+  [`bbe6e74`](https://github.com/Ripple-TS/ripple/commit/bbe6e7422c690558f0dfcb3abe5452d4f4cdde91),
+  [`0e9f523`](https://github.com/Ripple-TS/ripple/commit/0e9f52358a615c2fc7759544e96c43dccb533c86),
+  [`35ac700`](https://github.com/Ripple-TS/ripple/commit/35ac70052d79efae41bb1df2440fee3f052ca115),
+  [`35ac700`](https://github.com/Ripple-TS/ripple/commit/35ac70052d79efae41bb1df2440fee3f052ca115),
+  [`2b65285`](https://github.com/Ripple-TS/ripple/commit/2b65285bfcd4c6a0aa93d7fa0b25082e6ec74e1f),
+  [`35ac700`](https://github.com/Ripple-TS/ripple/commit/35ac70052d79efae41bb1df2440fee3f052ca115),
+  [`f55466b`](https://github.com/Ripple-TS/ripple/commit/f55466bde65d0cff00c0c4525af9d68ae794ffd2),
+  [`b887deb`](https://github.com/Ripple-TS/ripple/commit/b887debf5f47e63d73184ac218ec8b3542a5e21c),
+  [`3668c5f`](https://github.com/Ripple-TS/ripple/commit/3668c5fe9cdaca4862707d653d23af94780f42af),
+  [`bbc3843`](https://github.com/Ripple-TS/ripple/commit/bbc384387e33c538234be36c07cc4b30ef6ce136)]:
+  - @tsrx/ripple@0.1.33
+  - @tsrx/core@0.1.33
+
+## 0.3.84
+
+### Patch Changes
+
+- [`a5d1860`](https://github.com/Ripple-TS/ripple/commit/a5d18603beac4b15e99f9d23f4d0b18b67ffe413)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Adds snapshot() api for
+  non-reactive shallow copies of RippleArray and RippleObject
+- Updated dependencies
+  [[`cc3176b`](https://github.com/Ripple-TS/ripple/commit/cc3176b4e40021021986830bdfa3295530715432),
+  [`cc3176b`](https://github.com/Ripple-TS/ripple/commit/cc3176b4e40021021986830bdfa3295530715432)]:
+  - @tsrx/core@0.1.32
+  - @tsrx/ripple@0.1.32
+
+## 0.3.83
+
+### Patch Changes
+
+- [#1269](https://github.com/Ripple-TS/ripple/pull/1269)
+  [`8747e8f`](https://github.com/Ripple-TS/ripple/commit/8747e8f306628443d3c4d73bce0d79e986f5966e)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Treat plain JS control flow
+  inside `@{ … }` as ordinary JavaScript that returns JSX.
+
+  Only `@`-directives (`@if`/`@for`/`@switch`/`@try`) lower to template control
+  flow. Plain `if`/`for`/`for…of`/`for…in`/`while`/`do…while`/`switch`/`try`
+  inside a code block are now compiled exactly like the same control flow in a
+  regular `function C() { …; return <jsx> }` body — their JSX returns become
+  `tsrx_element` values rather than being template-ized.
+
+  Previously these plain statements were mis-routed into the template transform:
+  on **ripple** an early-return guard produced a `_$_.if`/`_$_.switch`/`_$_.try`
+  wrapper (with dead code in the `switch`/`try` cases) and plain loops threw a
+  compile error; on **solid** they produced
+  `<Show>`/`<Switch>`/`<For>`/`<Errored>` (dropping trailing output for `try`).
+  They now stay as plain control flow, so early-return guards and loops behave
+  like normal JavaScript.
+
+  As part of this, the ripple client and server targets no longer emit the
+  `return_guard` bookkeeping variable: a plain early `return` is a real early
+  return, so subsequent template output is naturally skipped without a guard flag.
+
+  On **solid**, this means a plain guard (`if (signal()) return …`) inside a
+  component body now runs once at setup — exactly like a regular Solid component —
+  instead of being lifted into a reactive `<Show>`. Use `@if` (or another
+  `@`-directive) when you want reactive conditional rendering.
+
+- Updated dependencies
+  [[`3d93339`](https://github.com/Ripple-TS/ripple/commit/3d93339e851818b547c43c29c8965700c069b037),
+  [`5646eb4`](https://github.com/Ripple-TS/ripple/commit/5646eb4e4c101b34100acf30ea57ad4065a47720),
+  [`8747e8f`](https://github.com/Ripple-TS/ripple/commit/8747e8f306628443d3c4d73bce0d79e986f5966e),
+  [`8747e8f`](https://github.com/Ripple-TS/ripple/commit/8747e8f306628443d3c4d73bce0d79e986f5966e)]:
+  - @tsrx/ripple@0.1.31
+  - @tsrx/core@0.1.31
+
+## 0.3.82
+
+### Patch Changes
+
+- [`67f3794`](https://github.com/Ripple-TS/ripple/commit/67f3794d2f1ffd55dd23a47327d925d9a76a4171)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Accept a component function
+  as the `children` prop in `mount()` and `hydrate()`. Compiled component call
+  sites normalize `children` via `normalize_children`, but props passed through
+  the mount options skipped that step, so a plain component function would be
+  rendered as text. The same normalization is now applied to `options.props`,
+  which lets bootstrap code hydrate a layout with its page as `children` without
+  reaching into runtime internals.
+- Updated dependencies
+  [[`b104604`](https://github.com/Ripple-TS/ripple/commit/b10460473fec0ee68b4963cbc2a3d9d5bb3bc633)]:
+  - @tsrx/core@0.1.30
+  - @tsrx/ripple@0.1.30
+
+## 0.3.81
+
+### Patch Changes
+
+- Updated dependencies
+  [[`67de047`](https://github.com/Ripple-TS/ripple/commit/67de047d103f39673b25910e1a97760278820999),
+  [`3b6fb73`](https://github.com/Ripple-TS/ripple/commit/3b6fb73170d4ad6a383befdda951ce0da4fcbb46),
+  [`1c645c8`](https://github.com/Ripple-TS/ripple/commit/1c645c8f854df23bb1271b3402d1885616b525cd),
+  [`b1256fd`](https://github.com/Ripple-TS/ripple/commit/b1256fdb5bf279ee7dd20bf1a71dcfccc47e279c)]:
+  - @tsrx/core@0.1.29
+  - @tsrx/ripple@0.1.29
+
+## 0.3.80
+
+### Patch Changes
+
+- Updated dependencies
+  [[`f001849`](https://github.com/Ripple-TS/ripple/commit/f00184940979a77cbf6873a811caaaa436feab46),
+  [`4af2591`](https://github.com/Ripple-TS/ripple/commit/4af259139d118a27d177531aa6a21435a3f3a015),
+  [`4af2591`](https://github.com/Ripple-TS/ripple/commit/4af259139d118a27d177531aa6a21435a3f3a015),
+  [`87afc5d`](https://github.com/Ripple-TS/ripple/commit/87afc5d3f4c73e604cd245865e27d29e40435482),
+  [`87afc5d`](https://github.com/Ripple-TS/ripple/commit/87afc5d3f4c73e604cd245865e27d29e40435482),
+  [`f1a4c10`](https://github.com/Ripple-TS/ripple/commit/f1a4c10d2ad8ed604375f36f7ae3b653fe95ed1a),
+  [`87afc5d`](https://github.com/Ripple-TS/ripple/commit/87afc5d3f4c73e604cd245865e27d29e40435482)]:
+  - @tsrx/core@0.1.28
+  - @tsrx/ripple@0.1.28
+
+## 0.3.79
+
+### Patch Changes
+
+- Updated dependencies
+  [[`60a78c9`](https://github.com/Ripple-TS/ripple/commit/60a78c9def09eed6d706c42bc751d2d051d1d57f)]:
+  - @tsrx/core@0.1.27
+  - @tsrx/ripple@0.1.27
+
+## 0.3.78
+
+### Patch Changes
+
+- [#1240](https://github.com/Ripple-TS/ripple/pull/1240)
+  [`92982ee`](https://github.com/Ripple-TS/ripple/commit/92982ee5cd2e6d971b5b650ec1df70483c9716aa)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Render `<{expr}>` dynamic
+  tags directly through `_$_.composite` in the client production output instead of
+  lowering to the `Dynamic` helper component, and fix hydration of dynamic string
+  tags claiming the SSR-rendered element.
+
+- [#1241](https://github.com/Ripple-TS/ripple/pull/1241)
+  [`b826234`](https://github.com/Ripple-TS/ripple/commit/b8262342111a977ba5a0d44086154e386b06f4b9)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Remove the runtime `Dynamic`
+  component exports; dynamic rendering is the `<{expr}>` tag syntax. The `Dynamic`
+  type declarations remain so type-only output keeps type-checking, but the JS is
+  gone: React and Preact production output now lowers dynamic tags to a scoped
+  component alias (`const TsrxDynamic_N = expr;`), Ripple SSR uses the internal
+  `_$_.dynamic_element` helper, and the imported-`Dynamic` detection for scoped
+  CSS is removed (the element marking is now `metadata.dynamicElement`, set by the
+  dynamic-tag lowering).
+- Updated dependencies
+  [[`92982ee`](https://github.com/Ripple-TS/ripple/commit/92982ee5cd2e6d971b5b650ec1df70483c9716aa),
+  [`92982ee`](https://github.com/Ripple-TS/ripple/commit/92982ee5cd2e6d971b5b650ec1df70483c9716aa),
+  [`b826234`](https://github.com/Ripple-TS/ripple/commit/b8262342111a977ba5a0d44086154e386b06f4b9),
+  [`b826234`](https://github.com/Ripple-TS/ripple/commit/b8262342111a977ba5a0d44086154e386b06f4b9),
+  [`b826234`](https://github.com/Ripple-TS/ripple/commit/b8262342111a977ba5a0d44086154e386b06f4b9)]:
+  - @tsrx/ripple@0.1.26
+  - @tsrx/core@0.1.26
+
+## 0.3.77
+
+### Patch Changes
+
+- Updated dependencies
+  [[`d14ec84`](https://github.com/Ripple-TS/ripple/commit/d14ec84f26233e514be9e59ffc94e61db5089587),
+  [`921fb9c`](https://github.com/Ripple-TS/ripple/commit/921fb9ce6485db41527b631f5236b7abbac74986),
+  [`1693c9e`](https://github.com/Ripple-TS/ripple/commit/1693c9e6daf1421e71171fe3c50e37adfc858b69)]:
+  - @tsrx/core@0.1.25
+  - @tsrx/ripple@0.1.25
+
+## 0.3.76
+
+### Patch Changes
+
+- [#1229](https://github.com/Ripple-TS/ripple/pull/1229)
+  [`6fd49c9`](https://github.com/Ripple-TS/ripple/commit/6fd49c9dd737e889844e254763f66e13ea4a7241)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Replace the removed `<@...>`
+  dynamic tag syntax with runtime `Dynamic` helpers. Ripple now exports `Dynamic`
+  and reuses its composite runtime path for dynamic elements/components, while
+  React, Preact, Solid, and Vue expose target-specific `Dynamic` helpers with
+  typed `is` props.
+
+  React, Preact, Solid, and Vue now mark imported runtime `Dynamic` elements
+  during shared JSX analysis so scoped CSS classes are applied through aliases
+  without treating local components named `Dynamic` as runtime elements.
+
+  Dynamic component prop forwarding now uses a shared core runtime helper that
+  excludes the internal `is` prop without snapshotting getter-backed reactive
+  props.
+
+  The TSRX parser, transforms, analyzers, prettier support, and related tests no
+  longer recognize dynamic tag syntax. Stale JSX identifier `tracked` plumbing
+  from that parser path has also been removed.
+
+- Updated dependencies
+  [[`6fd49c9`](https://github.com/Ripple-TS/ripple/commit/6fd49c9dd737e889844e254763f66e13ea4a7241)]:
+  - @tsrx/core@0.1.24
+  - @tsrx/ripple@0.1.24
+
+## 0.3.75
+
+### Patch Changes
+
+- Updated dependencies
+  [[`9eb4819`](https://github.com/Ripple-TS/ripple/commit/9eb4819cede6da7e93cbcd2bdf284bcb42d40464),
+  [`88a254c`](https://github.com/Ripple-TS/ripple/commit/88a254c69953a5ace33bc10047f11052ec598672),
+  [`ba3a7f6`](https://github.com/Ripple-TS/ripple/commit/ba3a7f6485ea163e60cc0750a8e8b06b50728009),
+  [`ac6f358`](https://github.com/Ripple-TS/ripple/commit/ac6f3582ca0b2814004439c882d6aa735c8afe50),
+  [`4c5f992`](https://github.com/Ripple-TS/ripple/commit/4c5f992b9a11e1f26abee476a6add89f959169bc),
+  [`78ffa8d`](https://github.com/Ripple-TS/ripple/commit/78ffa8d90fd01e85bf34e5c6adef0e51caae8da7),
+  [`16560cb`](https://github.com/Ripple-TS/ripple/commit/16560cb466430bdbe8749d9491bc79e69e58d02c),
+  [`186b3b2`](https://github.com/Ripple-TS/ripple/commit/186b3b2557761ff06c9056bf2e0b7ab8c7692477),
+  [`4be6e54`](https://github.com/Ripple-TS/ripple/commit/4be6e54bbfee20927adca473648a94aa173d7d77),
+  [`2b67f83`](https://github.com/Ripple-TS/ripple/commit/2b67f83d7ed7eab7a39bc33524fcf73f737d977e),
+  [`9918c52`](https://github.com/Ripple-TS/ripple/commit/9918c52e954f2b8e1a994892e7c555e8277f2d59),
+  [`e8493be`](https://github.com/Ripple-TS/ripple/commit/e8493be0b3489f402105297251e1919c103c2360),
+  [`c424675`](https://github.com/Ripple-TS/ripple/commit/c424675102a9edd4f1e356fb6db30124a9c2d885)]:
+  - @tsrx/core@0.1.23
+  - @tsrx/ripple@0.1.23
+
+## 0.3.74
+
+### Patch Changes
+
+- [#1199](https://github.com/Ripple-TS/ripple/pull/1199)
+  [`5d33325`](https://github.com/Ripple-TS/ripple/commit/5d3332564109d228af5e02c0f68ca4a318766649)
+  Thanks [@trueadm](https://github.com/trueadm)! - Expose Ripple's `RefValue` type
+  from the shared TSRX ref runtime declarations.
+
+- [#1199](https://github.com/Ripple-TS/ripple/pull/1199)
+  [`5d33325`](https://github.com/Ripple-TS/ripple/commit/5d3332564109d228af5e02c0f68ca4a318766649)
+  Thanks [@trueadm](https://github.com/trueadm)! - Add `@empty { ... }` fallbacks
+  for TSRX `@for` loops, require prefixed template continuation clauses such as
+  `@else`, `@empty`, `@pending`, `@catch`, `@case`, and `@default`, and reject
+  direct `continue`, `break`, and `return` statements inside `@for` loop bodies
+  and `@if` template branches.
+
+- [#1199](https://github.com/Ripple-TS/ripple/pull/1199)
+  [`5d33325`](https://github.com/Ripple-TS/ripple/commit/5d3332564109d228af5e02c0f68ca4a318766649)
+  Thanks [@trueadm](https://github.com/trueadm)! - Allow JSX and shared ref helper
+  types to accept arrays of ref functions.
+
+- Updated dependencies
+  [[`5d33325`](https://github.com/Ripple-TS/ripple/commit/5d3332564109d228af5e02c0f68ca4a318766649),
+  [`5d33325`](https://github.com/Ripple-TS/ripple/commit/5d3332564109d228af5e02c0f68ca4a318766649),
+  [`5d33325`](https://github.com/Ripple-TS/ripple/commit/5d3332564109d228af5e02c0f68ca4a318766649),
+  [`5d33325`](https://github.com/Ripple-TS/ripple/commit/5d3332564109d228af5e02c0f68ca4a318766649),
+  [`5d33325`](https://github.com/Ripple-TS/ripple/commit/5d3332564109d228af5e02c0f68ca4a318766649),
+  [`5d33325`](https://github.com/Ripple-TS/ripple/commit/5d3332564109d228af5e02c0f68ca4a318766649),
+  [`5d33325`](https://github.com/Ripple-TS/ripple/commit/5d3332564109d228af5e02c0f68ca4a318766649),
+  [`5d33325`](https://github.com/Ripple-TS/ripple/commit/5d3332564109d228af5e02c0f68ca4a318766649),
+  [`5d33325`](https://github.com/Ripple-TS/ripple/commit/5d3332564109d228af5e02c0f68ca4a318766649),
+  [`5d33325`](https://github.com/Ripple-TS/ripple/commit/5d3332564109d228af5e02c0f68ca4a318766649),
+  [`5d33325`](https://github.com/Ripple-TS/ripple/commit/5d3332564109d228af5e02c0f68ca4a318766649),
+  [`5d33325`](https://github.com/Ripple-TS/ripple/commit/5d3332564109d228af5e02c0f68ca4a318766649),
+  [`5d33325`](https://github.com/Ripple-TS/ripple/commit/5d3332564109d228af5e02c0f68ca4a318766649),
+  [`5d33325`](https://github.com/Ripple-TS/ripple/commit/5d3332564109d228af5e02c0f68ca4a318766649),
+  [`5d33325`](https://github.com/Ripple-TS/ripple/commit/5d3332564109d228af5e02c0f68ca4a318766649),
+  [`5d33325`](https://github.com/Ripple-TS/ripple/commit/5d3332564109d228af5e02c0f68ca4a318766649),
+  [`5d33325`](https://github.com/Ripple-TS/ripple/commit/5d3332564109d228af5e02c0f68ca4a318766649),
+  [`5d33325`](https://github.com/Ripple-TS/ripple/commit/5d3332564109d228af5e02c0f68ca4a318766649),
+  [`5d33325`](https://github.com/Ripple-TS/ripple/commit/5d3332564109d228af5e02c0f68ca4a318766649),
+  [`5d33325`](https://github.com/Ripple-TS/ripple/commit/5d3332564109d228af5e02c0f68ca4a318766649),
+  [`5d33325`](https://github.com/Ripple-TS/ripple/commit/5d3332564109d228af5e02c0f68ca4a318766649),
+  [`5d33325`](https://github.com/Ripple-TS/ripple/commit/5d3332564109d228af5e02c0f68ca4a318766649),
+  [`5d33325`](https://github.com/Ripple-TS/ripple/commit/5d3332564109d228af5e02c0f68ca4a318766649),
+  [`5d33325`](https://github.com/Ripple-TS/ripple/commit/5d3332564109d228af5e02c0f68ca4a318766649)]:
+  - @tsrx/ripple@0.1.22
+  - @tsrx/core@0.1.22
+
+## 0.3.73
+
+### Patch Changes
+
+- [#1198](https://github.com/Ripple-TS/ripple/pull/1198)
+  [`1de66b8`](https://github.com/Ripple-TS/ripple/commit/1de66b8f851849597b6078dab7af2699e49b0e21)
+  Thanks [@trueadm](https://github.com/trueadm)! - Remove the unused namespaced
+  TSX island feature and React bridge package.
+
+- Updated dependencies
+  [[`e738e11`](https://github.com/Ripple-TS/ripple/commit/e738e1153694f56f35cfcab8982d897d7199d85a),
+  [`1de66b8`](https://github.com/Ripple-TS/ripple/commit/1de66b8f851849597b6078dab7af2699e49b0e21),
+  [`e00f596`](https://github.com/Ripple-TS/ripple/commit/e00f5961d5668c054435c8a366ef2a6da6e4a381)]:
+  - @tsrx/ripple@0.1.21
+  - @tsrx/core@0.1.21
+
+## 0.3.72
+
+### Patch Changes
+
+- Updated dependencies
+  [[`0ea87fb`](https://github.com/Ripple-TS/ripple/commit/0ea87fb3cbef21c3c00d63cc2a1f3c9f34d01c24)]:
+  - @tsrx/core@0.1.20
+  - @tsrx/ripple@0.1.20
+
+## 0.3.71
+
+### Patch Changes
+
+- Updated dependencies
+  [[`0574e73`](https://github.com/Ripple-TS/ripple/commit/0574e73830a549f515cef6aa8c0a1e38c79b06cc),
+  [`0574e73`](https://github.com/Ripple-TS/ripple/commit/0574e73830a549f515cef6aa8c0a1e38c79b06cc)]:
+  - @tsrx/core@0.1.19
+  - @tsrx/ripple@0.1.19
+
+## 0.3.70
+
+### Patch Changes
+
+- Updated dependencies
+  [[`5c0b0ff`](https://github.com/Ripple-TS/ripple/commit/5c0b0ff031ddfb319bb048d627e2d2a2a49c1f1d)]:
+  - @tsrx/core@0.1.18
+  - @tsrx/ripple@0.1.18
+
+## 0.3.69
+
+### Patch Changes
+
+- [#1177](https://github.com/Ripple-TS/ripple/pull/1177)
+  [`054bd1e`](https://github.com/Ripple-TS/ripple/commit/054bd1e75347e395f6c096f8e293d1baf8e03549)
+  Thanks [@trueadm](https://github.com/trueadm)! - Parse tags and bare fragments
+  as native TSRX by default, remove `component` keyword parsing, and
+  compile/format/lint function components that return native TSRX across the
+  React, Preact, Solid, Vue, and Ripple targets. Ripple component compilation now
+  only renders TSRX reachable from returned values and supports string and `null`
+  component returns.
+
+  Ripple now also preserves directly called PascalCase helpers as ordinary
+  functions while still compiling renderable component functions used as
+  components or render entries.
+
+  The old explicit TSRX wrapper tag is no longer special; TSRX elements and
+  fragments are the default expression syntax, and the tag name is treated like
+  any ordinary element name.
+
+  Ripple now exports a typed `Fragment` helper from its public runtimes and
+  supports `innerHTML` on both host elements and `Fragment`. Ripple also treats
+  `innerHTML` from element spreads as rendered content instead of serializing it
+  as an `innerhtml` attribute.
+
+  The `{html ...}` template directive has been removed. Use each target's native
+  raw HTML prop instead, such as `innerHTML` for Ripple/Solid/Vue or
+  `dangerouslySetInnerHTML` for React/Preact.
+
+  The `{text ...}` template directive has also been removed. Text values now use
+  ordinary `{expr}` containers, with explicit coercion written as JavaScript
+  (`String(value)`, `value + ''`, or a typed string value). Ripple optimizes
+  clearly string-shaped expressions and typed string props into text-node updates
+  without requiring a TSRX-specific directive.
+
+- [#1177](https://github.com/Ripple-TS/ripple/pull/1177)
+  [`054bd1e`](https://github.com/Ripple-TS/ripple/commit/054bd1e75347e395f6c096f8e293d1baf8e03549)
+  Thanks [@trueadm](https://github.com/trueadm)! - Compile native TSRX functions
+  as value-producing functions and route component syntax through runtime
+  component helpers.
+
+- Updated dependencies
+  [[`054bd1e`](https://github.com/Ripple-TS/ripple/commit/054bd1e75347e395f6c096f8e293d1baf8e03549),
+  [`054bd1e`](https://github.com/Ripple-TS/ripple/commit/054bd1e75347e395f6c096f8e293d1baf8e03549)]:
+  - @tsrx/core@0.1.17
+  - @tsrx/ripple@0.1.17
+
+## 0.3.68
+
+### Patch Changes
+
+- Updated dependencies
+  [[`d045396`](https://github.com/Ripple-TS/ripple/commit/d0453962cfe1df7a98a0981b0bf3e5729195a9ae)]:
+  - @tsrx/ripple@0.1.16
+  - @tsrx/core@0.1.16
+
+## 0.3.67
+
+### Patch Changes
+
+- Updated dependencies
+  [[`ea717f2`](https://github.com/Ripple-TS/ripple/commit/ea717f2ac20901aca59946c1cea8066c28a4220c),
+  [`d083ab8`](https://github.com/Ripple-TS/ripple/commit/d083ab8e802259fa6d8b7bf9bb64d4be899848c4)]:
+  - @tsrx/core@0.1.15
+  - @tsrx/ripple@0.1.15
+
+## 0.3.66
+
+### Patch Changes
+
+- [#1166](https://github.com/Ripple-TS/ripple/pull/1166)
+  [`1dc0331`](https://github.com/Ripple-TS/ripple/commit/1dc0331f7b7296545ee459dc31a92057871cbb0d)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Replace all [0] and [1]
+  compiled output with `.value` and direct `lazy` Throw runtime errors for direct
+  `[0]` and `[1]` access on tracked and derived values. Fix type removal for
+  non-tsx paths Remove the public `get` and `set` exports in favor of `.value`
+  access. Ignore lazy writes past the tracked tuple length instead of creating
+  numeric properties.
+
+- [#1169](https://github.com/Ripple-TS/ripple/pull/1169)
+  [`bf1cb96`](https://github.com/Ripple-TS/ripple/commit/bf1cb96f2ea9b325e30f5a051c451f92659d20f9)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Type host `ref={...}`
+  attributes, named ref props, and generated ref keys so inline callbacks
+  `{ref ...}` receive element-specific JSX types.
+
+  Exclude `returnType` from the compiler types that use typeAnnotation instead due
+  to the way `@sveltejs/acorn-typescript` parses them.
+
+- [#1168](https://github.com/Ripple-TS/ripple/pull/1168)
+  [`146cbf5`](https://github.com/Ripple-TS/ripple/commit/146cbf58120aad05161d503118a47bdc566ba869)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Add global root pending/catch
+  boundary support and allow Ripple config routes to reference named entry
+  exports.
+
+  Refactor vite-plugin to keep code generation in one place, produce cache as
+  necessary and generate actual files for inspection.
+
+- Updated dependencies
+  [[`1dc0331`](https://github.com/Ripple-TS/ripple/commit/1dc0331f7b7296545ee459dc31a92057871cbb0d),
+  [`bf1cb96`](https://github.com/Ripple-TS/ripple/commit/bf1cb96f2ea9b325e30f5a051c451f92659d20f9)]:
+  - @tsrx/ripple@0.1.14
+  - @tsrx/core@0.1.14
+
+## 0.3.65
+
+### Patch Changes
+
+- Updated dependencies
+  [[`95c2976`](https://github.com/Ripple-TS/ripple/commit/95c2976b9ec2c20c4160ad13b636c1ed03e863ef)]:
+  - @tsrx/core@0.1.13
+  - @tsrx/ripple@0.1.13
+
+## 0.3.64
+
+## 0.3.63
+
+### Patch Changes
+
+- [#1153](https://github.com/Ripple-TS/ripple/pull/1153)
+  [`9df9fe3`](https://github.com/Ripple-TS/ripple/commit/9df9fe3a2d26978e69172db84994ac496761cd04)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Parse nested `<tsrx>` islands
+  inside `<tsx>` expression containers as native TSRX so setup declarations and
+  references keep Volar mappings, and hydrate deeply nested `<tsx>`/`<tsrx>`
+  expression values without skipping server markers.
+
+- [#1153](https://github.com/Ripple-TS/ripple/pull/1153)
+  [`9df9fe3`](https://github.com/Ripple-TS/ripple/commit/9df9fe3a2d26978e69172db84994ac496761cd04)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Avoid duplicating plain text
+  when hydrating mixed TSRX collection values.
+
+- [#1153](https://github.com/Ripple-TS/ripple/pull/1153)
+  [`9df9fe3`](https://github.com/Ripple-TS/ripple/commit/9df9fe3a2d26978e69172db84994ac496761cd04)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Fix to_ts output for nested
+  `<tsrx>` islands inside `<tsx>` blocks.
+
+  Type JSX expression values as `TSRXElement` so IntelliSense reports assigned
+  TSX/TSRX fragments as renderable values instead of `void`.
+
+  Fix TextMate highlighting for nested `<tsrx>` and `<tsx>` tags inside JSX
+  expression containers.
+
+- [#1153](https://github.com/Ripple-TS/ripple/pull/1153)
+  [`9df9fe3`](https://github.com/Ripple-TS/ripple/commit/9df9fe3a2d26978e69172db84994ac496761cd04)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Render nested `<tsx>` and
+  `<tsrx>` expression values, including arrays returned from JSX-style
+  expressions.
+
+- Updated dependencies
+  [[`2acbbea`](https://github.com/Ripple-TS/ripple/commit/2acbbea9253ac8f516fe0d3a7a38331490e6fd8b),
+  [`9df9fe3`](https://github.com/Ripple-TS/ripple/commit/9df9fe3a2d26978e69172db84994ac496761cd04),
+  [`9df9fe3`](https://github.com/Ripple-TS/ripple/commit/9df9fe3a2d26978e69172db84994ac496761cd04),
+  [`9df9fe3`](https://github.com/Ripple-TS/ripple/commit/9df9fe3a2d26978e69172db84994ac496761cd04),
+  [`9df9fe3`](https://github.com/Ripple-TS/ripple/commit/9df9fe3a2d26978e69172db84994ac496761cd04)]:
+  - @tsrx/core@0.1.12
+  - @tsrx/ripple@0.1.12
+
+## 0.3.62
+
+### Patch Changes
+
+- [#1144](https://github.com/Ripple-TS/ripple/pull/1144)
+  [`0e8baf2`](https://github.com/Ripple-TS/ripple/commit/0e8baf278e4105ae019929138956938cd5189035)
+  Thanks [@aleclarson](https://github.com/aleclarson)! - Remove the stale self
+  peer dependency from the Ripple runtime package.
+
+## 0.3.61
+
+### Patch Changes
+
+- Updated dependencies
+  [[`0de733f`](https://github.com/Ripple-TS/ripple/commit/0de733f05800df5d3854eb69e012e9aeaf098f8a)]:
+  - @tsrx/core@0.1.11
+  - ripple@0.3.61
+  - @tsrx/ripple@0.1.11
+
+## 0.3.60
+
+### Patch Changes
+
+- [#1141](https://github.com/Ripple-TS/ripple/pull/1141)
+  [`8c064c8`](https://github.com/Ripple-TS/ripple/commit/8c064c888b60e4fcf88f6828e51792b3bba5797a)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Improve JSX event handler
+  typings to infer specific DOM event types. Improve all JSX types for much
+  improved typescript support. Mark self-closing JSX tokens as completion-capable
+  so empty attribute positions can surface editor completions. Fix no intellisense
+  on dom attributes when <style> blocks were present Share scoped CSS selector
+  metadata across TSRX targets so class-name definitions work outside Ripple too.
+  CMD+click now jumps to class definitions for all tsrx platforms.
+- Updated dependencies
+  [[`8c064c8`](https://github.com/Ripple-TS/ripple/commit/8c064c888b60e4fcf88f6828e51792b3bba5797a)]:
+  - @tsrx/core@0.1.10
+  - ripple@0.3.60
+  - @tsrx/ripple@0.1.10
+
+## 0.3.59
+
+### Patch Changes
+
+- Updated dependencies
+  [[`b1d6de0`](https://github.com/Ripple-TS/ripple/commit/b1d6de05912aca4cf40af68f291851eda706140c)]:
+  - @tsrx/core@0.1.9
+  - ripple@0.3.59
+  - @tsrx/ripple@0.1.9
+
+## 0.3.58
+
+### Patch Changes
+
+- [#1130](https://github.com/Ripple-TS/ripple/pull/1130)
+  [`0a5f39b`](https://github.com/Ripple-TS/ripple/commit/0a5f39b6e13807dfd3dc1228f40d7bb02b933373)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Fix client cleanup for
+  HMR-wrapped roots that do not own their DOM range directly.
+
+- Updated dependencies
+  [[`b54fdfc`](https://github.com/Ripple-TS/ripple/commit/b54fdfc3ebfea29ac613307b76732c5bf5f49ab5),
+  [`0a5f39b`](https://github.com/Ripple-TS/ripple/commit/0a5f39b6e13807dfd3dc1228f40d7bb02b933373),
+  [`165703c`](https://github.com/Ripple-TS/ripple/commit/165703c588b52f3dc0d26c06187f21700d448693)]:
+  - @tsrx/core@0.1.8
+  - ripple@0.3.58
+  - @tsrx/ripple@0.1.8
+
+## 0.3.57
+
+### Patch Changes
+
+- [#1126](https://github.com/Ripple-TS/ripple/pull/1126)
+  [`2b1f746`](https://github.com/Ripple-TS/ripple/commit/2b1f7469ab31713140a5baf912a19fa8eedb9234)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Keep runtime helper imports
+  on namespaced runtime subpaths so production app bundles do not pull in
+  compiler-only modules.
+
+- [#1123](https://github.com/Ripple-TS/ripple/pull/1123)
+  [`e4a04dd`](https://github.com/Ripple-TS/ripple/commit/e4a04ddb4bbc8e21a9c7c2c65b179d764b72e4fb)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Nested lazy destructuring
+  support for all tsrx targets. Ripple already fully supported it.
+- Updated dependencies
+  [[`2b1f746`](https://github.com/Ripple-TS/ripple/commit/2b1f7469ab31713140a5baf912a19fa8eedb9234),
+  [`e4a04dd`](https://github.com/Ripple-TS/ripple/commit/e4a04ddb4bbc8e21a9c7c2c65b179d764b72e4fb)]:
+  - @tsrx/core@0.1.7
+  - ripple@0.3.57
+  - @tsrx/ripple@0.1.7
+
+## 0.3.56
+
+### Patch Changes
+
+- Updated dependencies
+  [[`a59ccb8`](https://github.com/Ripple-TS/ripple/commit/a59ccb83b91257bf34fca2ba1415e77d1f815a7b)]:
+  - @tsrx/core@0.1.6
+  - ripple@0.3.56
+  - @tsrx/ripple@0.1.6
+
+## 0.3.55
+
+### Patch Changes
+
+- Updated dependencies
+  [[`de27e18`](https://github.com/Ripple-TS/ripple/commit/de27e182d002ea736aee992acca4cbf9873a307d),
+  [`59e1e32`](https://github.com/Ripple-TS/ripple/commit/59e1e328607598fe342abbba35f76e5fadb9ca5c),
+  [`1256569`](https://github.com/Ripple-TS/ripple/commit/12565695efaa3a4ad429245807721ea671c2ecb5),
+  [`1256569`](https://github.com/Ripple-TS/ripple/commit/12565695efaa3a4ad429245807721ea671c2ecb5),
+  [`18b4aef`](https://github.com/Ripple-TS/ripple/commit/18b4aefa8127e56a9f1b3058da2d4d2172551579)]:
+  - @tsrx/core@0.1.5
+  - ripple@0.3.55
+  - @tsrx/ripple@0.1.5
+
+## 0.3.54
+
+### Patch Changes
+
+- Updated dependencies
+  [[`3e84758`](https://github.com/Ripple-TS/ripple/commit/3e847588027d6254c3999a87c717e9d58fb55a26),
+  [`3e84758`](https://github.com/Ripple-TS/ripple/commit/3e847588027d6254c3999a87c717e9d58fb55a26),
+  [`509170b`](https://github.com/Ripple-TS/ripple/commit/509170ba3cecc611ba1798575c70555070665736)]:
+  - @tsrx/core@0.1.4
+  - ripple@0.3.54
+  - @tsrx/ripple@0.1.4
+
+## 0.3.53
+
+### Patch Changes
+
+- Updated dependencies
+  [[`5a59d73`](https://github.com/Ripple-TS/ripple/commit/5a59d73daf60b2652c86ffad2a4eaf3d801e40d7),
+  [`4f360f0`](https://github.com/Ripple-TS/ripple/commit/4f360f008edf61492cf85afa646c797c80a73f22),
+  [`c042672`](https://github.com/Ripple-TS/ripple/commit/c04267255d35945753ca8090006622c96fa0a14f),
+  [`a9d640f`](https://github.com/Ripple-TS/ripple/commit/a9d640f0728996b3f21b452ffe6040e54d82609c),
+  [`5a59d73`](https://github.com/Ripple-TS/ripple/commit/5a59d73daf60b2652c86ffad2a4eaf3d801e40d7),
+  [`2ae792c`](https://github.com/Ripple-TS/ripple/commit/2ae792cdca7d466e552a330ea965cefec2b1f5a5),
+  [`96360f3`](https://github.com/Ripple-TS/ripple/commit/96360f36306180e67ce69e464dd545773e57e8b1)]:
+  - @tsrx/core@0.1.3
+  - @tsrx/ripple@0.1.3
+  - ripple@0.3.53
+
+## 0.3.52
+
+### Patch Changes
+
+- Updated dependencies
+  [[`2010290`](https://github.com/Ripple-TS/ripple/commit/20102904d68951b47dce3958f88ddd1fc150e7a1)]:
+  - @tsrx/core@0.1.2
+  - ripple@0.3.52
+  - @tsrx/ripple@0.1.2
+
+## 0.3.51
+
+### Patch Changes
+
+- [`f1b1f94`](https://github.com/Ripple-TS/ripple/commit/f1b1f9475553cbe3632a5cc9794a8f54615c29f2)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Patch packages currently
+  versioned at 0.3.50 to fix the bump that caused major 1.0.0 release with a minor
+  changeset.
+
+- Updated dependencies
+  [[`0fdf340`](https://github.com/Ripple-TS/ripple/commit/0fdf3408417a7565a00304b766e958b438b3c834),
+  [`f1b1f94`](https://github.com/Ripple-TS/ripple/commit/f1b1f9475553cbe3632a5cc9794a8f54615c29f2)]:
+  - @tsrx/core@0.1.1
+  - ripple@0.3.51
+  - @tsrx/ripple@0.1.1
+
+## 0.3.50
+
+### Patch Changes
+
+- Updated dependencies
+  [[`2a85e9b`](https://github.com/Ripple-TS/ripple/commit/2a85e9bb73f4d82f2bd2273c33735b4dc7b82d5f)]:
+  - @tsrx/core@0.1.0
+  - @tsrx/ripple@0.1.0
+  - ripple@0.3.50
+
+## 0.3.49
+
+### Patch Changes
+
+- [#1071](https://github.com/Ripple-TS/ripple/pull/1071)
+  [`b54a72f`](https://github.com/Ripple-TS/ripple/commit/b54a72f721adb5f08a5bf3e3d006780b7e1eb471)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Add named ref props with
+  `prop_name={ref expr}` syntax and expose `isRefProp()` for runtime detection of
+  named ref prop values.
+- Updated dependencies
+  [[`b54a72f`](https://github.com/Ripple-TS/ripple/commit/b54a72f721adb5f08a5bf3e3d006780b7e1eb471),
+  [`b54a72f`](https://github.com/Ripple-TS/ripple/commit/b54a72f721adb5f08a5bf3e3d006780b7e1eb471),
+  [`b54a72f`](https://github.com/Ripple-TS/ripple/commit/b54a72f721adb5f08a5bf3e3d006780b7e1eb471)]:
+  - ripple@0.3.49
+  - @tsrx/core@0.0.28
+  - @tsrx/ripple@0.0.30
+
+## 0.3.48
+
+### Patch Changes
+
+- Updated dependencies []:
+  - ripple@0.3.48
+
+## 0.3.47
+
+### Patch Changes
+
+- [#1063](https://github.com/Ripple-TS/ripple/pull/1063)
+  [`a960343`](https://github.com/Ripple-TS/ripple/commit/a960343169aee906162211c502b6cc6b74e2a124)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Standardizes compile api
+  across all packages, including forcing types to adhere to the standard. Adds
+  more debug compile options to the playgrounds.
+- Updated dependencies
+  [[`eae7b40`](https://github.com/Ripple-TS/ripple/commit/eae7b4047f4d8cc7a0278fb48ffe630d73a592c6),
+  [`b34b95a`](https://github.com/Ripple-TS/ripple/commit/b34b95a808ec801109d1818f4d24ae0bbc00f66b),
+  [`a960343`](https://github.com/Ripple-TS/ripple/commit/a960343169aee906162211c502b6cc6b74e2a124)]:
+  - @tsrx/ripple@0.0.29
+  - ripple@0.3.47
+
+## 0.3.46
+
+### Patch Changes
+
+- Updated dependencies []:
+  - ripple@0.3.46
+  - @tsrx/ripple@0.0.28
+
+## 0.3.45
+
+### Patch Changes
+
+- [#1047](https://github.com/Ripple-TS/ripple/pull/1047)
+  [`d1acf12`](https://github.com/Ripple-TS/ripple/commit/d1acf129cdd0bf2ee596dbab26ec4df829a33880)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Removes duplicate utils,
+  moves most utils to @tsrx/core, include their tests.
+
+  Fixes some types
+
+- Updated dependencies
+  [[`d1acf12`](https://github.com/Ripple-TS/ripple/commit/d1acf129cdd0bf2ee596dbab26ec4df829a33880),
+  [`d1acf12`](https://github.com/Ripple-TS/ripple/commit/d1acf129cdd0bf2ee596dbab26ec4df829a33880),
+  [`3928ac8`](https://github.com/Ripple-TS/ripple/commit/3928ac8816399f9eccfd40081d480042a9d74030)]:
+  - @tsrx/ripple@0.0.27
+  - ripple@0.3.45
+
+## 0.3.44
+
+### Patch Changes
+
+- Updated dependencies
+  [[`f5a3c1b`](https://github.com/Ripple-TS/ripple/commit/f5a3c1b9e915c250c8cd1a7dcf4e80c44abe720f)]:
+  - @tsrx/ripple@0.0.26
+  - ripple@0.3.44
+
+## 0.3.43
+
+### Patch Changes
+
+- Updated dependencies
+  [[`5c6ee71`](https://github.com/Ripple-TS/ripple/commit/5c6ee71bfd4f5dc443c43eb34e631bb032606faf),
+  [`83b19fd`](https://github.com/Ripple-TS/ripple/commit/83b19fd67aa27eb10e93205dd88c61b13ffbc523)]:
+  - @tsrx/ripple@0.0.25
+  - ripple@0.3.43
+
+## 0.3.42
+
+### Patch Changes
+
+- Updated dependencies
+  [[`b4cc83f`](https://github.com/Ripple-TS/ripple/commit/b4cc83f07d8777d5882d1e853493941a3f6224ae)]:
+  - @tsrx/ripple@0.0.24
+  - ripple@0.3.42
+
+## 0.3.41
+
+### Patch Changes
+
+- Updated dependencies []:
+  - ripple@0.3.41
+  - @tsrx/ripple@0.0.23
+
+## 0.3.40
+
+### Patch Changes
+
+- Updated dependencies
+  [[`31193f2`](https://github.com/Ripple-TS/ripple/commit/31193f23aa6b6b5b79cd858f57e8aca69cd44b6d)]:
+  - @tsrx/ripple@0.0.22
+  - ripple@0.3.40
+
+## 0.3.39
+
+### Patch Changes
+
+- Updated dependencies []:
+  - ripple@0.3.39
+  - @tsrx/ripple@0.0.21
+
+## 0.3.38
+
+### Patch Changes
+
+- [#1007](https://github.com/Ripple-TS/ripple/pull/1007)
+  [`088299c`](https://github.com/Ripple-TS/ripple/commit/088299ce94a6022c017ce2e56c7e1b59bd5973f7)
+  Thanks [@trueadm](https://github.com/trueadm)! - Keep double-quoted JavaScript
+  strings inside TSRX expression containers using normal JavaScript string
+  semantics while preserving direct double-quoted text child parsing.
+
+- Updated dependencies
+  [[`088299c`](https://github.com/Ripple-TS/ripple/commit/088299ce94a6022c017ce2e56c7e1b59bd5973f7)]:
+  - @tsrx/ripple@0.0.20
+  - ripple@0.3.38
+
+## 0.3.37
+
+### Patch Changes
+
+- [#1002](https://github.com/Ripple-TS/ripple/pull/1002)
+  [`c631ab0`](https://github.com/Ripple-TS/ripple/commit/c631ab0076b7e2cb30f4998101b54c3a86e78c61)
+  Thanks [@trueadm](https://github.com/trueadm)! - Align direct double-quoted TSRX
+  text children with quoted JSX attribute text by decoding character references
+  and treating backslashes as literal text. Preserve the direct quoted form in the
+  Prettier plugin and highlight it as JSX text in the TextMate grammar.
+
+- Updated dependencies
+  [[`c631ab0`](https://github.com/Ripple-TS/ripple/commit/c631ab0076b7e2cb30f4998101b54c3a86e78c61)]:
+  - @tsrx/ripple@0.0.19
+  - ripple@0.3.37
+
+## 0.3.36
+
+### Patch Changes
+
+- Updated dependencies []:
+  - ripple@0.3.36
+  - @tsrx/ripple@0.0.18
+
+## 0.3.35
+
+### Patch Changes
+
+- Updated dependencies []:
+  - ripple@0.3.35
+  - @tsrx/ripple@0.0.17
+
+## 0.3.34
+
+### Patch Changes
+
+- Updated dependencies
+  [[`fee8620`](https://github.com/Ripple-TS/ripple/commit/fee8620fa4e82a7c7e4adb3e434e9db552a3e157),
+  [`2fcacb4`](https://github.com/Ripple-TS/ripple/commit/2fcacb471d7780074f92b20c9b394f7650a941bb)]:
+  - @tsrx/ripple@0.0.16
+  - ripple@0.3.34
+
+## 0.3.33
+
+### Patch Changes
+
+- [#961](https://github.com/Ripple-TS/ripple/pull/961)
+  [`3e07109`](https://github.com/Ripple-TS/ripple/commit/3e071098508449158fa11f2ae48c912d4d673b68)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Fix ArrayPattern source map
+  visitor, various type fixes for tests: ripple, vite-plugin-react,
+  vite-plugin-solid
+- Updated dependencies
+  [[`3e07109`](https://github.com/Ripple-TS/ripple/commit/3e071098508449158fa11f2ae48c912d4d673b68)]:
+  - ripple@0.3.33
+  - @tsrx/ripple@0.0.15
+
+## 0.3.32
+
+### Patch Changes
+
+- Updated dependencies []:
+  - ripple@0.3.32
+  - @tsrx/ripple@0.0.14
+
+## 0.3.31
+
+### Patch Changes
+
+- Updated dependencies []:
+  - ripple@0.3.31
+  - @tsrx/ripple@0.0.13
+
+## 0.3.30
+
+### Patch Changes
+
+- [`7f59ed8`](https://github.com/Ripple-TS/ripple/commit/7f59ed80d7b44c847fb9eb8bf00d4fe9835c3136)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Replace `node:crypto` usage
+  in the compiler with a pure-JS implementation so Ripple can be compiled inside
+  browser workers (e.g. the Monaco-based playground) where `crypto.createHash` is
+  not available.
+
+  The hashing utility is split into two functions:
+  - `simple_hash` — fast non-cryptographic djb2 (base36). Used for CSS class-name
+    prefixes and runtime `{html}` hydration markers where the input is user
+    content and the output multiplies across the shipped bundle.
+  - `strong_hash` — preimage-resistant SHA-256 prefix (pure-JS via
+    `@noble/hashes`). Used everywhere a hash is derived from a server-only
+    filesystem path (`#server` RPC ids, `track`/`trackAsync` ids, head-element
+    hydration markers) so the hash can't be inverted to reveal the original path.
+
+  The runtime `ripple` package no longer ships its own `hashing.js` — it
+  re-exports `simple_hash`/`strong_hash` from `@tsrx/core`, and the compiler emits
+  `_$_.simple_hash` (previously `_$_.hash`) for dynamic `{html}` hydration
+  markers.
+
+- Updated dependencies
+  [[`7f59ed8`](https://github.com/Ripple-TS/ripple/commit/7f59ed80d7b44c847fb9eb8bf00d4fe9835c3136)]:
+  - @tsrx/ripple@0.0.12
+  - ripple@0.3.30
+
+## 0.3.29
+
+### Patch Changes
+
+- Updated dependencies
+  [[`4543794`](https://github.com/Ripple-TS/ripple/commit/45437944a99decfb4bc56f7171772614a7f5691a)]:
+  - @tsrx/ripple@0.0.11
+  - ripple@0.3.29
+
+## 0.3.28
+
+### Patch Changes
+
+- Updated dependencies
+  [[`e4b5555`](https://github.com/Ripple-TS/ripple/commit/e4b5555fb5b1651a2bf1bf232565c7e0e40213b8),
+  [`e4b5555`](https://github.com/Ripple-TS/ripple/commit/e4b5555fb5b1651a2bf1bf232565c7e0e40213b8)]:
+  - @tsrx/ripple@0.0.10
+  - ripple@0.3.28
+
+## 0.3.27
+
+### Patch Changes
+
+- Updated dependencies []:
+  - ripple@0.3.27
+
+## 0.3.26
+
+### Patch Changes
+
+- [`68d80f8`](https://github.com/Ripple-TS/ripple/commit/68d80f8c7a6398692e00497b90cb3d0ba981aea3)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Correct package versions.
+
+- Updated dependencies
+  [[`68d80f8`](https://github.com/Ripple-TS/ripple/commit/68d80f8c7a6398692e00497b90cb3d0ba981aea3)]:
+  - ripple@0.3.26
+  - @tsrx/ripple@0.0.9
+
+## 1.0.1
+
+### Patch Changes
+
+- [#886](https://github.com/Ripple-TS/ripple/pull/886)
+  [`316cba1`](https://github.com/Ripple-TS/ripple/commit/316cba18614e5ef59dce15e0de6e720eb922955f)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Add SSR-to-client
+  serialization/hydration for trackAsync by emitting per-call JSON <script>
+  envelopes (resolved payload + direct dependency hashes, or sanitized error
+  message) and consuming/removing them during client hydration to avoid re-running
+  the user async function. Add proper error handling routing to catch blocks with
+  actual error messages in DEV and safe production error messages, all with
+  correct hydration support
+- Updated dependencies
+  [[`316cba1`](https://github.com/Ripple-TS/ripple/commit/316cba18614e5ef59dce15e0de6e720eb922955f)]:
+  - ripple@1.0.1
+  - @tsrx/ripple@0.0.8
+
+## 1.0.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - ripple@1.0.0
+  - @tsrx/ripple@0.0.7
+
+## 0.3.25
+
+### Patch Changes
+
+- Updated dependencies []:
+  - ripple@0.3.25
+
+## 0.3.24
+
+### Patch Changes
+
+- Updated dependencies []:
+  - ripple@0.3.24
+
+## 0.3.23
+
+### Patch Changes
+
+- Updated dependencies
+  [[`73ceaac`](https://github.com/Ripple-TS/ripple/commit/73ceaacd029fb634a62252abdda59ab5f2bec15d)]:
+  - @tsrx/ripple@0.0.6
+  - ripple@0.3.23
+
+## 0.3.22
+
+### Patch Changes
+
+- [`bc8a6ed`](https://github.com/Ripple-TS/ripple/commit/bc8a6ed53d451da90cb6eb6ff9ec564f6f0cabe8)
+  Thanks [@trueadm](https://github.com/trueadm)! - Restore the `ripple/compiler`
+  subpath export. The compiler was moved into `@tsrx/ripple` during the
+  Ripple/TSRX split, which accidentally dropped `ripple/compiler` from the
+  published `exports` map — breaking downstream tooling that imports the compiler
+  by the public path, including `livecodes` and any playground served through
+  `esm.sh`. The path now re-exports the `@tsrx/ripple` API (`compile`, `parse`,
+  `compile_to_volar_mappings`, and the shared types), and `@tsrx/ripple` is
+  promoted to a runtime dependency so the re-export resolves for installed
+  consumers.
+- Updated dependencies
+  [[`bc8a6ed`](https://github.com/Ripple-TS/ripple/commit/bc8a6ed53d451da90cb6eb6ff9ec564f6f0cabe8)]:
+  - ripple@0.3.22
+
+## 0.3.21
+
+### Patch Changes
+
+- Updated dependencies []:
+  - ripple@0.3.21
+
+## 0.3.20
+
+### Patch Changes
+
+- Updated dependencies []:
+  - ripple@0.3.20
+
+## 0.3.19
+
+### Patch Changes
+
+- Updated dependencies []:
+  - ripple@0.3.19
+
+## 0.3.18
+
+### Patch Changes
+
+- Updated dependencies []:
+  - ripple@0.3.18
+
+## 0.3.17
+
+### Patch Changes
+
+- Updated dependencies []:
+  - ripple@0.3.17
+
+## 0.3.16
+
+### Patch Changes
+
+- Updated dependencies []:
+  - ripple@0.3.16
+
+## 0.3.15
+
+### Patch Changes
+
+- [`a14097a`](https://github.com/Ripple-TS/ripple/commit/a14097a688ad85c236a6619cef527c78787ab367)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Fix children prop precedence
+  when invoking components so that template children always win over an explicit
+  `children=` attribute, while still respecting JSX-like ordering between explicit
+  props and spreads when no template children are present.
+
+- Updated dependencies
+  [[`a14097a`](https://github.com/Ripple-TS/ripple/commit/a14097a688ad85c236a6619cef527c78787ab367)]:
+  - ripple@0.3.15
+
+## 0.3.14
+
+### Patch Changes
+
+- [#866](https://github.com/Ripple-TS/ripple/pull/866)
+  [`228f1bb`](https://github.com/Ripple-TS/ripple/commit/228f1bb36cd3e8506c422ed0997164bf5a0b5fe2)
+  Thanks [@trueadm](https://github.com/trueadm)! - Extract compiler into
+  `@tsrx/core` and `@tsrx/ripple` packages
+  - `@tsrx/core`: Core compiler infrastructure — parser factory, scope management,
+    utilities, constants, and type definitions
+  - `@tsrx/ripple`: Ripple-specific compiler — RipplePlugin, analyze,
+    client/server transforms
+  - Remove compiler source code from `ripple` package (consumers should use
+    `@tsrx/ripple`)
+  - Migrate eslint-plugin type imports to `@tsrx/core/types/*`
+  - Remove unused compiler dependencies from `ripple` package
+
+- Updated dependencies
+  [[`228f1bb`](https://github.com/Ripple-TS/ripple/commit/228f1bb36cd3e8506c422ed0997164bf5a0b5fe2)]:
+  - ripple@0.3.14
+
+## 0.3.13
+
+### Patch Changes
+
+- [#842](https://github.com/Ripple-TS/ripple/pull/842)
+  [`4eb4d68`](https://github.com/Ripple-TS/ripple/commit/4eb4d6851573d771d65f1e85b1b442ad3cdc53d2)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - fix(server): inject SSR web
+  stream sinks instead of creating node streams
+
+- [#862](https://github.com/Ripple-TS/ripple/pull/862)
+  [`48af856`](https://github.com/Ripple-TS/ripple/commit/48af85678d5e1b32bb1c5e3fbb2fb07498bc88a3)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Add a release changeset for
+  the async tracking work introduced in commit
+  `4eb4d6851573d771d65f1e85b1b442ad3cdc53d2`.
+
+  This ships async tracking as a first-class feature in Ripple:
+  - remove and prohibit direct component-level `await`; async component flows now
+    require using `trackAsync()` (with `trackPending()` for pending state checks)
+  - add `trackAsync()` and `trackPending()` support so async values can be read
+    through Ripple's reactive runtime using tracked async values
+  - update compiler/runtime behavior for `try`/`catch`/`pending` boundaries so
+    async pending and error states can render and recover correctly in client and
+    SSR paths
+  - align `@ripple-ts/compat-react` async boundary behavior with the new Ripple
+    async tracking semantics
+  - update editor/tooling integration to match the new async syntax/runtime shape
+
+- [`6e11177`](https://github.com/Ripple-TS/ripple/commit/6e111778cae4e7d9876e51e293520f0859eb5890)
+  Thanks [@trueadm](https://github.com/trueadm)! - Add `.rsrx` support across
+  Ripple tooling and rename the repository's tracked `.ripple` modules to `.rsrx`.
+- Updated dependencies
+  [[`4eb4d68`](https://github.com/Ripple-TS/ripple/commit/4eb4d6851573d771d65f1e85b1b442ad3cdc53d2),
+  [`48af856`](https://github.com/Ripple-TS/ripple/commit/48af85678d5e1b32bb1c5e3fbb2fb07498bc88a3),
+  [`6e11177`](https://github.com/Ripple-TS/ripple/commit/6e111778cae4e7d9876e51e293520f0859eb5890)]:
+  - ripple@0.3.13
+
+## 0.3.12
+
+### Patch Changes
+
+- Updated dependencies []:
+  - ripple@0.3.12
+
+## 0.3.11
+
+### Patch Changes
+
+- [#853](https://github.com/Ripple-TS/ripple/pull/853)
+  [`6792c70`](https://github.com/Ripple-TS/ripple/commit/6792c700db30ec0c25077bf8892753f18eddc5cc)
+  Thanks [@RazinShafayet2007](https://github.com/RazinShafayet2007)! -
+  fix(compiler): add `throw` statement support in `if` blocks
+
+- [#858](https://github.com/Ripple-TS/ripple/pull/858)
+  [`f2624a6`](https://github.com/Ripple-TS/ripple/commit/f2624a6596479480c47317ea3030863214a6e2b3)
+  Thanks [@RazinShafayet2007](https://github.com/RazinShafayet2007)! - fix: scoped
+  styles apply correctly when child content is rendered through a parent component
+
+- [#840](https://github.com/Ripple-TS/ripple/pull/840)
+  [`13323dd`](https://github.com/Ripple-TS/ripple/commit/13323dddbcb68e1e8e373142884a7c54fbb76cd7)
+  Thanks [@trueadm](https://github.com/trueadm)! - Remove the `compat` option from
+  `mount()` and `hydrate()`, and stop exporting the old public compat types from
+  `ripple`. Compat integrations are now expected to be provided by the Vite plugin
+  via `ripple.config.ts`, while direct runtime tests can seed the generated global
+  compat registry.
+
+  Also add the `reactCompat()` config-facing helper from `@ripple-ts/compat-react`
+  for use in `ripple.config.ts`.
+
+- Updated dependencies
+  [[`6792c70`](https://github.com/Ripple-TS/ripple/commit/6792c700db30ec0c25077bf8892753f18eddc5cc),
+  [`f2624a6`](https://github.com/Ripple-TS/ripple/commit/f2624a6596479480c47317ea3030863214a6e2b3),
+  [`13323dd`](https://github.com/Ripple-TS/ripple/commit/13323dddbcb68e1e8e373142884a7c54fbb76cd7)]:
+  - ripple@0.3.11
+
+## 0.3.10
+
+### Patch Changes
+
+- [`aef1253`](https://github.com/Ripple-TS/ripple/commit/aef1253dd79c067a8358172d502dc21d8a9a9085)
+  Thanks [@trueadm](https://github.com/trueadm)! - Replace `<children />` with
+  `{children}` expression syntax for rendering component children
+
+- Updated dependencies
+  [[`aef1253`](https://github.com/Ripple-TS/ripple/commit/aef1253dd79c067a8358172d502dc21d8a9a9085)]:
+  - ripple@0.3.10
+
+## 0.3.9
+
+### Patch Changes
+
+- Updated dependencies []:
+  - ripple@0.3.9
+
+## 0.3.8
+
+### Patch Changes
+
+- Updated dependencies []:
+  - ripple@0.3.8
+
+## 0.3.7
+
+### Patch Changes
+
+- [#832](https://github.com/Ripple-TS/ripple/pull/832)
+  [`9ca9310`](https://github.com/Ripple-TS/ripple/commit/9ca9310550a800f4435821ed84b24bdd4f243117)
+  Thanks [@trueadm](https://github.com/trueadm)! - Fix lazy array rest
+  destructuring for tracked and array-like values by routing rest extraction
+  through a shared `array_slice` helper instead of calling `.slice()` directly on
+  the source.
+
+- [#832](https://github.com/Ripple-TS/ripple/pull/832)
+  [`9ca9310`](https://github.com/Ripple-TS/ripple/commit/9ca9310550a800f4435821ed84b24bdd4f243117)
+  Thanks [@trueadm](https://github.com/trueadm)! - Allow tracked tuple `.length`
+  member access in compiler analysis and simplify tracked direct-access validation
+  into a single combined condition.
+
+- [#832](https://github.com/Ripple-TS/ripple/pull/832)
+  [`9ca9310`](https://github.com/Ripple-TS/ripple/commit/9ca9310550a800f4435821ed84b24bdd4f243117)
+  Thanks [@trueadm](https://github.com/trueadm)! - Fix `to_ts` output for lazy
+  array destructuring so it keeps direct destructuring syntax for `track()` and
+  `trackSplit()` instead of expanding through an intermediate `lazy` variable.
+
+- [#832](https://github.com/Ripple-TS/ripple/pull/832)
+  [`9ca9310`](https://github.com/Ripple-TS/ripple/commit/9ca9310550a800f4435821ed84b24bdd4f243117)
+  Thanks [@trueadm](https://github.com/trueadm)! - Replace tracked `get()`/`set()`
+  APIs with a `value` getter/setter across runtime, types, analyzer tracked-access
+  rules, and lazy destructuring tests.
+
+- Updated dependencies
+  [[`9ca9310`](https://github.com/Ripple-TS/ripple/commit/9ca9310550a800f4435821ed84b24bdd4f243117),
+  [`9ca9310`](https://github.com/Ripple-TS/ripple/commit/9ca9310550a800f4435821ed84b24bdd4f243117),
+  [`9ca9310`](https://github.com/Ripple-TS/ripple/commit/9ca9310550a800f4435821ed84b24bdd4f243117),
+  [`9ca9310`](https://github.com/Ripple-TS/ripple/commit/9ca9310550a800f4435821ed84b24bdd4f243117)]:
+  - ripple@0.3.7
+
+## 0.3.6
+
+### Patch Changes
+
+- Updated dependencies []:
+  - ripple@0.3.6
+
+## 0.3.5
+
+### Patch Changes
+
+- [#827](https://github.com/Ripple-TS/ripple/pull/827)
+  [`218a72c`](https://github.com/Ripple-TS/ripple/commit/218a72c3e663910636eec1d065c58afe30813c84)
+  Thanks [@trueadm](https://github.com/trueadm)! - fix(compiler): handle
+  UpdateExpression on lazy bindings with default values
+
+  Update expressions (`++`/`--`) on lazy destructured bindings with default values
+  now work correctly. For postfix operations (`count++`), an IIFE captures the
+  fallback value before incrementing. Also added `fallback` function to server
+  runtime.
+
+- Updated dependencies
+  [[`218a72c`](https://github.com/Ripple-TS/ripple/commit/218a72c3e663910636eec1d065c58afe30813c84)]:
+  - ripple@0.3.5
+
+## 0.3.4
+
+### Patch Changes
+
+- [`92982cd`](https://github.com/Ripple-TS/ripple/commit/92982cd7b918d0afee9334c74765573b30c8a645)
+  Thanks [@trueadm](https://github.com/trueadm)! - feat(compiler): add lazy
+  destructuring syntax (`&{...}` and `&[...]`)
+
+  Lazy destructuring defers property/index access until the binding is read,
+  preserving reactivity for destructured props. Works with default values,
+  compound assignment operators, and update expressions.
+
+- [#814](https://github.com/Ripple-TS/ripple/pull/814)
+  [`747ae1f`](https://github.com/Ripple-TS/ripple/commit/747ae1fc7948e994eeb521f3ed78711c9dd3e802)
+  Thanks [@RazinShafayet2007](https://github.com/RazinShafayet2007)! -
+  fix(compiler): strip TypeScript class syntax from JS output
+
+  This fixes compiler output for `.ripple` classes by stripping TypeScript-only
+  `implements` clauses and `extends` type arguments from emitted JavaScript.
+
+- [#820](https://github.com/Ripple-TS/ripple/pull/820)
+  [`abe1caa`](https://github.com/Ripple-TS/ripple/commit/abe1caa6ab636722099a6ecd4cafbf117d208ec2)
+  Thanks [@RazinShafayet2007](https://github.com/RazinShafayet2007)! - fix: sync
+  `<select>` `bindValue` with typed and dynamic options
+
+- [#817](https://github.com/Ripple-TS/ripple/pull/817)
+  [`046d0ba`](https://github.com/Ripple-TS/ripple/commit/046d0baf190d161c3b851799080d11eb4f95e094)
+  Thanks [@RazinShafayet2007](https://github.com/RazinShafayet2007)! -
+  fix(compiler): preserve class `extends` generics in volar output
+
+- [`79a920e`](https://github.com/Ripple-TS/ripple/commit/79a920e30f0f35f2ec07ff8d52dc709f8bb74c77)
+  Thanks [@trueadm](https://github.com/trueadm)! - Remove `#ripple` namespace
+  syntax in favor of direct imports from `'ripple'`
+
+  The `#ripple` namespace (`#ripple.track()`, `#ripple.effect()`,
+  `#ripple.array()`, etc.) has been removed. All reactive APIs are now accessed
+  via standard imports:
+
+  ```ripple
+  import {
+    track,
+    effect,
+    untrack,
+    Context,
+    RippleArray,
+    RippleObject,
+  } from 'ripple';
+  ```
+
+  - `#ripple.track(value)` → `track(value)`
+  - `#ripple.effect(fn)` → `effect(fn)`
+  - `#ripple.untrack(fn)` → `untrack(fn)`
+  - `#ripple.context(value)` → `new Context(value)`
+  - `#ripple[1, 2, 3]` → `new RippleArray(1, 2, 3)`
+  - `#ripple{ key: value }` → `new RippleObject({ key: value })`
+  - `#ripple.style` → `#style`
+  - `#ripple.server` → `#server`
+
+- [#824](https://github.com/Ripple-TS/ripple/pull/824)
+  [`83807a4`](https://github.com/Ripple-TS/ripple/commit/83807a412603ff49c398f9365b011fd4b4a5f8bf)
+  Thanks [@RazinShafayet2007](https://github.com/RazinShafayet2007)! -
+  fix(parser): avoid hanging on unclosed tsx compat tags
+
+- Updated dependencies
+  [[`92982cd`](https://github.com/Ripple-TS/ripple/commit/92982cd7b918d0afee9334c74765573b30c8a645),
+  [`747ae1f`](https://github.com/Ripple-TS/ripple/commit/747ae1fc7948e994eeb521f3ed78711c9dd3e802),
+  [`abe1caa`](https://github.com/Ripple-TS/ripple/commit/abe1caa6ab636722099a6ecd4cafbf117d208ec2),
+  [`046d0ba`](https://github.com/Ripple-TS/ripple/commit/046d0baf190d161c3b851799080d11eb4f95e094),
+  [`79a920e`](https://github.com/Ripple-TS/ripple/commit/79a920e30f0f35f2ec07ff8d52dc709f8bb74c77),
+  [`83807a4`](https://github.com/Ripple-TS/ripple/commit/83807a412603ff49c398f9365b011fd4b4a5f8bf)]:
+  - ripple@0.3.4
+
+## 0.3.3
+
+### Patch Changes
+
+- [#804](https://github.com/Ripple-TS/ripple/pull/804)
+  [`cd1073f`](https://github.com/Ripple-TS/ripple/commit/cd1073f7cc8085c8b200ada4faf77b2c35b10c6c)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Editor support for
+  #ripple.server
+
+- Updated dependencies
+  [[`cd1073f`](https://github.com/Ripple-TS/ripple/commit/cd1073f7cc8085c8b200ada4faf77b2c35b10c6c)]:
+  - ripple@0.3.3
+
+## 0.3.2
+
+### Patch Changes
+
+- [#802](https://github.com/Ripple-TS/ripple/pull/802)
+  [`42524c9`](https://github.com/Ripple-TS/ripple/commit/42524c9551b1950d7f7a0336ce396fc312b6fe51)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Editor support for
+  #ripple.style
+
+- Updated dependencies
+  [[`42524c9`](https://github.com/Ripple-TS/ripple/commit/42524c9551b1950d7f7a0336ce396fc312b6fe51)]:
+  - ripple@0.3.2
+
+## 0.3.1
+
+### Patch Changes
+
+- [#799](https://github.com/Ripple-TS/ripple/pull/799)
+  [`87c2078`](https://github.com/Ripple-TS/ripple/commit/87c20780f6f6f7339cf94b9a9d08e028533df0a2)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Fix imports for removed
+  functions
+
+- Updated dependencies
+  [[`87c2078`](https://github.com/Ripple-TS/ripple/commit/87c20780f6f6f7339cf94b9a9d08e028533df0a2)]:
+  - ripple@0.3.1
+
+## 0.3.0
+
+### Minor Changes
+
+- [#779](https://github.com/Ripple-TS/ripple/pull/779)
+  [`74a10cc`](https://github.com/Ripple-TS/ripple/commit/74a10cc5701962cd7c72b144d59b35ecb76263a3)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Introduces #ripple namespace
+  for creating ripple reactive entities without imports, such as array, object,
+  map, set, date, url, urlSearchParams, mediaQuery. Adds track, untrack,
+  trackSplit, effect, context, server, style to the namespace. Deprecates #[] and
+  #{} in favor of #ripple[] and #ripple{}. Renames types and actual reactive
+  imports for TrackedX entities, such as TrackedArray, TrackedObject, etc. into
+  RippleArray, RippleObjec, etc.
+
+### Patch Changes
+
+- [#786](https://github.com/Ripple-TS/ripple/pull/786)
+  [`61271cb`](https://github.com/Ripple-TS/ripple/commit/61271cb1c4777f2ab9093c6c89a5ad771ec98b7d)
+  Thanks [@anubra266](https://github.com/anubra266)! - fix: preserve generic type
+  arguments in interface extends clauses for `compile_to_volar_mappings`
+
+- [#772](https://github.com/Ripple-TS/ripple/pull/772)
+  [`21dd402`](https://github.com/Ripple-TS/ripple/commit/21dd4029d7e027a0706cb133b09530a722feb73d)
+  Thanks [@anubra266](https://github.com/anubra266)! - Fix ref handling for
+  dynamic elements with reactive spread props to avoid read-only/proxy symbol
+  errors and prevent unnecessary ref teardown/recreation.
+
+- [#774](https://github.com/Ripple-TS/ripple/pull/774)
+  [`c2dbefe`](https://github.com/Ripple-TS/ripple/commit/c2dbefe5645c0c4f6e0ff4dc00d9c4de81616667)
+  Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Fixes
+  language server type support for nested component call inside a parent
+  components that become props and should not be marked as unused by typescript
+- Updated dependencies
+  [[`61271cb`](https://github.com/Ripple-TS/ripple/commit/61271cb1c4777f2ab9093c6c89a5ad771ec98b7d),
+  [`21dd402`](https://github.com/Ripple-TS/ripple/commit/21dd4029d7e027a0706cb133b09530a722feb73d),
+  [`c2dbefe`](https://github.com/Ripple-TS/ripple/commit/c2dbefe5645c0c4f6e0ff4dc00d9c4de81616667),
+  [`74a10cc`](https://github.com/Ripple-TS/ripple/commit/74a10cc5701962cd7c72b144d59b35ecb76263a3)]:
+  - ripple@0.3.0
+
+## 0.2.216
+
+### Patch Changes
+
+- [#757](https://github.com/Ripple-TS/ripple/pull/757)
+  [`9fb507d`](https://github.com/Ripple-TS/ripple/commit/9fb507d76af6fd6a5c636af1976d1e03d3e869ac)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - fixes compiler error that was
+  generating async functions for call expressions inside if conditions when inside
+  async context
+
+- [#751](https://github.com/Ripple-TS/ripple/pull/751)
+  [`e1de4bb`](https://github.com/Ripple-TS/ripple/commit/e1de4bb9df75342a693cda24d0999a423db05ec4)
+  Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Fix
+  HMR "zoom" issue when a Ripple file is changed in the dev server.
+
+  When a layout component contained children with nested `if`/`for` blocks,
+  hydration would leave `hydrate_node` pointing deep inside the layout's root
+  element (e.g. a HYDRATION_END comment inside `<main>`). The `append()`
+  function's `parentNode === dom` check only handled direct children, so it missed
+  grandchild/deeper positions and incorrectly updated the branch block's `s.end`
+  to that deep internal node.
+
+  This caused two problems on HMR re-render:
+  1. `remove_block_dom(s.start, s.end)` removed wrong elements (the deep node was
+     treated as a sibling boundary, causing removal of unrelated content including
+     the root HYDRATION_END comment).
+  2. `target = hydrate_node` (set after the initial render) became `null` or
+     pointed outside the component's region, so new content was inserted at the
+     wrong DOM location — producing a layout that appeared "zoomed" because it
+     rendered outside its CSS container context.
+
+  The fix changes the `parentNode === dom` check to `dom.contains(hydrate_node)`,
+  consistent with the `anchor === dom` branch that already used `dom.contains()`.
+  This correctly resets `hydrate_node` to `dom`'s sibling level regardless of how
+  deeply nested it was inside `dom`.
+
+- [#764](https://github.com/Ripple-TS/ripple/pull/764)
+  [`95ea864`](https://github.com/Ripple-TS/ripple/commit/95ea8645b2cb27e2610a4ace4c8fb238c92d441a)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Fixes syntax color
+  highlighting for `pending`
+
+- Updated dependencies
+  [[`9fb507d`](https://github.com/Ripple-TS/ripple/commit/9fb507d76af6fd6a5c636af1976d1e03d3e869ac),
+  [`e1de4bb`](https://github.com/Ripple-TS/ripple/commit/e1de4bb9df75342a693cda24d0999a423db05ec4),
+  [`95ea864`](https://github.com/Ripple-TS/ripple/commit/95ea8645b2cb27e2610a4ace4c8fb238c92d441a)]:
+  - ripple@0.2.216
+
+## 0.2.215
+
+### Patch Changes
+
+- [#742](https://github.com/Ripple-TS/ripple/pull/742)
+  [`a9ecda4`](https://github.com/Ripple-TS/ripple/commit/a9ecda4e3f29e3b934d9f5ee80d55c059ba36ebe)
+  Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Fix
+  catch block not executing when used with pending block in try statements.
+  Previously, errors thrown inside async components within
+  `try { ... } pending { ... } catch { ... }` blocks were lost as unhandled
+  promise rejections. Now errors are properly caught and the catch block is
+  rendered. Also fixes the server-side rendering to not include pending content in
+  the final output when the async operation resolves or errors.
+
+- [#744](https://github.com/Ripple-TS/ripple/pull/744)
+  [`6653c5c`](https://github.com/Ripple-TS/ripple/commit/6653c5cebfbd4dce129906a25686ef9c63dc592a)
+  Thanks [@leonidaz](https://github.com/leonidaz)! - Fix compiler analysis
+  incorrectly marking untrackable nodes as tracked. `MemberExpression` now only
+  enables tracking when the member or its property is actually marked as
+  `tracked`, and unconditional tracking side-effects were removed from
+  `CallExpression` and `NewExpression` visitors.
+
+  Also fixes the client transform for `TrackedExpression` in TypeScript mode to
+  emit a `['#v']` member access (marked as `tracked`) instead of the runtime
+  `_$_.get(...)` call, aligning TSX output with tracked-access semantics.
+
+- [#733](https://github.com/Ripple-TS/ripple/pull/733)
+  [`307dcf3`](https://github.com/Ripple-TS/ripple/commit/307dcf30f27dae987a19a59508cc2593c839eda3)
+  Thanks [@trueadm](https://github.com/trueadm)! - Fix client HMR updates when a
+  wrapped component has not mounted yet. The runtime now avoids calling `set()` on
+  an undefined tracked source and keeps wrapper HMR state synchronized across
+  update chains.
+- Updated dependencies
+  [[`a9ecda4`](https://github.com/Ripple-TS/ripple/commit/a9ecda4e3f29e3b934d9f5ee80d55c059ba36ebe),
+  [`6653c5c`](https://github.com/Ripple-TS/ripple/commit/6653c5cebfbd4dce129906a25686ef9c63dc592a),
+  [`307dcf3`](https://github.com/Ripple-TS/ripple/commit/307dcf30f27dae987a19a59508cc2593c839eda3)]:
+  - ripple@0.2.215
+
+## 0.2.214
+
+### Patch Changes
+
+- Updated dependencies []:
+  - ripple@0.2.214
+
+## 0.2.213
+
+### Patch Changes
+
+- Updated dependencies []:
+  - ripple@0.2.213
+
+## 0.2.212
+
+### Patch Changes
+
+- Fix hydration error when component is last sibling - added `hydrate_advance()`
+  to safely advance hydration position at end of component content without
+  throwing when no next sibling exists
+
+- Updated dependencies []:
+  - ripple@0.2.212
+
+## 0.2.211
+
+### Patch Changes
+
+- [#694](https://github.com/Ripple-TS/ripple/pull/694)
+  [`fa285f4`](https://github.com/Ripple-TS/ripple/commit/fa285f441ab8d748c3dfea6adb463e3ca6d614b5)
+  Thanks [@trueadm](https://github.com/trueadm)! - Add a compiler validation error
+  for rendering `children` through text interpolation (for example `{children}` or
+  `{props.children}`) and direct users to render children as a component
+  (`<@children />`) instead.
+- Updated dependencies
+  [[`fa285f4`](https://github.com/Ripple-TS/ripple/commit/fa285f441ab8d748c3dfea6adb463e3ca6d614b5)]:
+  - ripple@0.2.211
+
+## 0.2.210
+
+### Patch Changes
+
+- Fix npm OIDC publishing workflow
+
+- Updated dependencies []:
+  - ripple@0.2.210
+
+## 0.2.209
+
+### Patch Changes
+
+- [#682](https://github.com/Ripple-TS/ripple/pull/682)
+  [`96a5614`](https://github.com/Ripple-TS/ripple/commit/96a56141de8aa667a64bf53ad06f63292e38b1d9)
+  Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Add
+  invalid HTML nesting error detection during SSR in dev mode
+
+  During SSR, if the HTML is malformed (e.g., `<button>` elements nested inside
+  other `<button>` elements), the browser tries to repair the HTML, making
+  hydration impossible. This change adds runtime validation of HTML nesting during
+  SSR to detect these cases and provide clear error messages.
+  - Added `push_element` and `pop_element` functions to the server runtime that
+    track the element stack during SSR
+  - Added comprehensive HTML nesting validation rules based on the HTML spec
+  - The server compiler now emits `push_element`/`pop_element` calls when the
+    `dev` option is enabled
+  - Added `dev` option to `CompileOptions`
+  - The Vite plugin now automatically enables dev mode during `vite dev` (serve
+    command)
+
+- [#683](https://github.com/Ripple-TS/ripple/pull/683)
+  [`ae3aa98`](https://github.com/Ripple-TS/ripple/commit/ae3aa981515f81e62a699497e624dd0c2e3d2c91)
+  Thanks [@WebEferen](https://github.com/WebEferen)! - Fix SSR hydration output
+  for early-return guarded content by emitting hydration block markers around
+  return-guarded regions, and add hydration/server coverage for early return
+  scenarios.
+- Updated dependencies
+  [[`96a5614`](https://github.com/Ripple-TS/ripple/commit/96a56141de8aa667a64bf53ad06f63292e38b1d9),
+  [`ae3aa98`](https://github.com/Ripple-TS/ripple/commit/ae3aa981515f81e62a699497e624dd0c2e3d2c91)]:
+  - ripple@0.2.209

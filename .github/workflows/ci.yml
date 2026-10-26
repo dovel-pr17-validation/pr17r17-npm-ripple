@@ -1,0 +1,169 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+    tags: ["!**"]
+    paths:
+      - "packages/**"
+      - "benchmarks/**"
+      - "package.json"
+      - "playground/ripple/**"
+      - "pnpm-lock.yaml"
+      - "pnpm-workspace.yaml"
+      - "scripts/**"
+      - "templates/**"
+      - "vitest.config.js"
+      - ".changeset/**"
+      - ".github/workflows/ci.yml"
+
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - "packages/**"
+      - "benchmarks/**"
+      - "package.json"
+      - "playground/ripple/**"
+      - "pnpm-lock.yaml"
+      - "pnpm-workspace.yaml"
+      - "scripts/**"
+      - "templates/**"
+      - "vitest.config.js"
+      - ".changeset/**"
+      - ".github/workflows/ci.yml"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [22, 24, 26]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: |
+          for attempt in 1 2 3; do
+            if pnpm install --prod false --frozen-lockfile; then
+              exit 0
+            fi
+
+            if [ "$attempt" -eq 3 ]; then
+              exit 1
+            fi
+
+            echo "::warning::Dependency installation failed (attempt $attempt/3); retrying in 5 seconds"
+            sleep 5
+          done
+
+      - name: Build cli
+        working-directory: ./packages/cli
+        run: pnpm build
+
+      - name: Run tests
+        run: pnpm test
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v7
+        if: failure()
+        with:
+          name: test-results-node-${{ matrix.node-version }}
+          path: |
+            packages/ripple/tests/__snapshots__/
+            coverage/
+          retention-days: 30
+
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: |
+          for attempt in 1 2 3; do
+            if pnpm install --frozen-lockfile; then
+              exit 0
+            fi
+
+            if [ "$attempt" -eq 3 ]; then
+              exit 1
+            fi
+
+            echo "::warning::Dependency installation failed (attempt $attempt/3); retrying in 5 seconds"
+            sleep 5
+          done
+
+      - name: Check formatting
+        run: pnpm format:check
+
+  changeset-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - name: Disallow major bumps in changesets
+        run: node scripts/check-changesets.js
+
+  typecheck:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: |
+          for attempt in 1 2 3; do
+            if pnpm install --frozen-lockfile; then
+              exit 0
+            fi
+
+            if [ "$attempt" -eq 3 ]; then
+              exit 1
+            fi
+
+            echo "::warning::Dependency installation failed (attempt $attempt/3); retrying in 5 seconds"
+            sleep 5
+          done
+
+      - name: Type check
+        run: pnpm typecheck

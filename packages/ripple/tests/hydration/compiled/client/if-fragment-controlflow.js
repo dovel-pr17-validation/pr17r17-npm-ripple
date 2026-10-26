@@ -1,0 +1,481 @@
+// @ts-nocheck
+import * as _$_ from 'ripple/internal/client';
+
+var root_2 = _$_.template_el('p', ['class', 'muze'], ' ');
+var root_1 = _$_.template(`<!><span class=after>after`, 1, 2);
+
+function consequent(__anchor, { b: muzes }) {
+	var fragment = root_1();
+	var node_1 = _$_.first_child_frag(fragment);
+
+	_$_.for_keyed(
+		node_1,
+		() => muzes,
+		(__anchor, pattern) => {
+			var p = root_2();
+
+			{
+				var expression = _$_.hydrating ? _$_.hydrate_child() : p.firstChild;
+
+				_$_.expression(expression, () => _$_.get(pattern).muzeId);
+				_$_.hydrating && _$_.pop(p);
+			}
+
+			_$_.append(__anchor, p);
+		},
+		0,
+		(pattern) => pattern.muzeId
+	);
+
+	_$_.next();
+	_$_.append(__anchor, fragment);
+}
+
+function if_1({ a: hasLoaded }) {
+	if (hasLoaded) return consequent;
+}
+
+var root = _$_.template_el('div', ['class', 'feed-c'], [null]);
+
+function IfFragmentForElement_render(__anchor, __block) {
+	const muzes = [{ muzeId: 'b' }, { muzeId: 'c' }];
+	const hasLoaded = true;
+	var div = root();
+
+	{
+		var node = _$_.hydrating ? _$_.hydrate_child() : div.firstChild;
+
+		_$_.if(node, if_1, false, { a: hasLoaded, b: muzes });
+		_$_.hydrating && _$_.pop(div);
+	}
+
+	_$_.append(__anchor, div);
+}
+
+IfFragmentForElement[_$_.$r] = IfFragmentForElement_render;
+
+var root_5 = _$_.template_el('p', ['class', 'muze'], ' ');
+var root_6 = _$_.template_el('span', ['class', 'has-items'], 'has items');
+
+function consequent_1(__anchor) {
+	var span = root_6();
+
+	_$_.append(__anchor, span);
+}
+
+function if_2(muzes) {
+	if (muzes.length > 0) return consequent_1;
+}
+
+var root_7 = _$_.template_el('span', ['class', 'empty'], 'empty');
+
+function consequent_2(__anchor) {
+	var span_1 = root_7();
+
+	_$_.append(__anchor, span_1);
+}
+
+function if_3(muzes) {
+	if (muzes.length === 0) return consequent_2;
+}
+
+var root_4 = _$_.template(`<!><!><!>`, 1, 3);
+
+function render(__prev) {
+	var __a = if_2(__prev._a);
+
+	if (__prev.a !== __a) {
+		_$_.if_update(__prev._b, __prev.a = __a);
+	}
+
+	var __b = if_3(__prev._a);
+
+	if (__prev.b !== __b) {
+		_$_.if_update(__prev._c, __prev.b = __b);
+	}
+}
+
+function consequent_3(__anchor, { b: muzes }) {
+	var fragment_1 = root_4();
+	var node_3 = _$_.first_child_frag(fragment_1);
+
+	_$_.for_keyed(
+		node_3,
+		() => muzes,
+		(__anchor, pattern_1) => {
+			var p_1 = root_5();
+
+			{
+				var expression_1 = _$_.hydrating ? _$_.hydrate_child() : p_1.firstChild;
+
+				_$_.expression(expression_1, () => _$_.get(pattern_1).muzeId);
+				_$_.hydrating && _$_.pop(p_1);
+			}
+
+			_$_.append(__anchor, p_1);
+		},
+		0,
+		(pattern_1) => pattern_1.muzeId
+	);
+
+	var node_4 = _$_.hydrating ? _$_.hydrate_sibling() : node_3.nextSibling;
+	var ifs = _$_.if_static(node_4, if_2, 0, muzes);
+	var node_5 = _$_.hydrating ? _$_.hydrate_sibling() : node_4.nextSibling;
+	var ifs_1 = _$_.if_static(node_5, if_3, 0, muzes);
+
+	_$_.render(render, {
+		a: _$_.UNINITIALIZED,
+		b: _$_.UNINITIALIZED,
+		_a: muzes,
+		_b: ifs,
+		_c: ifs_1
+	});
+
+	_$_.append(__anchor, fragment_1);
+}
+
+function if_4({ a: hasLoaded }) {
+	if (hasLoaded) return consequent_3;
+}
+
+var root_3 = _$_.template_el('div', ['class', 'feed'], [null]);
+
+function IfFragmentForIfIf_render(__anchor, __block) {
+	const muzes = [{ muzeId: 'b' }, { muzeId: 'c' }];
+	const hasLoaded = true;
+	var div_1 = root_3();
+
+	{
+		var node_2 = _$_.hydrating ? _$_.hydrate_child() : div_1.firstChild;
+
+		_$_.if(node_2, if_4, false, { a: hasLoaded, b: muzes });
+		_$_.hydrating && _$_.pop(div_1);
+	}
+
+	_$_.append(__anchor, div_1);
+}
+
+IfFragmentForIfIf[_$_.$r] = IfFragmentForIfIf_render;
+
+var root_9 = _$_.template(`<p class=muze>b</p><p class=muze>c`, 1, 2);
+
+function consequent_4(__anchor) {
+	var fragment_2 = root_9();
+
+	_$_.next();
+	_$_.append(__anchor, fragment_2);
+}
+
+function if_5(hasLoaded) {
+	if (hasLoaded) return consequent_4;
+}
+
+var root_8 = _$_.template_el('div', ['class', 'feed-b'], [null]);
+
+function IfFragmentElements_render(__anchor, __block) {
+	const hasLoaded = true;
+	var div_2 = root_8();
+
+	{
+		var node_6 = _$_.hydrating ? _$_.hydrate_child() : div_2.firstChild;
+
+		_$_.if(node_6, if_5, false, hasLoaded);
+		_$_.hydrating && _$_.pop(div_2);
+	}
+
+	_$_.append(__anchor, div_2);
+}
+
+IfFragmentElements[_$_.$r] = IfFragmentElements_render;
+
+var root_12 = _$_.template_el('p', ['class', 'muze'], ' ');
+var root_11 = _$_.template(`<!><span class=after>after`, 1, 2);
+var root_10 = _$_.template(`<!>`, 1, 1);
+
+function ComponentBodyFragmentControlFlow_render(__anchor, __block) {
+	const muzes = [{ muzeId: 'b' }, { muzeId: 'c' }];
+	var fragment_3 = root_10();
+	var node_8 = _$_.first_child_frag(fragment_3);
+
+	_$_.expression(node_8, () => _$_.tsrx_element((__anchor, __block) => {
+		var fragment_4 = root_11();
+		var node_7 = _$_.first_child_frag(fragment_4);
+
+		_$_.for_keyed(
+			node_7,
+			() => muzes,
+			(__anchor, pattern_2) => {
+				var p_2 = root_12();
+
+				{
+					var expression_2 = _$_.hydrating ? _$_.hydrate_child() : p_2.firstChild;
+
+					_$_.expression(expression_2, () => _$_.get(pattern_2).muzeId);
+					_$_.hydrating && _$_.pop(p_2);
+				}
+
+				_$_.append(__anchor, p_2);
+			},
+			0,
+			(pattern_2) => pattern_2.muzeId
+		);
+
+		_$_.next();
+		_$_.append(__anchor, fragment_4);
+	}));
+
+	_$_.append(__anchor, fragment_3);
+}
+
+ComponentBodyFragmentControlFlow[_$_.$r] = ComponentBodyFragmentControlFlow_render;
+
+var root_14 = _$_.template_el('p', ['class', 'muze'], ' ');
+var root_15 = _$_.template(`<!><span class=after>after`, 1, 2);
+var root_13 = _$_.template(`<!>`, 1, 1);
+
+function ComponentBodyCodeBlockControlFlow_render(__anchor, __block) {
+	const muzes = [{ muzeId: 'b' }, { muzeId: 'c' }];
+	var fragment_5 = root_13();
+	var node_9 = _$_.first_child_frag(fragment_5);
+
+	_$_.expression(node_9, () => _$_.tsrx_element((__anchor, __block) => {
+		var fragment_6 = root_15();
+		var expression_4 = _$_.first_child_frag(fragment_6);
+
+		_$_.expression(expression_4, () => _$_.tsrx_element((__anchor, __block) => {
+			const rows = muzes;
+
+			_$_.for_keyed(
+				__anchor,
+				() => rows,
+				(__anchor, pattern_3) => {
+					var p_3 = root_14();
+
+					{
+						var expression_3 = _$_.hydrating ? _$_.hydrate_child() : p_3.firstChild;
+
+						_$_.expression(expression_3, () => _$_.get(pattern_3).muzeId);
+						_$_.hydrating && _$_.pop(p_3);
+					}
+
+					_$_.append(__anchor, p_3);
+				},
+				16,
+				(pattern_3) => pattern_3.muzeId
+			);
+		}));
+
+		_$_.next();
+		_$_.append(__anchor, fragment_6);
+	}));
+
+	_$_.append(__anchor, fragment_5);
+}
+
+ComponentBodyCodeBlockControlFlow[_$_.$r] = ComponentBodyCodeBlockControlFlow_render;
+
+var root_17 = _$_.template_el('p', ['class', 'muze'], ' ');
+var root_18 = _$_.template(`<!><span class=after>after`, 1, 2);
+
+function consequent_5(__anchor, { b: muzes }) {
+	var fragment_7 = root_18();
+	var expression_6 = _$_.first_child_frag(fragment_7);
+
+	_$_.expression(expression_6, () => _$_.tsrx_element((__anchor, __block) => {
+		const rows = muzes;
+
+		_$_.for_keyed(
+			__anchor,
+			() => rows,
+			(__anchor, pattern_4) => {
+				var p_4 = root_17();
+
+				{
+					var expression_5 = _$_.hydrating ? _$_.hydrate_child() : p_4.firstChild;
+
+					_$_.expression(expression_5, () => _$_.get(pattern_4).muzeId);
+					_$_.hydrating && _$_.pop(p_4);
+				}
+
+				_$_.append(__anchor, p_4);
+			},
+			16,
+			(pattern_4) => pattern_4.muzeId
+		);
+	}));
+
+	_$_.next();
+	_$_.append(__anchor, fragment_7);
+}
+
+function if_6({ a: hasLoaded }) {
+	if (hasLoaded) return consequent_5;
+}
+
+var root_16 = _$_.template_el('div', ['class', 'feed-f'], [null]);
+
+function IfCodeBlockControlFlow_render(__anchor, __block) {
+	const muzes = [{ muzeId: 'b' }, { muzeId: 'c' }];
+	const hasLoaded = true;
+	var div_3 = root_16();
+
+	{
+		var node_10 = _$_.hydrating ? _$_.hydrate_child() : div_3.firstChild;
+
+		_$_.if(node_10, if_6, false, { a: hasLoaded, b: muzes });
+		_$_.hydrating && _$_.pop(div_3);
+	}
+
+	_$_.append(__anchor, div_3);
+}
+
+IfCodeBlockControlFlow[_$_.$r] = IfCodeBlockControlFlow_render;
+
+var root_20 = _$_.template_el('span', ['class', 'loading'], 'loading');
+var root_22 = _$_.template_el('p', ['class', 'muze'], ' ');
+var root_21 = _$_.template(`<!><span class=after>after`, 1, 2);
+
+function consequent_6(__anchor) {
+	var span_2 = root_20();
+
+	_$_.append(__anchor, span_2);
+}
+
+function alternate(__anchor, { b: muzes }) {
+	var fragment_8 = root_21();
+	var node_12 = _$_.first_child_frag(fragment_8);
+
+	_$_.for_keyed(
+		node_12,
+		() => muzes,
+		(__anchor, pattern_5) => {
+			var p_5 = root_22();
+
+			{
+				var expression_7 = _$_.hydrating ? _$_.hydrate_child() : p_5.firstChild;
+
+				_$_.expression(expression_7, () => _$_.get(pattern_5).muzeId);
+				_$_.hydrating && _$_.pop(p_5);
+			}
+
+			_$_.append(__anchor, p_5);
+		},
+		0,
+		(pattern_5) => pattern_5.muzeId
+	);
+
+	_$_.next();
+	_$_.append(__anchor, fragment_8);
+}
+
+function if_7({ a: hasLoaded }) {
+	if (hasLoaded) return consequent_6; else return alternate;
+}
+
+var root_19 = _$_.template_el('div', ['class', 'feed-d'], [null]);
+
+function IfElseFragment_render(__anchor, __block) {
+	const muzes = [{ muzeId: 'b' }, { muzeId: 'c' }];
+	const hasLoaded = false;
+	var div_4 = root_19();
+
+	{
+		var node_11 = _$_.hydrating ? _$_.hydrate_child() : div_4.firstChild;
+
+		_$_.if(node_11, if_7, false, { a: hasLoaded, b: muzes });
+		_$_.hydrating && _$_.pop(div_4);
+	}
+
+	_$_.append(__anchor, div_4);
+}
+
+IfElseFragment[_$_.$r] = IfElseFragment_render;
+
+var root_25 = _$_.template_el('p', ['class', 'muze'], ' ');
+var root_24 = _$_.template_el('section', null, [['span', ['class', 'after'], 'after']]);
+
+function consequent_7(__anchor, { b: muzes }) {
+	var section = root_24();
+
+	{
+		var node_14 = _$_.hydrating ? _$_.hydrate_child() : section.firstChild;
+
+		_$_.for_keyed(
+			node_14,
+			() => muzes,
+			(__anchor, pattern_6) => {
+				var p_6 = root_25();
+
+				{
+					var expression_8 = _$_.hydrating ? _$_.hydrate_child() : p_6.firstChild;
+
+					_$_.expression(expression_8, () => _$_.get(pattern_6).muzeId);
+					_$_.hydrating && _$_.pop(p_6);
+				}
+
+				_$_.append(__anchor, p_6);
+			},
+			0,
+			(pattern_6) => pattern_6.muzeId
+		);
+
+		_$_.hydrating && _$_.pop(section);
+	}
+
+	_$_.append(__anchor, section);
+}
+
+function if_8({ a: hasLoaded }) {
+	if (hasLoaded) return consequent_7;
+}
+
+var root_23 = _$_.template_el('div', ['class', 'feed-e'], [null]);
+
+function IfDivFragment_render(__anchor, __block) {
+	const muzes = [{ muzeId: 'b' }, { muzeId: 'c' }];
+	const hasLoaded = true;
+	var div_5 = root_23();
+
+	{
+		var node_13 = _$_.hydrating ? _$_.hydrate_child() : div_5.firstChild;
+
+		_$_.if(node_13, if_8, false, { a: hasLoaded, b: muzes });
+		_$_.hydrating && _$_.pop(div_5);
+	}
+
+	_$_.append(__anchor, div_5);
+}
+
+IfDivFragment[_$_.$r] = IfDivFragment_render;
+
+export function IfFragmentForElement() {
+	return _$_.tsrx_element(IfFragmentForElement_render);
+}
+
+export function IfFragmentForIfIf() {
+	return _$_.tsrx_element(IfFragmentForIfIf_render);
+}
+
+export function IfFragmentElements() {
+	return _$_.tsrx_element(IfFragmentElements_render);
+}
+
+export function ComponentBodyFragmentControlFlow() {
+	return _$_.tsrx_element(ComponentBodyFragmentControlFlow_render);
+}
+
+export function ComponentBodyCodeBlockControlFlow() {
+	return _$_.tsrx_element(ComponentBodyCodeBlockControlFlow_render);
+}
+
+export function IfCodeBlockControlFlow() {
+	return _$_.tsrx_element(IfCodeBlockControlFlow_render);
+}
+
+export function IfElseFragment() {
+	return _$_.tsrx_element(IfElseFragment_render);
+}
+
+export function IfDivFragment() {
+	return _$_.tsrx_element(IfDivFragment_render);
+}

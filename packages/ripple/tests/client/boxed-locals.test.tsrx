@@ -1,0 +1,517 @@
+import { describe, it, expect } from 'vitest';
+import { flushSync, track, trackAsync } from 'ripple';
+
+// A plain `let` that is written after its declaration (reassigned in the
+// source, or assigned by a `ref` setter) and read by template code is
+// compiled to a `{ v }` box, so the module-level functions the compiler
+// hoists (`@if` and `@switch` conditions and branches, render blocks) share
+// the variable with the component exactly as a closure would. None of these
+// variables is reactive: the update is always triggered by a tracked value,
+// and the box only has to make sure the hoisted code sees the latest value.
+
+describe('boxed locals', () => {
+	it('a reassigned let read by an @if condition is current on re-evaluation', () => {
+		let disable: () => void = () => {};
+		let bump: () => void = () => {};
+
+		function App() @{
+			const count = track(0);
+			let enabled = true;
+			disable = () => {
+				enabled = false;
+			};
+			bump = () => {
+				count.value++;
+			};
+			@if (enabled && count.value > 0) {
+				<span>on</span>
+			} @else {
+				<span>off</span>
+			}
+		}
+
+		render(App);
+		const text = () => container.querySelector('span')?.textContent;
+		expect(text()).toBe('off');
+
+		bump();
+		flushSync();
+		expect(text()).toBe('on');
+
+		disable();
+		bump();
+		flushSync();
+		expect(text()).toBe('off');
+	});
+
+	it('a reassigned let read inside an @if branch is current when the branch renders', () => {
+		let rename: () => void = () => {};
+		let toggle: () => void = () => {};
+
+		function App() @{
+			const show = track(false);
+			let title = 'first';
+			rename = () => {
+				title = 'second';
+			};
+			toggle = () => {
+				show.value = !show.value;
+			};
+			@if (show.value) {
+				<p>{title}</p>
+			}
+		}
+
+		render(App);
+		expect(container.querySelector('p')).toBeNull();
+
+		rename();
+		toggle();
+		flushSync();
+		expect(container.querySelector('p')?.textContent).toBe('second');
+	});
+
+	it('a reassigned let read by a text expression is current on re-evaluation', () => {
+		let rename: () => void = () => {};
+		let bump: () => void = () => {};
+
+		function App() @{
+			const count = track(0);
+			let unit = 'ms';
+			rename = () => {
+				unit = 's';
+			};
+			bump = () => {
+				count.value++;
+			};
+			<p>{count.value + unit}</p>
+		}
+
+		render(App);
+		const text = () => container.querySelector('p')?.textContent;
+		expect(text()).toBe('0ms');
+
+		rename();
+		bump();
+		flushSync();
+		expect(text()).toBe('1s');
+	});
+
+	it(
+		'a let written by a handler inside a hoisted @if branch updates the component variable',
+		() => {
+			let read: () => number = () => -1;
+
+			function App() @{
+				const show = track(true);
+				const tick = track(0);
+				let clicks = 0;
+				read = () => clicks;
+				@if (show.value) {
+					<button onClick={() => clicks++}>{'hit ' + tick.value}</button>
+				}
+			}
+
+			render(App);
+			expect(read()).toBe(0);
+
+			container.querySelector('button')?.click();
+			container.querySelector('button')?.click();
+			expect(read()).toBe(2);
+		},
+	);
+
+	it('a let assigned by a ref inside a hoisted @if branch is the element, then null', () => {
+		let div: HTMLDivElement | null | undefined;
+		let hide: () => void = () => {};
+
+		function App() @{
+			const show = track(true);
+			const label = track('a');
+			hide = () => {
+				show.value = false;
+			};
+			@if (show.value) {
+				<div ref={div}>{label.value}</div>
+			}
+		}
+
+		render(App);
+		flushSync();
+		expect(div).toBeInstanceOf(HTMLDivElement);
+
+		hide();
+		flushSync();
+		expect(div).toBeNull();
+	});
+
+	it('supports compound assignment and update expressions on a boxed let', () => {
+		let step: () => void = () => {};
+		let bump: () => void = () => {};
+
+		function App() @{
+			const count = track(0);
+			let base = 10;
+			step = () => {
+				base += 5;
+				base++;
+				base = base * 2;
+			};
+			bump = () => {
+				count.value++;
+			};
+			<span>{base + count.value}</span>
+		}
+
+		render(App);
+		const text = () => container.querySelector('span')?.textContent;
+		expect(text()).toBe('10');
+
+		step();
+		bump();
+		flushSync();
+		expect(text()).toBe('33');
+	});
+
+	it('boxes a rebound name from a flat destructuring pattern', () => {
+		let rename: () => void = () => {};
+		let bump: () => void = () => {};
+
+		function Names(props: { user: { first: string; last?: string } }) @{
+			const count = track(0);
+			let { first, last = 'none' } = props.user;
+			rename = () => {
+				first = 'renamed';
+			};
+			bump = () => {
+				count.value++;
+			};
+			<span>{first + ' ' + last + ' ' + count.value}</span>
+		}
+
+		function App() @{
+			<Names user={{ first: 'ada' }} />
+		}
+
+		render(App);
+		const text = () => container.querySelector('span')?.textContent;
+		expect(text()).toBe('ada none 0');
+
+		rename();
+		bump();
+		flushSync();
+		expect(text()).toBe('renamed none 1');
+	});
+
+	it('renders a fallback from a reassigned typed function parameter', () => {
+		function label(text: string) {
+			if (!text) text = 'untitled';
+			return <p>{text}</p>;
+		}
+
+		function App() @{
+			<>
+				{label('')}
+				{label('title')}
+			</>
+		}
+
+		render(App);
+		expect(Array.from(container.querySelectorAll('p'), (p) => p.textContent)).toEqual([
+			'untitled',
+			'title',
+		]);
+	});
+
+	it('renders reassigned optional and defaulted parameters', () => {
+		const optional = function (text?: string) {
+			if (!text) text = 'optional';
+			return <p>{text}</p>;
+		};
+		const defaulted = (text: string = '') => {
+			if (!text) text = 'defaulted';
+			return <p>{text}</p>;
+		};
+
+		function App() @{
+			<>
+				{optional()}
+				{defaulted()}
+				{defaulted('title')}
+			</>
+		}
+
+		render(App);
+		expect(Array.from(container.querySelectorAll('p'), (p) => p.textContent)).toEqual([
+			'optional',
+			'defaulted',
+			'title',
+		]);
+	});
+
+	it('transforms parameter defaults that read a boxed outer binding', () => {
+		function App() @{
+			let fallback = 'initial';
+			function label(text: string = fallback) {
+				text += '!';
+				return <p>{text}</p>;
+			}
+			fallback = 'updated';
+			<>
+				<span>{fallback}</span>
+				{label()}
+			</>
+		}
+
+		render(App);
+		expect(container.querySelector('span')?.textContent).toBe('updated');
+		expect(container.querySelector('p')?.textContent).toBe('updated!');
+	});
+
+	it('boxes a rebound destructured parameter', () => {
+		let edit: () => void = () => {};
+		let bump: () => void = () => {};
+
+		function Panel({ mode = 'view' }: { mode?: string }) @{
+			const count = track(0);
+			edit = () => {
+				mode = 'edit';
+			};
+			bump = () => {
+				count.value++;
+			};
+			@if (count.value >= 0) {
+				<button>{mode + count.value}</button>
+			}
+		}
+
+		render(Panel);
+		const text = () => container.querySelector('button')?.textContent;
+		expect(text()).toBe('view0');
+
+		edit();
+		bump();
+		flushSync();
+		expect(text()).toBe('edit1');
+	});
+
+	it('boxes a reassigned props parameter', () => {
+		let bump: () => void = () => {};
+
+		function Child(props: { label: string }) @{
+			const count = track(0);
+			bump = () => {
+				count.value++;
+			};
+			props = { ...props, label: props.label + '!' };
+			<span>{props.label + count.value}</span>
+		}
+
+		function App() @{
+			<Child label="hi" />
+		}
+
+		render(App);
+		const text = () => container.querySelector('span')?.textContent;
+		expect(text()).toBe('hi!0');
+
+		bump();
+		flushSync();
+		expect(text()).toBe('hi!1');
+	});
+
+	it('boxes rebound names from nested object and array patterns', () => {
+		let rename: () => void = () => {};
+		let bump: () => void = () => {};
+
+		function Names(props: { user: { first: string; last?: string }; tags: string[] }) @{
+			const count = track(0);
+			let { user: { first, last = 'none' }, tags: [tag] } = props;
+			rename = () => {
+				first = 'renamed';
+				tag = 't2';
+			};
+			bump = () => {
+				count.value++;
+			};
+			<span>{first + ' ' + last + ' ' + tag + count.value}</span>
+		}
+
+		function App() @{
+			<Names user={{ first: 'ada' }} tags={['t1']} />
+		}
+
+		render(App);
+		const text = () => container.querySelector('span')?.textContent;
+		expect(text()).toBe('ada none t10');
+
+		rename();
+		bump();
+		flushSync();
+		expect(text()).toBe('renamed none t21');
+	});
+
+	it('boxes a rebound catch parameter', async () => {
+		let clear: () => void = () => {};
+		let bump: () => void = () => {};
+
+		function Loader() @{
+			const n = track(0);
+			bump = () => {
+				n.value++;
+			};
+			@try {
+				const data = trackAsync(() => Promise.reject(new Error('boom')));
+				<p>{data.value}</p>
+			} @catch (err) {
+				clear = () => {
+					err = null;
+				};
+				<button>{String(err instanceof Error ? err.message : err) + n.value}</button>
+			}
+		}
+
+		render(Loader);
+		await new Promise((resolve) => setTimeout(resolve, 0));
+		flushSync();
+		const text = () => container.querySelector('button')?.textContent;
+		expect(text()).toBe('boom0');
+
+		clear();
+		bump();
+		flushSync();
+		expect(text()).toBe('null1');
+	});
+
+	it('boxes lets written through destructuring and for-of assignment targets', () => {
+		let swap: () => void = () => {};
+		let bump: () => void = () => {};
+
+		function Pair() @{
+			const tick = track(0);
+			let label = 'a';
+			let other = 'x';
+			let last = '';
+			swap = () => {
+				[label] = ['b'];
+				({ other } = { other: 'y' });
+				for (last of ['c', 'd']) {
+					// the loop variable is the boxed let
+				}
+			};
+			bump = () => {
+				tick.value++;
+			};
+			<span>{label + other + last + tick.value}</span>
+		}
+
+		render(Pair);
+		const text = () => container.querySelector('span')?.textContent;
+		expect(text()).toBe('ax0');
+
+		swap();
+		bump();
+		flushSync();
+		expect(text()).toBe('byd1');
+	});
+
+	it('boxes lets written through rest and default destructuring targets', () => {
+		let swap: () => void = () => {};
+		let bump: () => void = () => {};
+
+		function App() @{
+			const tick = track(0);
+			let a = 0;
+			let rest: Record<string, number> = {};
+			let tail: number[] = [];
+			swap = () => {
+				({ a = 5, ...rest } = { rest_x: 7 } as { a?: number; rest_x: number });
+				[a, ...tail] = new Set([1, 2, 3]);
+			};
+			bump = () => {
+				tick.value++;
+			};
+			<span>{a + ':' + (rest.rest_x ?? '-') + ':' + tail.join(',') + ':' + tick.value}</span>
+		}
+
+		render(App);
+		const text = () => container.querySelector('span')?.textContent;
+		expect(text()).toBe('0:-::0');
+
+		swap();
+		bump();
+		flushSync();
+		// The object default applied, the rest collected, and the array rest
+		// consumed the Set through the iterator protocol.
+		expect(text()).toBe('1:7:2,3:1');
+	});
+
+	it('boxes a reassigned function declaration', () => {
+		let swap: () => void = () => {};
+		let bump: () => void = () => {};
+
+		function App() @{
+			const n = track(0);
+			function greet() {
+				return 'hi';
+			}
+			swap = () => {
+				greet = () => 'bye';
+			};
+			bump = () => {
+				n.value++;
+			};
+			<span>{greet() + n.value}</span>
+		}
+
+		render(App);
+		const text = () => container.querySelector('span')?.textContent;
+		expect(text()).toBe('hi0');
+
+		swap();
+		bump();
+		flushSync();
+		expect(text()).toBe('bye1');
+	});
+
+	it('a let declared without an initializer starts as undefined', () => {
+		let assign: () => void = () => {};
+		let bump: () => void = () => {};
+
+		function App() @{
+			const count = track(0);
+			let later: string | undefined;
+			assign = () => {
+				later = 'set';
+			};
+			bump = () => {
+				count.value++;
+			};
+			<span>{String(later) + '/' + count.value}</span>
+		}
+
+		render(App);
+		const text = () => container.querySelector('span')?.textContent;
+		expect(text()).toBe('undefined/0');
+
+		assign();
+		bump();
+		flushSync();
+		expect(text()).toBe('set/1');
+	});
+});
+
+describe('boxing keeps per-iteration bindings', () => {
+	it('does not box a for-loop variable, whose closures see their own iteration', () => {
+		function App() @{
+			const list = [];
+			for (let i = 0; i < 3; i++) {
+				list.push(<span>{i}</span>);
+			}
+			<div>{list}</div>
+		}
+
+		render(App);
+		expect(container.querySelector('div')?.textContent).toBe('012');
+	});
+});

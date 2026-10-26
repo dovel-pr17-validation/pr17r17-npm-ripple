@@ -1,0 +1,146 @@
+// @ts-check
+
+/** @import * as AST from 'estree' */
+/** @import { CompileOptions, CompileError, ParseOptions } from '../types/index' */
+/** @import { NonEmptyString } from '@tsrx/core/types/helpers' */
+
+import { analyzeTsrx, createVolarMappingsResult, parseModule } from '@tsrx/core';
+import { register_text_type_facts } from './text-type-facts.js';
+import { analyze } from './analyze/index.js';
+import { transform_client } from './transform/client/index.js';
+import { transform_server } from './transform/server/index.js';
+
+/**
+ * Parse Ripple source code to ESTree AST
+ * @template {string} T
+ * @param {string} source
+ * @param {NonEmptyString<T>} filename
+ * @param {ParseOptions} [options]
+ * @returns {AST.Program}
+ */
+export function parse(source, filename, options) {
+	return parseModule(source, filename, options);
+}
+
+/**
+ * Compile Ripple source code to JS/CSS output
+ * @param {string} source
+ * @param {string} filename
+ * @param {CompileOptions} [options]
+ * @returns {{ code: string, map: any, css: string, cssHash: string | null, errors: CompileError[], js: { code: string, map: any } }}
+ */
+export function compile(source, filename, options = {}) {
+	const errors = /** @type {CompileError[]} */ ([]);
+	const comments = /** @type {AST.CommentWithLocation[]} */ ([]);
+	const collect = !!(options?.collect || options?.loose);
+	const ast = parseModule(
+		source,
+		filename,
+		collect ? { ...options, collect, errors, comments } : undefined,
+	);
+	analyzeTsrx(
+		ast,
+		filename,
+		collect ? { collect, loose: !!options.loose, errors, comments } : undefined,
+	);
+	const analysis = analyze(
+		ast,
+		filename,
+		collect ? { ...options, collect, errors, comments } : options,
+	);
+	register_text_type_facts(
+		analysis.textChildExpressions,
+		analysis.attributeExpressions,
+		source,
+		filename,
+		analysis.scope,
+		options.textTypeFacts,
+	);
+	const result =
+		options.mode === 'server'
+			? transform_server(
+					filename,
+					source,
+					analysis,
+					options?.minify_css ?? false,
+					options?.dev ?? false,
+				)
+			: transform_client(
+					filename,
+					source,
+					analysis,
+					false,
+					options?.minify_css ?? false,
+					options?.hmr ?? false,
+					options?.hydration ?? true,
+				);
+
+	const { ast: _ast, ...rest } = result;
+	return {
+		...rest,
+		// Temporary back-compat for the LiveCodes playground
+		// (live-codes/livecodes#865), which still reads `js.code`. Remove once
+		// the playground is replaced.
+		js: { code: rest.code, map: rest.map },
+		errors,
+	};
+}
+
+/**
+ * Compile Ripple component to Volar virtual code with TypeScript mappings
+ * @param {string} source
+ * @param {string} filename
+ * @param {{collect?: boolean, loose?: boolean, minify_css?: boolean}} [options]
+ */
+export function compile_to_volar_mappings(source, filename, options = {}) {
+	const errors = /** @type {CompileError[]} */ ([]);
+	const comments = /** @type {AST.CommentWithLocation[]} */ ([]);
+	const ast = parseModule(source, filename, {
+		...options,
+		collect: true,
+		loose: !!options?.loose,
+		preserveParens: true,
+		keywordTokens: true,
+		errors,
+		comments,
+	});
+	analyzeTsrx(ast, filename, {
+		collect: true,
+		loose: !!options?.loose,
+		to_ts: true,
+		errors,
+		comments,
+	});
+	const analysis = analyze(ast, filename, {
+		to_ts: true,
+		collect: true,
+		loose: !!options?.loose,
+		errors,
+		comments,
+	});
+	const transformed = transform_client(
+		filename,
+		source,
+		analysis,
+		true,
+		options?.minify_css ?? false,
+	);
+
+	return {
+		...createVolarMappingsResult({
+			ast: transformed.ast,
+			// Mapping generation walks the pristine source shapes. Analysis and the
+			// transform are copy-on-write — they rebuild their own tree and never
+			// mutate the parse tree — so the parsed AST *is* the source view.
+			ast_from_source: ast,
+			source,
+			generated_code: transformed.code,
+			source_map: transformed.map,
+			post_processing_changes: transformed.post_processing_changes,
+			line_offsets: transformed.line_offsets,
+			errors: transformed.errors,
+		}),
+		textChildExpressions: analysis.textChildExpressions ?? new Map(),
+		attributeExpressions: analysis.attributeExpressions ?? new Map(),
+	};
+}
